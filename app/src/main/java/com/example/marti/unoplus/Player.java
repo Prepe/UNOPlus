@@ -5,32 +5,34 @@ import java.util.LinkedList;
 public class Player {
 
     static String name;
-    int ID;
-/*
+/*    public Deck deck;
+
     LinkedList<Card> cards;
 
-    public void DrawCart(int amount){
+    public String getName(){
+        return this.name;
+    }
+
+    public Card drawCard(){
+        Card card = this.deck.draw();
+        return card;
+    }
+
+    public void playCard(Card c){
+        deck.move(c, this.deck, GameScreen.trashDeck);   //move card to trashDeck
+
+    }
+
+    public void dropCard(Card c){
+        deck.move(c, this.deck, GameScreen.trashDeck);  // move card to trashdeck ?? or invisibleDeck
+    }
+
+    public void TradeCard(Card c, Player p){
         //TO DO
     }
 
-    public String PlayCard(Card c){
-        //TO DO
-        return "";
-    }
 
-    public String DropCard(Card c){
-        //TO DO
-        return "";
-    }
-
-    public String TradeCard(Card c, Player p){
-        //TO DO
-        return "";
-    }
-
-
-    public Player(String name, int ID){
-        this.ID = ID;
+    public Player(String name){
         this.name = name;
     }
 
