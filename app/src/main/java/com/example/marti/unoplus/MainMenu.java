@@ -20,9 +20,8 @@ public class MainMenu extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.main_menu);
 
-
-        findViewById(R.id.exitbutton).setOnClickListener(handler);
         findViewById(R.id.einstellungen).setOnClickListener(handler);
+        findViewById(R.id.exitbutton).setOnClickListener(handler);
     }
 
     View.OnClickListener handler = new View.OnClickListener(){
@@ -43,11 +42,9 @@ public class MainMenu extends AppCompatActivity {
                     break;
 
                 case R.id.exitbutton:
-                    finish();
+                    System.exit(0);
                     break;
             }
         }
     };
-
-
 }
