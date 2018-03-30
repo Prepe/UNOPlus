@@ -20,6 +20,8 @@ public class MainMenu extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.main_menu);
 
+        findViewById(R.id.spielerstellen).setOnClickListener(handler);
+        findViewById(R.id.spielbeitreten).setOnClickListener(handler);
         findViewById(R.id.einstellungen).setOnClickListener(handler);
         findViewById(R.id.exitbutton).setOnClickListener(handler);
     }
@@ -30,11 +32,11 @@ public class MainMenu extends AppCompatActivity {
             switch (v.getId()) {
 
                 case R.id.spielerstellen:
-                    //TO DO
+                    startActivity(new Intent(MainMenu.this, GameScreen.class));
                     break;
 
                 case R.id.spielbeitreten:
-                    // TO DO
+                    startActivity(new Intent(MainMenu.this, LobbyScreen.class));
                     break;
 
                 case R.id.einstellungen:
