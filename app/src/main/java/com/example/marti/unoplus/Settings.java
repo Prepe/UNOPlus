@@ -7,9 +7,10 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-public class MainMenu extends AppCompatActivity {
-    public MainMenu() {
-        super();
+public class Settings extends AppCompatActivity {
+
+    public Settings() {
+
     }
 
     @Override
@@ -18,29 +19,26 @@ public class MainMenu extends AppCompatActivity {
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.main_menu);
 
-
-        findViewById(R.id.exitbutton).setOnClickListener(handler);
-        findViewById(R.id.einstellungen).setOnClickListener(handler);
+        setContentView(R.layout.settings_menu);
+        findViewById(R.id.zurueckbuttonmenu).setOnClickListener(handler);
+        //findViewById(R.id.button_settings_1).setOnClickListener(handler);
     }
 
-    View.OnClickListener handler = new View.OnClickListener(){
+    View.OnClickListener handler = new View.OnClickListener() {
         public void onClick(View v) {
 
             switch (v.getId()) {
 
-                case R.id.einstellungen:
-                    startActivity(new Intent(MainMenu.this, Settings.class));
-
-                    break;
-                case R.id.exitbutton:
+                case R.id.zurueckbuttonmenu:
                     // doStuff
-                    finish();
+                    startActivity(new Intent(Settings.this, MainMenu.class));
                     break;
             }
-        }
-    };
+
+            }
+        };
+
+    }
 
 
-}
