@@ -22,7 +22,7 @@ public class Settings extends AppCompatActivity {
 
         setContentView(R.layout.settings_menu);
         findViewById(R.id.zurueckbuttonmenu).setOnClickListener(handler);
-        //findViewById(R.id.button_settings_1).setOnClickListener(handler);
+
     }
 
     View.OnClickListener handler = new View.OnClickListener() {
@@ -31,14 +31,13 @@ public class Settings extends AppCompatActivity {
             switch (v.getId()) {
 
                 case R.id.zurueckbuttonmenu:
-                    // doStuff
                     startActivity(new Intent(Settings.this, MainMenu.class));
                     break;
             }
 
-            }
-        };
+        }
+    };
 
-    }
+}
 
 

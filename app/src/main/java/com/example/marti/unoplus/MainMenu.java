@@ -30,12 +30,19 @@ public class MainMenu extends AppCompatActivity {
 
             switch (v.getId()) {
 
+                case R.id.spielerstellen:
+                    //TO DO
+                    break;
+
+                case R.id.spielbeitreten:
+                    // TO DO
+                    break;
+
                 case R.id.einstellungen:
                     startActivity(new Intent(MainMenu.this, Settings.class));
-
                     break;
+
                 case R.id.exitbutton:
-                    // doStuff
                     finish();
                     break;
             }
