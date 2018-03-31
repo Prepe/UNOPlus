@@ -1,10 +1,12 @@
-package com.example.marti.unoplus;
+package com.example.marti.unoplus.Screens;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
+
+import com.example.marti.unoplus.R;
 
 public class TitleScreen extends AppCompatActivity {
 
@@ -24,7 +26,7 @@ public class TitleScreen extends AppCompatActivity {
         Thread titlescreenthread = new Thread(){
             public void run() {
                 try {
-                    sleep(4000);
+                    sleep(3000);
                     Intent intent = new Intent(getApplicationContext(), MainMenu.class);
                     startActivity(intent);
                     finish();
