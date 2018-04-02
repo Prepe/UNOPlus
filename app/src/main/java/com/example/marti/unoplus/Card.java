@@ -8,62 +8,82 @@ import java.io.Serializable;
 
 public class Card implements Serializable{
 
-    //Create 4 different card colors + universal color (for all)
+    //Create 4 different card colors + wild color (for all)
     public enum colors {
-        RED,
-        BLUE,
-        GREEN,
-        YELLOW,
-        ALL
+        RED (0),
+        BLUE (1),
+        GREEN (2),
+        YELLOW (3),
+        WILD (4);
+
+        private int value;
+        private colors(int value){this.value = value;}
     }
     public colors color;
 
     //Create card values
     public enum values {
-        ZERO,
-        ONE,
-        TWO,
-        THREE,
-        FOUR,
-        FIVE,
-        SIX,
-        SEVEN,
-        EIGHT,
-        NINE,
-        SKIP,
-        PLUS_TWO,
-        TURN,
-        PLUS_FOUR,
-        COLOR_CHOOSE
+        ZERO (0),
+        ONE (1),
+        TWO (2),
+        THREE (3),
+        FOUR (4),
+        FIVE (5),
+        SIX (6),
+        SEVEN (7),
+        EIGHT (8),
+        NINE (9),
+        SKIP (10),
+        TURN (11),
+        PLUS_TWO (12),
+        CHOOSE_COLOR (13),
+        PLUS_FOUR (14);
+
+        private int value;
+        private values(int value){this.value = value;}
         }
 
     public values value;
 
-    //SpecialCard makes needs some additional actions, e.g. take 2 or 4 cards, choose color
-    boolean	specialCard = false;
 
-    public Card (Card.colors color, Card.values value) {
-        this.color = color;
-        this.value = value;
-        if 	(this.color.equals(Card.colors.ALL) || this.value.equals(Card.values.SKIP)
-                || this.value.equals(values.PLUS_TWO) || this.value.equals(Card.values.TURN)) {
-            this.specialCard = true;
-        } else {
-            this.specialCard = false;
-        }
+    public Card (String color, String val) {
+        this.color = colors.valueOf(color);
+        this.value = values.valueOf(val);
+    }
+
+    Card(int cardColor, int cardValue){
+
+        this.color = colors.values()[cardColor];
+        this.value = values.values()[cardValue];
+
+    }
+
+    public colors getColor(){
+        return this.color;
+    }
+
+    public values getValue(){
+        return this.value;
     }
 
     public String get_name() {
-        return ((this.color).toString() + "_" + (this.value).toString());
+        return ((this.color).toString().toLowerCase() + "_" + (this.value).toString().toLowerCase());
     }
 
-    public boolean isSpecialCard() {
-        return this.specialCard;
+    public boolean isWildCard(){
+        return this.color == colors.values()[4];
     }
 
-    @Override
-    public String toString() {
-        return "Card{" + "color=" + color + ", value=" + value + ", specialCard=" + specialCard + '}';
+    public boolean isTakeTwo(){
+        return this.value == values.values()[12];
+    }
+
+    public boolean isSkip(){
+        return this.value == values.values()[10];
+    }
+
+    public boolean isTakeFour(){
+        return this.value == values.values()[14];
     }
 
 }
