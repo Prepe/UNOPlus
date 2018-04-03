@@ -45,7 +45,6 @@ public class Card implements Serializable{
 
     public values value;
 
-
     public Card (String color, String val) {
         this.color = colors.valueOf(color);
         this.value = values.valueOf(val);
