@@ -8,10 +8,7 @@ import java.util.ListIterator;
 public class PlayerList {
 
     LinkedList<Player> players;
-    private Player player;
-    private PlayerList next;
-    private PlayerList previous;
-    private PlayerList first;
+    private Player active_player;
     ListIterator<Player> player_i;
 
 
@@ -24,7 +21,7 @@ public class PlayerList {
     }
     
     public Player getPlayer(String name){
-        return this.player;
+        return this.active_player;
     }
 
     public Player getNext(){

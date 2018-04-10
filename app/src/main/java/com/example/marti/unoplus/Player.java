@@ -3,9 +3,9 @@ package com.example.marti.unoplus;
 import java.util.LinkedList;
 
 public class Player {
-
+/*
     static String name;
-/*    public Deck deck;
+    public GameController gameController;
 
     LinkedList<Card> cards;
 
@@ -13,9 +13,11 @@ public class Player {
         return this.name;
     }
 
-    public Card drawCard(){
-        Card card = this.deck.draw();
-        return card;
+    public void drawCard(){
+        for(Card c : gameController.drawCards() ){
+        cards.add(c);
+        }
+
     }
 
     public void playCard(Card c){
