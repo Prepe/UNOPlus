@@ -2,12 +2,10 @@ package com.example.marti.unoplus.gameLogicImpl;
 
 import java.util.LinkedList;
 
-import javax.smartcardio.Card;
-
 public class GameLogic {
     LinkedList<String> playerList;  //reference to all Players                      TODO change Type
     String deck;                      //reference to the Deck that is used            TODO change Type
-    Card lastCard;                  //The card that is on top of the discard pile   TODO change Type
+    String lastCard;                  //The card that is on top of the discard pile   TODO change Type
     String activePlayer;            //well active player (its his turn)
     int cardDrawCount = 1;          //the amount the next Player has to draw from the deck
     boolean reverse = false;        //is the game currently reversed or not
@@ -20,7 +18,7 @@ public class GameLogic {
     }
 
     //Basic GameLogic should only be called when the card is good to play or player has to draw a card (card == null)
-    public String runLogic (String aktivePlayer, Card card) {
+    public String runLogic (String aktivePlayer, String card) {
         if (card == null) {
             //aktivePlayer.drawCard();
         } else {
@@ -54,7 +52,7 @@ public class GameLogic {
     * But the lastCard into the discard Pile that gets reused when Deck is empty
     * Make the played card the lastCard and trigger its effect on the game
     * */
-    private void playCard(Card card) {
+    private void playCard(String card) {
         //deck.addUsedCard(lastCard);
         lastCard = card;
         //lastCard.cardEffect();
@@ -75,7 +73,7 @@ public class GameLogic {
     /*
     * Checks if the Card the Player wants to play is OK to be played
     * */
-    public boolean checkCard (Card card) {
+    public boolean checkCard (String card) {
         //Check card for right Value
         if (checkValue(card)) {
             return true;
@@ -90,7 +88,7 @@ public class GameLogic {
     }
 
     //Check for the colour of the card
-    private boolean checkColor(Card card) {
+    private boolean checkColor(String card) {
 /*        //Check for black Card
         if (card.getColour() == 0) {
             return true;
@@ -104,7 +102,7 @@ public class GameLogic {
     }
 
     //Check for the Value of the card
-    private boolean checkValue(Card card) {
+    private boolean checkValue(String card) {
 /*        //Check for matching Value
         if (card.getValue() == lastCard.getValue()) {
             return true;

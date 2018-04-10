@@ -2,8 +2,6 @@ package com.example.marti.unoplus.gameLogicImpl;
 
 import java.util.LinkedList;
 
-import javax.smartcardio.Card;
-
 /**
  * Created by marti on 10.04.2018.
  */
@@ -44,14 +42,14 @@ public class GameControler {
 */    }
 
     //Method for all Players to call to draw Cards form the Deck
-    public LinkedList<Card> drawCard(String player) {
-        LinkedList<Card> cards;
+    public LinkedList<String> drawCard(String player) {
+        LinkedList<String> cards;
         cards = null; //deck.drawCards(logic.getCardDrawCount());
         return cards;
     }
 
     //Method for all Players to call when they want to play a Card
-    public boolean playCard(String player, Card card) {
+    public boolean playCard(String player, String card) {
         boolean cardOK = logic.checkCard(card);
         if (cardOK) {
             logic.runLogic(player, card);
@@ -77,7 +75,7 @@ public class GameControler {
     }
 
     //Method to cheat and trade a Card with a Player
-    public boolean tradeCard(String player, Card card) {
+    public boolean tradeCard(String player, String card) {
         //TODO implement
 
         return false;
