@@ -1,55 +1,122 @@
 import java.util.LinkedList;
 
+import javax.smartcardio.Card;
+
 public class GameLogic {
-    LinkedList<String> playerList; //TODO Change Type to PlayerList when implemented
-    String lastCard; // TODO Change Type to Card when Card is implemented
-    int nextCardDraw;
-    boolean reverse;
+    LinkedList<Player> playerList;  //reference to all Players
+    Deck deck;                      //reference to the Deck that is used
+    Card lastCard;                  //The card that is on top of the discard pile
+    Player activePlayer;            //well active player (its his turn)
+    int cardDrawCount = 1;          //the amount the next Player has to draw from the deck
+    boolean reverse = false;        //is the game currently reversed or not
 
-    public GameLogic (LinkedList<String> pL) {
+    public GameLogic (LinkedList<Player> pL, Deck gameDeck) {
         playerList = pL;
+        deck = gameDeck;
+
+        activePlayer = playerList.getFirst();
     }
 
-    public String RunLogic (String aktivePlayer, String card) {
+    //Basic GameLogic should only be called when the card is good to play or player has to draw a card (card == null)
+    public Player runLogic (Player aktivePlayer, Card card) {
         if (card == null) {
-            DrawCard(aktivePlayer);
+            aktivePlayer.drawCard();
         } else {
-            TryToPlayCard(card);
+            playCard(card);
         }
-        return NextPlayer(aktivePlayer);
+        return nextPlayer(aktivePlayer);
     }
 
-    private void DrawCard (String aktivePlayer) {
-        //TODO call the DrawCard method from Player and Change Type from String to Player
+    //Return the amount of Cards the Player has to draw and set next draw to 1
+    public int getCardDrawCount () {
+        int amount = cardDrawCount;
+        cardDrawCount = 1;
+        return amount;
     }
 
-    private void TryToPlayCard (String card) {
-        boolean cardCheck = false;
-        cardCheck = CheckCard(card);
+    //Change the CardDrawCount to either the shown amount on Card or add to last amount
+    public void changeCardDrawCount(int amount) {
+        if (cardDrawCount == 1) {
+            cardDrawCount = amount;
+        } else {
+            cardDrawCount = cardDrawCount + amount;
+        }
     }
 
-    private String NextPlayer (String aktivePlayer) {
-        //TODO call the NextPlayer Method from the PlayerList class
-        return "";
+    //returns the activePlayer
+    public getAktivePlayer() {
+        return activePlayer;
     }
 
-    private boolean CheckCard (String card) {
-        boolean check = false;
+    /*
+    * But the lastCard into the discard Pile that gets reused when Deck is empty
+    * Make the played card the lastCard and trigger its effect on the game
+    * */
+    private void playCard(Card card) {
+        deck.addUsedCard(lastCard);
+        lastCard = card;
+        lastCard.cardEffect();
+    }
 
-        if (CheckColor(card)) {
-            check = true;
-        } else if (CheckValue(card)) {
-            check = true;
+    /*
+    * Return the next Player after checking the direction of the game
+    * */
+    private Player nextPlayer (Player player) {
+        if (reverse) {
+            activePlayer = playerList.previousPlayer(player);
+        } else {
+            activePlayer = playerList.nextPlayer(player);
+        }
+        return activePlayer;
+    }
+
+    /*
+    * Checks if the Card the Player wants to play is OK to be played
+    * */
+    public boolean checkCard (Card card) {
+        //Check card for right Value
+        if (checkValue(card)) {
+            return true;
         }
 
-        return check;
+        //Check card for right Color
+        if (checkColor(card)) {
+            return true;
+        }
+
+        return false;
     }
 
-    private boolean CheckColor(String card) {
-        return (true); //TODO implement color check with last card
+    //Check for the colour of the card
+    private boolean checkColor(Card card) {
+        //Check for black Card
+        if (card.getColour() == 0) {
+            return true;
+        }
+        //Check for matching Colour
+        if (card.getColour() == lastCard.getColour()) {
+            return true;
+        }
+
+        return false;
     }
 
-    private boolean CheckValue (String card) {
-        return (true); //TODO implement value check with last card
+    //Check for the Value of the card
+    private boolean checkValue(Card card) {
+        //Check for matching Value
+        if (card.getValue() == lastCard.getValue()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    //Plays 1 Card from the Deck without logic Checks
+    public void playTopCard() {
+        if (lastCard != null) {
+            deck.addUsedCard(lastCard);
+        }
+        lastCard = deck.drawCard(1);
+        lastCard.effect();
     }
 }
