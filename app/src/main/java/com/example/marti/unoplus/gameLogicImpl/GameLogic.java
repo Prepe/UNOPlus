@@ -5,14 +5,14 @@ import java.util.LinkedList;
 import javax.smartcardio.Card;
 
 public class GameLogic {
-    LinkedList<Player> playerList;  //reference to all Players
-    Deck deck;                      //reference to the Deck that is used
-    Card lastCard;                  //The card that is on top of the discard pile
-    Player activePlayer;            //well active player (its his turn)
+    LinkedList<String> playerList;  //reference to all Players                      TODO change Type
+    String deck;                      //reference to the Deck that is used            TODO change Type
+    Card lastCard;                  //The card that is on top of the discard pile   TODO change Type
+    String activePlayer;            //well active player (its his turn)
     int cardDrawCount = 1;          //the amount the next Player has to draw from the deck
     boolean reverse = false;        //is the game currently reversed or not
 
-    public GameLogic (LinkedList<Player> pL, Deck gameDeck) {
+    public GameLogic (LinkedList<String> pL, String gameDeck) {
         playerList = pL;
         deck = gameDeck;
 
@@ -20,9 +20,9 @@ public class GameLogic {
     }
 
     //Basic GameLogic should only be called when the card is good to play or player has to draw a card (card == null)
-    public Player runLogic (Player aktivePlayer, Card card) {
+    public String runLogic (String aktivePlayer, Card card) {
         if (card == null) {
-            aktivePlayer.drawCard();
+            //aktivePlayer.drawCard();
         } else {
             playCard(card);
         }
@@ -46,7 +46,7 @@ public class GameLogic {
     }
 
     //returns the activePlayer
-    public getAktivePlayer() {
+    public String getAktivePlayer() {
         return activePlayer;
     }
 
@@ -55,19 +55,19 @@ public class GameLogic {
     * Make the played card the lastCard and trigger its effect on the game
     * */
     private void playCard(Card card) {
-        deck.addUsedCard(lastCard);
+        //deck.addUsedCard(lastCard);
         lastCard = card;
-        lastCard.cardEffect();
+        //lastCard.cardEffect();
     }
 
     /*
     * Return the next Player after checking the direction of the game
     * */
-    private Player nextPlayer (Player player) {
+    private String nextPlayer (String player) {
         if (reverse) {
-            activePlayer = playerList.previousPlayer(player);
+            //activePlayer = playerList.previousPlayer(player);
         } else {
-            activePlayer = playerList.nextPlayer(player);
+            //activePlayer = playerList.nextPlayer(player);
         }
         return activePlayer;
     }
@@ -91,7 +91,7 @@ public class GameLogic {
 
     //Check for the colour of the card
     private boolean checkColor(Card card) {
-        //Check for black Card
+/*        //Check for black Card
         if (card.getColour() == 0) {
             return true;
         }
@@ -99,26 +99,26 @@ public class GameLogic {
         if (card.getColour() == lastCard.getColour()) {
             return true;
         }
-
+*/
         return false;
     }
 
     //Check for the Value of the card
     private boolean checkValue(Card card) {
-        //Check for matching Value
+/*        //Check for matching Value
         if (card.getValue() == lastCard.getValue()) {
             return true;
         }
-
+*/
         return false;
     }
 
     //Plays 1 Card from the Deck without logic Checks
     public void playTopCard() {
-        if (lastCard != null) {
+/*        if (lastCard != null) {
             deck.addUsedCard(lastCard);
         }
         lastCard = deck.drawCard(1);
         lastCard.effect();
-    }
+*/    }
 }

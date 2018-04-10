@@ -8,14 +8,14 @@ import javax.smartcardio.Card;
  * Created by marti on 10.04.2018.
  */
 
-public class GameContorler {
-    PlayerList players;     //reference to all Players in the Game
-    Deck deck;              //reference to the Deck that is used
+public class GameControler {
+    String players;     //reference to all Players in the Game  TODO Change Type
+    String deck;              //reference to the Deck that is used    TODO Change Type
     GameLogic logic;        //reference to the GameLogic
     int startingHand = 7;   //Amount of Cards every Player gets at the start of the Game
     float turnTime;         //Turn Timer for the Game
 
-    public GameControler(PlayerList playersList, Deck gameDeck, GameLogic gameLogic) {
+    public GameControler(String playersList, String gameDeck, GameLogic gameLogic) {
         players = playersList;
         deck = gameDeck;
         logic = gameLogic;
@@ -36,22 +36,22 @@ public class GameContorler {
     }
 
     private void drawHandCardsForPlayers() {
-        for (Player p : players) {
+/*        for (String p : players) {
             for (int i = 0; i < startingHand; i++) {
-                p.drawCard();
+                //p.drawCard();
             }
         }
-    }
+*/    }
 
     //Method for all Players to call to draw Cards form the Deck
-    public LinkedList<Card> drawCard(Player player) {
+    public LinkedList<Card> drawCard(String player) {
         LinkedList<Card> cards;
-        cards = deck.drawCards(logic.getCardDrawCount());
+        cards = null; //deck.drawCards(logic.getCardDrawCount());
         return cards;
     }
 
     //Method for all Players to call when they want to play a Card
-    public boolean playCard(Player player, Card card) {
+    public boolean playCard(String player, Card card) {
         boolean cardOK = logic.checkCard(card);
         if (cardOK) {
             logic.runLogic(player, card);
@@ -77,7 +77,7 @@ public class GameContorler {
     }
 
     //Method to cheat and trade a Card with a Player
-    public boolean tradeCard(Player player, Card card) {
+    public boolean tradeCard(String player, Card card) {
         //TODO implement
 
         return false;
