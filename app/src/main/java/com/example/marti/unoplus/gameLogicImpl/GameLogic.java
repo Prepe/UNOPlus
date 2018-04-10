@@ -4,11 +4,12 @@ import java.util.LinkedList;
 
 public class GameLogic {
     LinkedList<String> playerList;  //reference to all Players                      TODO change Type
-    String deck;                      //reference to the Deck that is used            TODO change Type
-    String lastCard;                  //The card that is on top of the discard pile   TODO change Type
+    String deck;                    //reference to the Deck that is used            TODO change Type
+    String lastCard;                //The card that is on top of the discard pile   TODO change Type
     String activePlayer;            //well active player (its his turn)
     int cardDrawCount = 1;          //the amount the next Player has to draw from the deck
     boolean reverse = false;        //is the game currently reversed or not
+    boolean suspend = false;        //is the next Player suspended or not
 
     public GameLogic (LinkedList<String> pL, String gameDeck) {
         playerList = pL;
@@ -44,7 +45,7 @@ public class GameLogic {
     }
 
     //returns the activePlayer
-    public String getAktivePlayer() {
+    public String getActivePlayer() {
         return activePlayer;
     }
 
@@ -63,9 +64,17 @@ public class GameLogic {
     * */
     private String nextPlayer (String player) {
         if (reverse) {
-            //activePlayer = playerList.previousPlayer(player);
+            if (suspend) {
+                //activePlayer = playerList.previousPlayer(playerList.previousPlayer(player));
+            } else {
+                //activePlayer = playerList.previousPlayer(player);
+            }
         } else {
-            //activePlayer = playerList.nextPlayer(player);
+            if (suspend) {
+                //activePlayer = playerList.nextPlayer(playerList.nextPlayer(player));
+            } else {
+                //activePlayer = playerList.nextPlayer(player);
+            }
         }
         return activePlayer;
     }
