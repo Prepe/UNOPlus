@@ -72,7 +72,7 @@ public class Deck {
     //Check if the deck empty
     public boolean isEmptyDeck(){
         if(this.deck.size()==0)
-            return this.deck.size()==0;
+            return true;
         else {
             return false;
         }
@@ -80,7 +80,7 @@ public class Deck {
 
     //Draws the top card from the take deck and adds it to player's deck
     public Card draw(){
-        //Check if pile empty, if so, take top card, shuffle played deck and make it the take deck
+        //Check if pile empty, if so, take top card, shuffle played deck and make take deck from it
         int takeDeckSize = takedeck.getDeckSize();
         if (takeDeckSize == 0){
             replaceTakeDeck();
