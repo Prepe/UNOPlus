@@ -2,8 +2,10 @@ package com.example.marti.unoplus.Screens;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 
 import com.example.marti.unoplus.R;
 
@@ -20,5 +22,12 @@ public class LobbyScreen extends AppCompatActivity {
         setContentView(R.layout.lobby_screen);
 
 
+        Button button= (Button)findViewById(R.id.verbindenbutton);
+        button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                //TO DO
+            }
+        });
     }
 }
