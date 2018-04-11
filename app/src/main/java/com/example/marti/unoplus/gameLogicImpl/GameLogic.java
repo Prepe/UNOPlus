@@ -1,17 +1,22 @@
 package com.example.marti.unoplus.gameLogicImpl;
 
-import java.util.LinkedList;
+import com.example.marti.unoplus.cards.Card;
+import com.example.marti.unoplus.cards.CardEffects;
+import com.example.marti.unoplus.cards.Deck;
+import com.example.marti.unoplus.players.Player;
+import com.example.marti.unoplus.players.PlayerList;
 
 public class GameLogic {
-    LinkedList<String> playerList;  //reference to all Players                      TODO change Type
-    String deck;                    //reference to the Deck that is used            TODO change Type
-    String lastCard;                //The card that is on top of the discard pile   TODO change Type
-    String activePlayer;            //well active player (its his turn)
-    int cardDrawCount = 1;          //the amount the next Player has to draw from the deck
-    boolean reverse = false;        //is the game currently reversed or not
-    boolean suspend = false;        //is the next Player suspended or not
+    PlayerList playerList;      //reference to all Players
+    Deck deck;                  //reference to the Deck that is used
+    Card lastCard;              //The card that is on top of the discard pile
+    Player activePlayer;        //well active player (its his turn)
+    CardEffects effects;        //used to call CardEffects
+    int cardDrawCount = 1;      //the amount the next Player has to draw from the deck
+    boolean reverse = false;    //is the game currently reversed or not
+    boolean skip = false;       //is the next Player suspended or not
 
-    public GameLogic (LinkedList<String> pL, String gameDeck) {
+    public GameLogic (PlayerList pL, Deck gameDeck) {
         playerList = pL;
         deck = gameDeck;
 
@@ -19,7 +24,7 @@ public class GameLogic {
     }
 
     //Basic GameLogic should only be called when the card is good to play or player has to draw a card (card == null)
-    public String runLogic (String aktivePlayer, String card) {
+    public Player runLogic (Player aktivePlayer, Card card) {
         if (card == null) {
             //aktivePlayer.drawCard();
         } else {
@@ -45,7 +50,7 @@ public class GameLogic {
     }
 
     //returns the activePlayer
-    public String getActivePlayer() {
+    public Player getActivePlayer() {
         return activePlayer;
     }
 
@@ -53,7 +58,7 @@ public class GameLogic {
     * But the lastCard into the discard Pile that gets reused when Deck is empty
     * Make the played card the lastCard and trigger its effect on the game
     * */
-    private void playCard(String card) {
+    private void playCard(Card card) {
         //deck.addUsedCard(lastCard);
         lastCard = card;
         //lastCard.cardEffect();
@@ -62,15 +67,17 @@ public class GameLogic {
     /*
     * Return the next Player after checking the direction of the game
     * */
-    private String nextPlayer (String player) {
+    private Player nextPlayer (Player player) {
         if (reverse) {
-            if (suspend) {
+            if (skip) {
+                skip = false;
                 //activePlayer = playerList.previousPlayer(playerList.previousPlayer(player));
             } else {
                 //activePlayer = playerList.previousPlayer(player);
             }
         } else {
-            if (suspend) {
+            if (skip) {
+                skip = false;
                 //activePlayer = playerList.nextPlayer(playerList.nextPlayer(player));
             } else {
                 //activePlayer = playerList.nextPlayer(player);
@@ -82,7 +89,7 @@ public class GameLogic {
     /*
     * Checks if the Card the Player wants to play is OK to be played
     * */
-    public boolean checkCard (String card) {
+    public boolean checkCard (Card card) {
         //Check card for right Value
         if (checkValue(card)) {
             return true;
@@ -97,26 +104,26 @@ public class GameLogic {
     }
 
     //Check for the colour of the card
-    private boolean checkColor(String card) {
-/*        //Check for black Card
-        if (card.getColour() == 0) {
+    private boolean checkColor(Card card) {
+        //Check for black Card
+        if (card.getColor() == Card.colors.WILD) {
             return true;
         }
         //Check for matching Colour
-        if (card.getColour() == lastCard.getColour()) {
+        if (card.getColor() == lastCard.getColor()) {
             return true;
         }
-*/
+
         return false;
     }
 
     //Check for the Value of the card
-    private boolean checkValue(String card) {
-/*        //Check for matching Value
+    private boolean checkValue(Card card) {
+        //Check for matching Value
         if (card.getValue() == lastCard.getValue()) {
             return true;
         }
-*/
+
         return false;
     }
 
@@ -125,7 +132,11 @@ public class GameLogic {
 /*        if (lastCard != null) {
             deck.addUsedCard(lastCard);
         }
-        lastCard = deck.drawCard(1);
+        lastCard = deck.draw();
         lastCard.effect();
 */    }
+
+    public void skipNext() {
+        skip = true;
+    }
 }

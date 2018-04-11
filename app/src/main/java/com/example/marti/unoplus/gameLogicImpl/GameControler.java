@@ -1,5 +1,10 @@
 package com.example.marti.unoplus.gameLogicImpl;
 
+import com.example.marti.unoplus.cards.Card;
+import com.example.marti.unoplus.cards.Deck;
+import com.example.marti.unoplus.players.Player;
+import com.example.marti.unoplus.players.PlayerList;
+
 import java.util.LinkedList;
 
 /**
@@ -7,13 +12,13 @@ import java.util.LinkedList;
  */
 
 public class GameControler {
-    String players;     //reference to all Players in the Game  TODO Change Type
-    String deck;              //reference to the Deck that is used    TODO Change Type
+    PlayerList players;     //reference to all Players in the Game  TODO Change Type
+    Deck deck;              //reference to the Deck that is used    TODO Change Type
     GameLogic logic;        //reference to the GameLogic
     int startingHand = 7;   //Amount of Cards every Player gets at the start of the Game
     float turnTime;         //Turn Timer for the Game
 
-    public GameControler(String playersList, String gameDeck, GameLogic gameLogic) {
+    public GameControler(PlayerList playersList, Deck gameDeck, GameLogic gameLogic) {
         players = playersList;
         deck = gameDeck;
         logic = gameLogic;
@@ -34,22 +39,22 @@ public class GameControler {
     }
 
     private void drawHandCardsForPlayers() {
-/*        for (String p : players) {
+        for (Player p : players.getPlayers()) {
             for (int i = 0; i < startingHand; i++) {
-                //p.drawCard();
+                p.drawCard();
             }
         }
-*/    }
+    }
 
     //Method for all Players to call to draw Cards form the Deck
-    public LinkedList<String> drawCard(String player) {
-        LinkedList<String> cards;
+    public LinkedList<Card> drawCard() {
+        LinkedList<Card> cards;
         cards = null; //deck.drawCards(logic.getCardDrawCount());
         return cards;
     }
 
     //Method for all Players to call when they want to play a Card
-    public boolean playCard(String player, String card) {
+    public boolean playCard(Player player, Card card) {
         boolean cardOK = logic.checkCard(card);
         if (cardOK) {
             logic.runLogic(player, card);
@@ -75,10 +80,10 @@ public class GameControler {
     }
 
     //Method to cheat and trade a Card with a Player
-    public boolean tradeCard(String player, String card) {
+    public Card tradeCard(Player player, Card card) {
         //TODO implement
 
-        return false;
+        return card;
     }
 
 }
