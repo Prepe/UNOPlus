@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/gameBG"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="0dp"
+        android:layout_y="0dp"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/gamebg"
+        tools:layout_editor_absoluteX="160dp"
+        tools:layout_editor_absoluteY="94dp" />
+
+    <Button
+        android:id="@+id/unounobutton"
+        android:layout_width="80dp"
+        android:layout_height="56dp"
+        android:layout_x="640dp"
+        android:layout_y="125dp"
+        android:background="@drawable/unounobutton"
+        tools:layout_editor_absoluteX="429dp"
+        tools:layout_editor_absoluteY="187dp" />
+
+    <ImageView
+        android:id="@+id/unostack"
+        android:layout_width="250dp"
+        android:layout_height="139dp"
+        android:layout_x="244dp"
+        android:layout_y="41dp"
+        app:srcCompat="@drawable/unostack"
+        tools:layout_editor_absoluteX="290dp"
+        tools:layout_editor_absoluteY="101dp" />
+
+</AbsoluteLayout>
