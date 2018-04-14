@@ -12,8 +12,8 @@ import java.util.LinkedList;
  */
 
 public class GameControler {
-    PlayerList players;     //reference to all Players in the Game  TODO Change Type
-    Deck deck;              //reference to the Deck that is used    TODO Change Type
+    PlayerList players;     //reference to all Players in the Game
+    Deck deck;              //reference to the Deck that is used
     GameLogic logic;        //reference to the GameLogic
     int startingHand = 7;   //Amount of Cards every Player gets at the start of the Game
     float turnTime;         //Turn Timer for the Game
@@ -34,6 +34,7 @@ public class GameControler {
 
     //Give all Players cards and Play the first Card
     private void setUpGame() {
+        deck.shuffle();
         drawHandCardsForPlayers();
         logic.playTopCard();
     }
@@ -48,8 +49,13 @@ public class GameControler {
 
     //Method for all Players to call to draw Cards form the Deck
     public LinkedList<Card> drawCard() {
-        LinkedList<Card> cards;
-        cards = null; //deck.drawCards(logic.getCardDrawCount());
+        LinkedList<Card> cards = new LinkedList<>();
+        if (deck.isEmptyDeck()) {
+            deck.replaceTakeDeck();
+        }
+        for (int i = 0; i < logic.getCardDrawCount(); i++) {
+            cards.add(deck.draw());
+        }
         return cards;
     }
 
