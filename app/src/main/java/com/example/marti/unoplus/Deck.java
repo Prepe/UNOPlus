@@ -1,4 +1,4 @@
-package com.example.marti.unoplus.cards;
+package com.example.marti.unoplus;
 
 import java.util.ArrayList;
 import java.util.Collections;

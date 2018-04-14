@@ -1,4 +1,6 @@
-package com.example.marti.unoplus.players;
+package com.example.marti.unoplus;
+
+import com.example.marti.unoplus.Player;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
