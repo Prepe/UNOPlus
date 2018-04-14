@@ -4,8 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
+import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
+import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,6 +26,10 @@ import android.widget.Toast;
 
 import com.example.marti.unoplus.R;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,14 +58,7 @@ public class MainActivityTest extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
 
         initialWork();
         exqListener();
@@ -110,7 +110,50 @@ public class MainActivityTest extends AppCompatActivity {
                 });
             }
         });
+
+    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            final WifiP2pDevice device = deviceArray[position];
+            WifiP2pConfig config = new WifiP2pConfig();
+            config.deviceAddress = device.deviceAddress;
+
+
+            mManager.connect(mChannel, config, new WifiP2pManager.ActionListener() {
+                @Override
+                public void onSuccess() {
+                    Toast.makeText(getApplicationContext(),"Connected to "+device.deviceName,Toast.LENGTH_SHORT).show();;
+
+                }
+
+                @Override
+                public void onFailure(int reason) {
+                    Toast.makeText(getApplicationContext(),"not connected",Toast.LENGTH_SHORT).show();;
+
+                }
+            });
+        }
+    });
     }
+
+    WifiP2pManager.ConnectionInfoListener connectionInfoListener = new WifiP2pManager.ConnectionInfoListener() {
+        @Override
+        public void onConnectionInfoAvailable(WifiP2pInfo info) {
+
+            final InetAddress groupOwnerAdress= info.groupOwnerAddress;
+
+            if(info.groupFormed &&info.isGroupOwner){
+
+                ConnectionStatus.setText("Host");
+            }else if(info.groupFormed){
+
+                ConnectionStatus.setText("Client");
+
+            }
+
+        }
+    };
 
     @Override
     protected void onResume() {
@@ -143,12 +186,7 @@ public class MainActivityTest extends AppCompatActivity {
         mIntentFilter = new IntentFilter();
 
 
-        //Problem... die Action wird nit wargenommen, dewegen wird die onRecieved Methode im BroadCastReceiver nit ausgeführt
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
-
-        //De Funktioniert dafür aber! Aber des is des falsche...
-        mIntentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
-
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
@@ -188,5 +226,26 @@ public class MainActivityTest extends AppCompatActivity {
 
         }
     };
+
+
+    //Keine anung, des gehet neu
+    public class ServerClass extends Thread{
+
+        Socket socket;
+        ServerSocket serverSocket;
+
+        @Override
+        public void run() {
+
+            try {
+                serverSocket = new ServerSocket(8888);
+                socket = serverSocket.accept();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+    }
 
 }

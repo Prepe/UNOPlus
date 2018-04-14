@@ -22,13 +22,7 @@
 
     <include layout="@layout/content_main_activity_test" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+
 
 
     <!-- Created by Sarthi Technology-->
@@ -96,8 +90,10 @@
         android:id="@+id/connectionStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="15dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/readMsg"
+        android:layout_marginTop="39dp"
         android:text="Connection Status"
         android:textAlignment="center"
         android:textColor="@android:color/holo_blue_dark"
