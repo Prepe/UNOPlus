@@ -2,6 +2,7 @@ package com.example.marti.unoplus.cards;
 
 import com.example.marti.unoplus.gameLogicImpl.GameControler;
 import com.example.marti.unoplus.gameLogicImpl.GameLogic;
+import com.example.marti.unoplus.players.Player;
 
 import static com.example.marti.unoplus.cards.Card.values.SKIP;
 
@@ -19,7 +20,7 @@ public class CardEffects {
     }
 
     //Method to call the cards effect
-    public void cardEffect(Card cardValue) {
+    public void cardEffect(Player player, Card cardValue) {
         switch (cardValue.getValue()) {
             default:
                 //No Card effect!!
@@ -34,10 +35,11 @@ public class CardEffects {
                 takeTwo();
                 break;
             case CHOOSE_COLOR:
-                changeColour();
+                changeColor(player);
                 break;
             case PLUS_FOUR:
-                takeFourChangeColour();
+                takeFour();
+                changeColor(player);
                 break;
         }
     }
@@ -48,18 +50,22 @@ public class CardEffects {
     }
 
     //ChangeColour Card effect method
-    private void changeColour() {
-        //TODO implement
+    private void changeColor(Player player) {
+        Card.colors colorWish = Card.colors.WILD;
+        if (player != null) {
+            //colorWish = player.wishForColor();
+        }
+        gameLogic.wishColor(colorWish);
     }
 
     //TakeFourChangeColour Card effect method
-    private void takeFourChangeColour() {
+    private void takeFour() {
         gameLogic.changeCardDrawCount(4);
     }
 
     //Reverse Card effect method
     private void reverse() {
-      //TODO implement
+      gameLogic.toggleReverse();
     }
 
     //Suspend Card effect method
