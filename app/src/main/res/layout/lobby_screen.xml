@@ -12,4 +12,14 @@
         app:srcCompat="@drawable/gamebg"
         tools:layout_editor_absoluteX="206dp"
         tools:layout_editor_absoluteY="159dp" />
+
+    <Button
+        android:id="@+id/verbindenbutton"
+        android:layout_width="277dp"
+        android:layout_height="80dp"
+        android:layout_x="216dp"
+        android:layout_y="242dp"
+        android:background="@drawable/verbindenbutton"
+        tools:layout_editor_absoluteX="307dp"
+        tools:layout_editor_absoluteY="264dp" />
 </AbsoluteLayout>
