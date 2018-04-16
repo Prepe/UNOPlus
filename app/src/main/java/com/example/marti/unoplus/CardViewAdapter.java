@@ -69,6 +69,9 @@ public class CardViewAdapter extends AppCompatImageView {
                 case SKIP:
                     pic = picture.getResources().getDrawable(R.drawable.green_skip);
                     break;
+                case CHOOSE_COLOR:
+                    pic = picture.getResources().getDrawable(R.drawable.all_green);
+                    break;
                 default:
                     pic = picture.getResources().getDrawable(R.drawable.card_back);
                     break;
@@ -113,6 +116,9 @@ public class CardViewAdapter extends AppCompatImageView {
                     break;
                 case SKIP:
                     pic = picture.getResources().getDrawable(R.drawable.blue_skip);
+                    break;
+                case CHOOSE_COLOR:
+                    pic = picture.getResources().getDrawable(R.drawable.all_blue);
                     break;
                 default:
                     pic = picture.getResources().getDrawable(R.drawable.card_back);
@@ -159,6 +165,9 @@ public class CardViewAdapter extends AppCompatImageView {
                 case SKIP:
                     pic = picture.getResources().getDrawable(R.drawable.red_skip);
                     break;
+                case CHOOSE_COLOR:
+                    pic = picture.getResources().getDrawable(R.drawable.all_red);
+                    break;
                 default:
                     pic = picture.getResources().getDrawable(R.drawable.card_back);
                     break;
@@ -203,6 +212,9 @@ public class CardViewAdapter extends AppCompatImageView {
                     break;
                 case SKIP:
                     pic = picture.getResources().getDrawable(R.drawable.yellow_skip);
+                    break;
+                case CHOOSE_COLOR:
+                    pic = picture.getResources().getDrawable(R.drawable.all_yellow);
                     break;
                 default:
                     pic = picture.getResources().getDrawable(R.drawable.card_back);
