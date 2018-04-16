@@ -92,7 +92,11 @@
         tools:layout_editor_absoluteY="203dp" />
 
     <CheckBox
+<<<<<<< HEAD
+        android:id="@+id/karten wegwerfen"
+=======
         android:id="@+id/kartenwegwerfen"
+>>>>>>> 6544743c525dc985e875ab2750228666d6fc1c07
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_x="50dp"
