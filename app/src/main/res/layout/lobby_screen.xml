@@ -2,12 +2,42 @@
 <AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/player4"
+        android:layout_width="238dp"
+        android:layout_height="46dp"
+        android:layout_x="307dp"
+        android:layout_y="120dp"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="125dp" />
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/player2"
+        android:layout_width="238dp"
+        android:layout_height="46dp"
+        android:layout_x="307dp"
+        android:layout_y="67dp"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="125dp" />
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/player1"
+        android:layout_width="238dp"
+        android:layout_height="46dp"
+        android:layout_x="48dp"
+        android:layout_y="67dp"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="125dp" />
 
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_x="0dp"
+        android:layout_y="0dp"
         android:scaleType="fitXY"
         app:srcCompat="@drawable/gamebg"
         tools:layout_editor_absoluteX="206dp"
@@ -17,9 +47,81 @@
         android:id="@+id/verbindenbutton"
         android:layout_width="277dp"
         android:layout_height="80dp"
-        android:layout_x="216dp"
-        android:layout_y="242dp"
+        android:layout_x="309dp"
+        android:layout_y="256dp"
         android:background="@drawable/verbindenbutton"
         tools:layout_editor_absoluteX="307dp"
         tools:layout_editor_absoluteY="264dp" />
+
+    <TextView
+        android:id="@+id/Spieler"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="48dp"
+        android:layout_y="19dp"
+        android:text="Spieler:"
+        android:textColor="@android:color/white"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        tools:layout_editor_absoluteX="42dp"
+        tools:layout_editor_absoluteY="17dp" />
+
+    <TextView
+        android:id="@+id/Optionen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="51dp"
+        android:layout_y="176dp"
+        android:text="Optionen:"
+        android:textColor="@android:color/white"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        tools:layout_editor_absoluteX="42dp"
+        tools:layout_editor_absoluteY="17dp" />
+
+    <CheckBox
+        android:id="@+id/kartentauschen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="50dp"
+        android:layout_y="248dp"
+        android:text="Karten tauschen"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="68dp"
+        tools:layout_editor_absoluteY="203dp" />
+
+    <CheckBox
+        android:id="@+id/karten wegwerfen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="50dp"
+        android:layout_y="280dp"
+        android:text="Karten wegwerfen"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="68dp"
+        tools:layout_editor_absoluteY="203dp" />
+
+    <CheckBox
+        android:id="@+id/tischteufel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="50dp"
+        android:layout_y="217dp"
+        android:text="Tischteufel"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="68dp"
+        tools:layout_editor_absoluteY="203dp" />
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/player3"
+        android:layout_width="238dp"
+        android:layout_height="46dp"
+        android:layout_x="48dp"
+        android:layout_y="121dp"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="125dp" />
+
 </AbsoluteLayout>
