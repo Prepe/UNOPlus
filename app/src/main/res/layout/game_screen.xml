@@ -2,7 +2,9 @@
 <AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/gameBG"
@@ -34,5 +36,12 @@
         app:srcCompat="@drawable/unostack"
         tools:layout_editor_absoluteX="290dp"
         tools:layout_editor_absoluteY="101dp" />
+
+    <LinearLayout
+        android:id="@+id/handCards"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal">
+    </LinearLayout>
 
 </AbsoluteLayout>
