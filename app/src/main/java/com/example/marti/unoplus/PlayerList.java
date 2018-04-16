@@ -1,7 +1,8 @@
 package com.example.marti.unoplus;
 
+import com.example.marti.unoplus.Player;
+
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
@@ -9,7 +10,6 @@ public class PlayerList {
 
     LinkedList<Player> players;
     private Player active_player;
-    ListIterator<Player> player_i;
 
 
     public void setPlayers(ArrayList<Player> players){
@@ -24,16 +24,24 @@ public class PlayerList {
         return this.active_player;
     }
 
-    public Player getNext(){
-        return this.player_i.next();
+
+    public Player getNext(Player p){
+        int i = players.indexOf(p);
+        return players.get(i+1);
+
     }
 
-    public Player getPrevious(){
-        return this.player_i.previous();
+    public Player getPrevious(Player p){
+        int i = players.indexOf(p);
+        return players.get(i-1);
     }
+    
 
     public Player getFirst(){
         return this.players.getFirst();
     }
 
+    public LinkedList<Player> getPlayers() {
+        return players;
+    }
 }
