@@ -304,6 +304,8 @@ public class MainActivityTest extends AppCompatActivity {
 
         @Override
         public void run() {
+            Log.d("serverrun","1");
+
 
             try {
                 serverSocket = new ServerSocket(8888);
@@ -343,6 +345,8 @@ public class MainActivityTest extends AppCompatActivity {
 
         @Override
         public void run() {
+            Log.d("sendrecrun","1");
+
 
             byte[] buffer = new byte[1024];
             int  bytes;
@@ -392,6 +396,7 @@ public class MainActivityTest extends AppCompatActivity {
         @Override
         public void run() {
             super.run();
+            Log.d("clientrun","1");
             try {
                 socket.connect(new InetSocketAddress(hostAdd, 8888), 500);
                 sendReceive = new SendReceive(socket);
