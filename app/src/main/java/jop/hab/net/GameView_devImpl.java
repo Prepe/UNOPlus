@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.marti.unoplus.Card;
 import com.example.marti.unoplus.R;
 
 public class GameView_devImpl extends AppCompatActivity  implements  ObserverInterface{
@@ -23,7 +24,7 @@ public class GameView_devImpl extends AppCompatActivity  implements  ObserverInt
     String hostAdress;
     String mode;
     NetworkIOManager networkIOManager;
-
+    Card card;
 
     //Hole aus Intent die Server adresse und andere Infos
     //Erzeuge Instanz von NetworkIOManager (Adresse übergebem)
@@ -73,6 +74,10 @@ public class GameView_devImpl extends AppCompatActivity  implements  ObserverInt
             @Override
             public void onClick(View v) {
                networkIOManager.writeMsg(editTextSend.getText().toString());
+
+                networkIOManager.writeCard(card);
+
+
             }
         });
     }
@@ -82,6 +87,9 @@ public class GameView_devImpl extends AppCompatActivity  implements  ObserverInt
     public void dataChanged() {
 
         textView.setText(networkIOManager.getTestText());
+        card = networkIOManager.getCard();
+
 
     }
+
 }

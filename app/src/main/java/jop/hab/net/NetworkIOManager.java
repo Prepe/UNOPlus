@@ -4,6 +4,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import com.example.marti.unoplus.Card;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -28,7 +30,9 @@ public class NetworkIOManager {
 
     String hostAdress;
 
-    boolean MODE_IS_SERVER;
+    Card actCard;
+
+    boolean MODE_IS_SERVER = false;
     static final int MESSAGE_READ = 1;
 
     String testText;
@@ -71,11 +75,21 @@ public class NetworkIOManager {
         }
 
 
+
+
     }
 
     public void writeMsg(String msg){
 
         sendReceive.write(msg.getBytes());
+    }
+
+    public void writeCard(Card c){
+
+
+        //TODO!
+      //  sendReceive.write(c.toGSON.getBytes());
+
     }
 
     Handler handler = new Handler(new Handler.Callback() {
@@ -87,8 +101,11 @@ public class NetworkIOManager {
                 case MESSAGE_READ:
                     byte[] readBuffer = (byte[]) msg.obj;
                     String tmpmsg = new String(readBuffer, 0, msg.arg1);
-                    
+
                     testText = tmpmsg;
+
+                    //TODO
+                   // actCard = tmpmsg.fromGSON("Card.class");
 
                     Log.d("@handler",testText);
 
@@ -104,6 +121,13 @@ public class NetworkIOManager {
         }
     });
 
+    public Card getCard() {
+
+        return actCard;
+
+
+    }
+
 
     public class ServerClass extends Thread {
 
@@ -117,15 +141,19 @@ public class NetworkIOManager {
             Log.d("@serverclass","Serverclass running");
 
             try {
-                serverSocket = new ServerSocket(8888);
-                socket = serverSocket.accept();
+                    Log.d("socket",serverSocket.toString());
+                    serverSocket = new ServerSocket(8888);
+                    socket = serverSocket.accept();
 
-                sendReceive = new SendReceive(socket);
-                sendReceive.start();
 
             } catch (IOException e) {
                 e.printStackTrace();
+                Log.d("@error","sc catched");
             }
+
+            sendReceive = new SendReceive(socket);
+            sendReceive.start();
+
 
 
         }
@@ -144,6 +172,8 @@ public class NetworkIOManager {
 
             this.socket = socket;
             try {
+                Log.d("@sendreceive","sr created");
+
                 this.inputStream = socket.getInputStream();
                 this.outputStream = socket.getOutputStream();
 
@@ -212,15 +242,21 @@ public class NetworkIOManager {
         public void run() {
             super.run();
             try {
+
+                Log.d("socket",socket.toString());
                 socket.connect(new InetSocketAddress(hostAdd, 8888), 500);
-                sendReceive = new SendReceive(socket);
-                sendReceive.start();
+
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            sendReceive = new SendReceive(socket);
+            sendReceive.start();
         }
     }
+
+
 
 
 
