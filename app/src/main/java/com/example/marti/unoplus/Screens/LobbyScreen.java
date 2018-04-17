@@ -20,16 +20,6 @@ import com.example.marti.unoplus.gameLogicImpl.GameLogic;
 import java.util.ArrayList;
 
 public class LobbyScreen extends AppCompatActivity {
-    boolean kt = false;
-    boolean kw = false;
-    boolean tt = false;
-    TextView p1 = (TextView) findViewById(R.id.player1);
-    TextView p2 = (TextView) findViewById(R.id.player2);
-    TextView p3 = (TextView) findViewById(R.id.player3);
-    TextView p4 = (TextView) findViewById(R.id.player4);
-    CheckBox kartentauschen = (CheckBox) findViewById(R.id.kartentauschen);
-    CheckBox kartenwegwerfen = (CheckBox) findViewById(R.id.kartenwegwerfen);
-    CheckBox tischteufel = (CheckBox) findViewById(R.id.tischteufel);
 
     public LobbyScreen() {
 
@@ -52,8 +42,22 @@ public class LobbyScreen extends AppCompatActivity {
                 startActivity(new Intent(LobbyScreen.this, GameScreen.class));
 
                 /*
+                boolean kt = false;
+                boolean kw = false;
+                boolean tt = false;
+                TextView p1 = (TextView) findViewById(R.id.player1);
+                TextView p2 = (TextView) findViewById(R.id.player2);
+                TextView p3 = (TextView) findViewById(R.id.player3);
+                TextView p4 = (TextView) findViewById(R.id.player4);
+                CheckBox kartentauschen = (CheckBox) findViewById(R.id.kartentauschen);
+                CheckBox kartenwegwerfen = (CheckBox) findViewById(R.id.kartenwegwerfen);
+                CheckBox tischteufel = (CheckBox) findViewById(R.id.tischteufel);
+                */
+
+                /*
                 TODO: Die eingestellten Spieloptionen/Schummelfunktionen müssen noch im GC implementiert/beachtet und diesem übergeben werden.
                  */
+                /*
                 if(kartentauschen.isChecked()){
                     kt = true;
                 }
@@ -71,6 +75,7 @@ public class LobbyScreen extends AppCompatActivity {
 
                 GameLogic GameLogic = new GameLogic(PlayerList, Deck);
                 GameControler GameControler = new GameControler(PlayerList, Deck, GameLogic);
+                */
 
             }
         });
