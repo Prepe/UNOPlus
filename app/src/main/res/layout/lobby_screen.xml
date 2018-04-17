@@ -1,36 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/player4"
-        android:layout_width="238dp"
-        android:layout_height="46dp"
-        android:layout_x="307dp"
-        android:layout_y="120dp"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="125dp" />
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/player2"
-        android:layout_width="238dp"
-        android:layout_height="46dp"
-        android:layout_x="307dp"
-        android:layout_y="67dp"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="125dp" />
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/player1"
-        android:layout_width="238dp"
-        android:layout_height="46dp"
-        android:layout_x="48dp"
-        android:layout_y="67dp"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="125dp" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -41,17 +16,8 @@
         android:scaleType="fitXY"
         app:srcCompat="@drawable/gamebg"
         tools:layout_editor_absoluteX="206dp"
-        tools:layout_editor_absoluteY="159dp" />
-
-    <Button
-        android:id="@+id/verbindenbutton"
-        android:layout_width="277dp"
-        android:layout_height="80dp"
-        android:layout_x="309dp"
-        android:layout_y="256dp"
-        android:background="@drawable/verbindenbutton"
-        tools:layout_editor_absoluteX="307dp"
-        tools:layout_editor_absoluteY="264dp" />
+        tools:layout_editor_absoluteY="159dp"
+        android:contentDescription="@string/dummy_content" />
 
     <TextView
         android:id="@+id/Spieler"
@@ -59,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_x="48dp"
         android:layout_y="19dp"
-        android:text="Spieler:"
+        android:text="@string/spieler"
         android:textColor="@android:color/white"
         android:textSize="30sp"
         android:textStyle="bold"
@@ -67,15 +33,60 @@
         tools:layout_editor_absoluteY="17dp" />
 
     <TextView
+        android:id="@+id/player1"
+        android:layout_width="219dp"
+        android:layout_height="42dp"
+        android:layout_x="50dp"
+        android:layout_y="69dp"
+        android:text="@string/player1_connected"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="201dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <TextView
+        android:id="@+id/player2"
+        android:layout_width="219dp"
+        android:layout_height="42dp"
+        android:layout_x="307dp"
+        android:layout_y="69dp"
+        android:text="@string/player2_connected"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="201dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <TextView
+        android:id="@+id/player3"
+        android:layout_width="219dp"
+        android:layout_height="42dp"
+        android:layout_x="51dp"
+        android:layout_y="111dp"
+        android:text="@string/player3_connected"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="201dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <TextView
+        android:id="@+id/player4"
+        android:layout_width="219dp"
+        android:layout_height="42dp"
+        android:layout_x="307dp"
+        android:layout_y="111dp"
+        android:text="@string/player4_connected"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="201dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <TextView
         android:id="@+id/Optionen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_x="51dp"
         android:layout_y="176dp"
-        android:text="Optionen:"
+        android:text="@string/optionen"
         android:textColor="@android:color/white"
         android:textSize="30sp"
         android:textStyle="bold"
+        android:visibility="visible"
         tools:layout_editor_absoluteX="42dp"
         tools:layout_editor_absoluteY="17dp" />
 
@@ -85,23 +96,19 @@
         android:layout_height="wrap_content"
         android:layout_x="50dp"
         android:layout_y="248dp"
-        android:text="Karten tauschen"
+        android:text="@string/karten_tauschen"
         android:textColor="@android:color/white"
         android:textSize="24sp"
         tools:layout_editor_absoluteX="68dp"
         tools:layout_editor_absoluteY="203dp" />
 
     <CheckBox
-<<<<<<< HEAD
-        android:id="@+id/karten wegwerfen"
-=======
         android:id="@+id/kartenwegwerfen"
->>>>>>> 6544743c525dc985e875ab2750228666d6fc1c07
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_x="50dp"
         android:layout_y="280dp"
-        android:text="Karten wegwerfen"
+        android:text="@string/karten_wegwerfen"
         android:textColor="@android:color/white"
         android:textSize="24sp"
         tools:layout_editor_absoluteX="68dp"
@@ -113,19 +120,20 @@
         android:layout_height="wrap_content"
         android:layout_x="50dp"
         android:layout_y="217dp"
-        android:text="Tischteufel"
+        android:text="@string/tischteufel"
         android:textColor="@android:color/white"
         android:textSize="24sp"
         tools:layout_editor_absoluteX="68dp"
         tools:layout_editor_absoluteY="203dp" />
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/player3"
-        android:layout_width="238dp"
-        android:layout_height="46dp"
-        android:layout_x="48dp"
-        android:layout_y="121dp"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="125dp" />
+    <Button
+        android:id="@+id/verbindenbutton"
+        android:layout_width="277dp"
+        android:layout_height="80dp"
+        android:layout_x="309dp"
+        android:layout_y="256dp"
+        android:background="@drawable/verbindenbutton"
+        tools:layout_editor_absoluteX="307dp"
+        tools:layout_editor_absoluteY="264dp" />
 
 </AbsoluteLayout>

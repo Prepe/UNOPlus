@@ -3,16 +3,17 @@ package com.example.marti.unoplus.Screens;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.TextView;
 
 import com.example.marti.unoplus.Deck;
 import com.example.marti.unoplus.PlayerList;
 import com.example.marti.unoplus.R;
+
 import com.example.marti.unoplus.gameLogicImpl.GameControler;
 import com.example.marti.unoplus.gameLogicImpl.GameLogic;
 
@@ -22,10 +23,10 @@ public class LobbyScreen extends AppCompatActivity {
     boolean kt = false;
     boolean kw = false;
     boolean tt = false;
-    CardView p1 = (CardView) findViewById(R.id.player1);
-    CardView p2 = (CardView) findViewById(R.id.player2);
-    CardView p3 = (CardView) findViewById(R.id.player3);
-    CardView p4 = (CardView) findViewById(R.id.player4);
+    TextView p1 = (TextView) findViewById(R.id.player1);
+    TextView p2 = (TextView) findViewById(R.id.player2);
+    TextView p3 = (TextView) findViewById(R.id.player3);
+    TextView p4 = (TextView) findViewById(R.id.player4);
     CheckBox kartentauschen = (CheckBox) findViewById(R.id.kartentauschen);
     CheckBox kartenwegwerfen = (CheckBox) findViewById(R.id.kartenwegwerfen);
     CheckBox tischteufel = (CheckBox) findViewById(R.id.tischteufel);
@@ -44,7 +45,7 @@ public class LobbyScreen extends AppCompatActivity {
         setContentView(R.layout.lobby_screen);
 
 
-        Button button= (Button)findViewById(R.id.verbindenbutton);
+        Button button= findViewById(R.id.verbindenbutton);
         button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -64,15 +65,9 @@ public class LobbyScreen extends AppCompatActivity {
                 }
 
                 Deck Deck = new Deck();
-                Deck.decksinit();
-                Deck.buildDeck();
-                Deck.createNormalCards();
-                Deck.createWildCards();
 
                 PlayerList PlayerList = new PlayerList();
-                ArrayList<PlayerList> players = new ArrayList<PlayerList>();
-                players.add();
-                PlayerList.setPlayers(players);
+                ArrayList<PlayerList> players = new ArrayList<>();
 
                 GameLogic GameLogic = new GameLogic(PlayerList, Deck);
                 GameControler GameControler = new GameControler(PlayerList, Deck, GameLogic);
