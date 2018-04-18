@@ -107,7 +107,7 @@ public class NetworkIOManager {
 
                 JSONObject jsonObj = new JSONObject();
 
-                jsonObj.put("value", c.getValue()); // Set the first name/pair
+                jsonObj.put("value", c.getValue());
 
                 jsonObj.put("color", c.getColor());
 
