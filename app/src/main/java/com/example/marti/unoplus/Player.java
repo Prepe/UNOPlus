@@ -9,7 +9,7 @@ public class Player {
     static String name;
     public GameControler gameController;
 
-    LinkedList<Card> cards;
+    LinkedList<Card> cards; //Hand
 
     public String getName(){
         return this.name;
