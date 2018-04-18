@@ -8,17 +8,9 @@
 
     <include layout="@layout/content_game_view_dev_impl" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
-
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="260dp">
+        android:layout_height="558dp">
 
         <Button
             android:id="@+id/btnSend"
@@ -33,25 +25,67 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="56dp"
-            android:layout_marginStart="56dp"
-            android:layout_marginTop="75dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="63dp"
             android:text="TextView" />
 
         <EditText
             android:id="@+id/txtSend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_marginBottom="39dp"
+            android:layout_below="@+id/textView"
+            android:layout_marginLeft="23dp"
+            android:layout_marginStart="23dp"
+            android:layout_marginTop="192dp"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Name" />
+            android:text="stuff" />
+
+        <ImageView
+            android:id="@+id/img_playCard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/btn_r"
+            android:layout_alignStart="@+id/btn_r"
+            android:layout_below="@+id/textView"
+            android:layout_marginTop="34dp"
+            app:srcCompat="@drawable/card_back" />
+
+        <ImageButton
+            android:id="@+id/btn_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/btn_r"
+            android:layout_centerHorizontal="true"
+            app:srcCompat="@drawable/blue_3" />
+
+        <ImageButton
+            android:id="@+id/btn_r"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/txtSend"
+            android:layout_alignStart="@+id/txtSend"
+            android:layout_alignTop="@+id/btn_g"
+            android:layout_marginLeft="30dp"
+            android:layout_marginStart="30dp"
+            app:srcCompat="@drawable/red_8" />
+
+        <ImageButton
+            android:id="@+id/btn_g"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/btnSend"
+            android:layout_alignRight="@+id/btnSend"
+            android:layout_below="@+id/txtSend"
+            android:layout_marginTop="48dp"
+            app:srcCompat="@drawable/green_7" />
+
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

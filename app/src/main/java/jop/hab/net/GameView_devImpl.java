@@ -1,5 +1,6 @@
 package jop.hab.net;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
@@ -9,18 +10,23 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.marti.unoplus.Card;
 import com.example.marti.unoplus.R;
 
-public class GameView_devImpl extends AppCompatActivity  implements  ObserverInterface{
+public class GameView_devImpl extends AppCompatActivity implements ObserverInterface {
 
 
     TextView textView;
     EditText editTextSend;
     Button btnSend;
-
+    ImageButton btnr8;
+    ImageButton btng7;
+    ImageButton btnb3;
+    ImageView playCard;
     String hostAdress;
     String mode;
     NetworkIOManager networkIOManager;
@@ -29,7 +35,6 @@ public class GameView_devImpl extends AppCompatActivity  implements  ObserverInt
     //Hole aus Intent die Server adresse und andere Infos
     //Erzeuge Instanz von NetworkIOManager (Adresse übergebem)
     //NetworkIOManager Callt diese Avtivity wenn daten sich geändert haben
-
 
 
     @Override
@@ -45,19 +50,16 @@ public class GameView_devImpl extends AppCompatActivity  implements  ObserverInt
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
 
         textView = (TextView) findViewById(R.id.textView);
-        editTextSend = (EditText)findViewById(R.id.txtSend);
-        btnSend=(Button) findViewById(R.id.btnSend);
+        editTextSend = (EditText) findViewById(R.id.txtSend);
+
+        btnSend = (Button) findViewById(R.id.btnSend);
+        btnb3 = (ImageButton) findViewById(R.id.btn_b);
+        btng7 = (ImageButton) findViewById(R.id.btn_g);
+        btnr8 = (ImageButton) findViewById(R.id.btn_r);
+        playCard = (ImageView) findViewById(R.id.img_playCard);
+
 
         hostAdress = getIntent().getStringExtra("adress");
         mode = getIntent().getStringExtra("mode");
@@ -68,14 +70,47 @@ public class GameView_devImpl extends AppCompatActivity  implements  ObserverInt
         networkIOManager.open();
 
 
-
-
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               networkIOManager.writeMsg(editTextSend.getText().toString());
 
-                networkIOManager.writeCard(card);
+
+                networkIOManager.writeMsg(editTextSend.getText().toString());
+
+                //networkIOManager.writeCard(card);
+
+
+            }
+        });
+
+        btnr8.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                networkIOManager.writeMsg("r8");
+
+
+            }
+        });
+
+        btnb3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                networkIOManager.writeMsg("b3");
+
+
+            }
+        });
+
+        btng7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                networkIOManager.writeMsg("g7");
 
 
             }
@@ -87,8 +122,25 @@ public class GameView_devImpl extends AppCompatActivity  implements  ObserverInt
     public void dataChanged() {
 
         textView.setText(networkIOManager.getTestText());
-        card = networkIOManager.getCard();
+        setCard(networkIOManager.getTestText());
 
+        //todo Card holen
+        //card = networkIOManager.getCard();
+
+
+    }
+
+    // nur für Demo Zwecke
+    public void setCard(String cardID) {
+
+        if (cardID.equals("r8")) {
+            playCard.setImageResource(R.drawable.red_8);
+        } else if (cardID.equals("g7")) {
+            playCard.setImageResource(R.drawable.green_7);
+        } else if (cardID.equals("b3")) {
+            playCard.setImageResource(R.drawable.blue_3);
+
+        }
 
     }
 
