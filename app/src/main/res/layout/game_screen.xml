@@ -2,7 +2,8 @@
 <AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/gameBG"
@@ -11,6 +12,7 @@
         android:layout_x="0dp"
         android:layout_y="0dp"
         android:scaleType="fitXY"
+        android:visibility="visible"
         app:srcCompat="@drawable/gamebg"
         tools:layout_editor_absoluteX="160dp"
         tools:layout_editor_absoluteY="94dp" />
@@ -22,6 +24,7 @@
         android:layout_x="640dp"
         android:layout_y="125dp"
         android:background="@drawable/unounobutton"
+        android:visibility="visible"
         tools:layout_editor_absoluteX="429dp"
         tools:layout_editor_absoluteY="187dp" />
 
@@ -31,8 +34,41 @@
         android:layout_height="139dp"
         android:layout_x="244dp"
         android:layout_y="41dp"
+        android:visibility="visible"
         app:srcCompat="@drawable/unostack"
         tools:layout_editor_absoluteX="290dp"
         tools:layout_editor_absoluteY="101dp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:layout_x="0dp"
+        android:layout_y="250dp"
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="238dp"
+        tools:layout_editor_absoluteY="241dp">
+
+        <LinearLayout
+            android:id="@+id/scroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        </LinearLayout>
+    </ScrollView>
+
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="145dp"
+        android:layout_height="252dp"
+        android:layout_x="0dp"
+        android:layout_y="0dp"
+        android:background="@drawable/gamebg"
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="129dp">
+
+    </ListView>
+
 
 </AbsoluteLayout>

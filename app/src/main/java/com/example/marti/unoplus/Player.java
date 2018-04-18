@@ -1,11 +1,14 @@
 package com.example.marti.unoplus;
 
+import com.example.marti.unoplus.Screens.GameScreen;
+import com.example.marti.unoplus.gameLogicImpl.GameControler;
+
 import java.util.LinkedList;
 
 public class Player {
-/*
+
     static String name;
-    public GameController gameController;
+    public GameControler gameController;
 
     LinkedList<Card> cards;
 
@@ -14,19 +17,21 @@ public class Player {
     }
 
     public void drawCard(){
+       /*
         for(Card c : gameController.drawCards() ){
         cards.add(c);
         }
+        */
 
     }
 
     public void playCard(Card c){
-        deck.move(c, this.deck, GameScreen.trashDeck);   //move card to trashDeck
+        //  deck.move(c, this.deck, GameScreen.trashDeck);  move card to trashDeck
 
     }
 
     public void dropCard(Card c){
-        deck.move(c, this.deck, GameScreen.trashDeck);  // move card to trashdeck ?? or invisibleDeck
+        //    deck.move(c, this.deck, GameScreen.trashDeck);   move card to trashdeck ?? or invisibleDeck
     }
 
     public void TradeCard(Card c, Player p){
@@ -37,10 +42,5 @@ public class Player {
     public Player(String name){
         this.name = name;
     }
-
-    */
-
-
-
 
 }
