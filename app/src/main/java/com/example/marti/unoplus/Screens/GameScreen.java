@@ -1,6 +1,5 @@
 package com.example.marti.unoplus.Screens;
 
-import android.app.ListActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
@@ -22,7 +21,7 @@ public class GameScreen extends AppCompatActivity {
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.game_screen);
+        setContentView(R.layout.game_screenTest);
 
         String[] players = {"Player 1", "Player2", "Player3", "Player4"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),  android.R.layout.simple_list_item_1, players);
