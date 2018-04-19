@@ -26,12 +26,22 @@ public class PlayerList {
 
     public Player getNext(Player p){
         int i = players.indexOf(p);
+
+        if(getNext(p) == null){
+            return getFirst();
+        }
+
         return players.get(i+1);
 
     }
 
     public Player getPrevious(Player p){
         int i = players.indexOf(p);
+
+        if(getPrevious(p) == null){
+            return players.getLast();
+        }
+
         return players.get(i-1);
     }
     
