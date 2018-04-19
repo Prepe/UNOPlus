@@ -1,10 +1,9 @@
-package com.example.marti.unoplus;
+package com.example.marti.unoplus.players;
 
-import com.example.marti.unoplus.Player;
+import com.example.marti.unoplus.players.Player;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.ListIterator;
 
 public class PlayerList {
 
