@@ -46,7 +46,7 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        setContentView(R.layout.activity_game_view_dev_impl);
+        setContentView(R.layout.game_screen);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
