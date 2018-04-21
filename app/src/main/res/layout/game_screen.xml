@@ -6,6 +6,16 @@
     android:background="@drawable/gamebg"
     android:orientation="horizontal">
 
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="150dp"
+        android:layout_height="231dp"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="@+id/unostack"
+        app:layout_constraintTop_toTopOf="@+id/unostack"/>
+
+
+
     <ImageView
 
         android:id="@+id/unostack"
@@ -27,15 +37,7 @@
         android:layout_marginRight="15dp"
         android:background="@drawable/unounobutton" />
 
-    <ListView
-        android:id="@+id/list"
-        android:layout_width="150dp"
-        android:layout_height="231dp"
-        android:visibility="visible"
-        app:layout_constraintStart_toStartOf="@+id/unostack"
-        app:layout_constraintTop_toTopOf="@+id/unostack">
 
-    </ListView>
 
     <TextView
         android:id="@+id/textView"
