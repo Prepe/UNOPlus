@@ -1,74 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/gamebg">
 
-    <ImageView
-        android:id="@+id/gameBG"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="0dp"
-        android:layout_y="0dp"
-        android:scaleType="fitXY"
-        android:visibility="visible"
-        app:srcCompat="@drawable/gamebg"
-        tools:layout_editor_absoluteX="160dp"
-        tools:layout_editor_absoluteY="94dp" />
-
-    <Button
-        android:id="@+id/unounobutton"
-        android:layout_width="80dp"
-        android:layout_height="56dp"
-        android:layout_x="640dp"
-        android:layout_y="125dp"
-        android:background="@drawable/unounobutton"
-        android:visibility="visible"
-        tools:layout_editor_absoluteX="429dp"
-        tools:layout_editor_absoluteY="187dp" />
 
     <ImageView
         android:id="@+id/unostack"
-        android:layout_width="250dp"
-        android:layout_height="139dp"
-        android:layout_x="244dp"
-        android:layout_y="41dp"
-        android:visibility="visible"
-        app:srcCompat="@drawable/unostack"
-        tools:layout_editor_absoluteX="290dp"
-        tools:layout_editor_absoluteY="101dp" />
+        android:layout_width="200dp"
+        android:layout_height="179dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="52dp"
+        app:srcCompat="@drawable/unostack" />
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="140dp"
-        android:layout_x="0dp"
-        android:layout_y="250dp"
-        android:visibility="visible"
-        tools:layout_editor_absoluteX="238dp"
-        tools:layout_editor_absoluteY="241dp">
-
-        <LinearLayout
-            android:id="@+id/scroll"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-        </LinearLayout>
-    </ScrollView>
+    <Button
+        android:id="@+id/button"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/unounobutton" />
 
     <ListView
         android:id="@+id/list"
-        android:layout_width="145dp"
-        android:layout_height="252dp"
-        android:layout_x="0dp"
-        android:layout_y="0dp"
+        android:layout_width="150dp"
+        android:layout_height="231dp"
         android:background="@drawable/gamebg"
         android:visibility="visible"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="129dp">
+        app:layout_constraintStart_toStartOf="@+id/unostack"
+        app:layout_constraintTop_toTopOf="@+id/unostack">
 
     </ListView>
 
+    <ScrollView
+        android:id="@+id/scrollViewGame"
+        android:layout_width="match_parent"
+        android:layout_height="155dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="0dp"
+        android:layout_marginStart="0dp"
 
-</AbsoluteLayout>
+        android:visibility="visible">
+
+    </ScrollView>
+</RelativeLayout>

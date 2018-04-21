@@ -1,64 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@drawable/gamebg">
 
-    <ImageView
-        android:id="@+id/menubg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scaleType="fitXY"
-        app:srcCompat="@drawable/gamebg"
-        tools:layout_editor_absoluteX="162dp"
-        tools:layout_editor_absoluteY="106dp" />
 
     <Button
         android:id="@+id/spielerstellen"
         android:layout_width="270dp"
         android:layout_height="90dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/einstellungen"
+        android:layout_alignLeft="@+id/einstellungen"
+        android:layout_marginTop="11dp"
         android:layout_x="430dp"
         android:layout_y="53dp"
-        android:background="@drawable/spielerstellenbutton"
-        tools:layout_editor_absoluteX="353dp"
-        tools:layout_editor_absoluteY="53dp" />
+        android:background="@drawable/spielerstellenbutton" />
 
     <Button
         android:id="@+id/spielbeitreten"
         android:layout_width="270dp"
         android:layout_height="90dp"
+        android:layout_alignStart="@+id/spielerstellen"
+        android:layout_alignLeft="@+id/spielerstellen"
+        android:layout_below="@+id/spielerstellen"
         android:layout_x="430dp"
         android:layout_y="131dp"
-        android:background="@drawable/spielbeitreten"
-        tools:layout_editor_absoluteX="283dp"
-        tools:layout_editor_absoluteY="135dp" />
+        android:background="@drawable/spielbeitreten" />
 
     <Button
         android:id="@+id/einstellungen"
         android:layout_width="270dp"
         android:layout_height="90dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/exitbutton"
+        android:layout_alignLeft="@+id/exitbutton"
+        android:layout_marginBottom="101dp"
         android:layout_x="430dp"
         android:layout_y="206dp"
-        android:background="@drawable/einstellungbutton"
-        tools:layout_editor_absoluteX="111dp"
-        tools:layout_editor_absoluteY="197dp" />
+        android:background="@drawable/einstellungbutton" />
 
     <Button
         android:id="@+id/exitbutton"
         android:layout_width="270dp"
         android:layout_height="90dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="11dp"
+        android:layout_toEndOf="@+id/unotemplate"
+        android:layout_toRightOf="@+id/unotemplate"
         android:layout_x="430dp"
         android:layout_y="283dp"
-        android:background="@drawable/exitbutton"
-        tools:layout_editor_absoluteX="147dp"
-        tools:layout_editor_absoluteY="249dp" />
+        android:background="@drawable/exitbutton" />
 
     <ImageView
         android:id="@+id/unotemplate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/unotemplate"
-        tools:layout_editor_absoluteX="148dp"
-        tools:layout_editor_absoluteY="154dp" />
-</AbsoluteLayout>
+        app:srcCompat="@drawable/unotemplate" />
+</RelativeLayout>

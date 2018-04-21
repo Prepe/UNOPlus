@@ -11,6 +11,7 @@ public class PlayerList {
     private Player active_player;
 
 
+    String[] player1 = new String[players.size()];
     public void setPlayers(ArrayList<Player> players){
         this.players = new LinkedList<>(players);
     }
