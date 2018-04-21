@@ -23,7 +23,7 @@ public class GameScreen extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.game_screen);
 
-        String[] player1 = new String[players.Player.players.size()];
+
         String[] players = {"Player 1", "Player2", "Player3", "Player4"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),  android.R.layout.simple_list_item_1, players);
 

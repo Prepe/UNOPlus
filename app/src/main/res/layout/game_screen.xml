@@ -30,24 +30,42 @@
         android:id="@+id/list"
         android:layout_width="150dp"
         android:layout_height="231dp"
-        android:background="@drawable/gamebg"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="@+id/unostack"
         app:layout_constraintTop_toTopOf="@+id/unostack">
 
     </ListView>
 
-    <ScrollView
+    <HorizontalScrollView
         android:id="@+id/scrollViewGame"
         android:layout_width="match_parent"
-        android:layout_height="155dp"
+        android:layout_height="130dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginLeft="0dp"
         android:layout_marginStart="0dp"
-
         android:visibility="visible">
 
-    </ScrollView>
+        <LinearLayout
+            android:id="@+id/playerHandLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+    <ImageView
+        android:id="@+id/playerHand"
+        android:layout_width="70dp"
+        android:layout_height="130dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="visible"
+        app:srcCompat="@drawable/red_skip">
+
+    </ImageView>
 </RelativeLayout>
