@@ -1,9 +1,12 @@
-package com.example.marti.unoplus;
+package com.example.marti.unoplus.cards;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.AppCompatImageView;
 import android.widget.ImageView;
+
+import com.example.marti.unoplus.R;
+import com.example.marti.unoplus.cards.Card;
 
 /**
  * Created by ekzhu on 16.04.2018.
