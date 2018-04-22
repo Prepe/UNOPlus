@@ -61,7 +61,6 @@
         </activity>
         <activity
             android:name="jop.hab.net.MainActivityTest"
-            android:label="@string/title_activity_main_test"
             android:theme="@style/FullscreenTheme">
 
         </activity>

@@ -6,13 +6,7 @@
     android:background="@drawable/gamebg"
     android:orientation="horizontal">
 
-    <ListView
-        android:id="@+id/list"
-        android:layout_width="150dp"
-        android:layout_height="231dp"
-        android:visibility="visible"
-        app:layout_constraintStart_toStartOf="@+id/unostack"
-        app:layout_constraintTop_toTopOf="@+id/unostack" />
+
 
     <ImageView
         android:id="@+id/unostack"
@@ -35,6 +29,15 @@
         android:layout_marginTop="63dp"
         android:text="TextView" />
 
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="150dp"
+        android:layout_height="231dp"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="@+id/unostack"
+        app:layout_constraintTop_toTopOf="@+id/unostack"/>
+
+
     <Button
         android:id="@+id/button"
         android:layout_width="60dp"
@@ -47,23 +50,22 @@
         android:background="@drawable/unounobutton" />
 
 
-
     <Button
         android:id="@+id/btnSend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/scrollViewGame"
+        android:layout_alignBottom="@+id/list"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginEnd="196dp"
-        android:layout_marginRight="196dp"
+        android:layout_marginEnd="164dp"
+        android:layout_marginRight="164dp"
         android:text="Send" />
 
-     <EditText
+    <EditText
         android:id="@+id/txtSend"
-        android:layout_width="wrap_content"
+        android:layout_width="156dp"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/btnSend"
+        android:layout_alignBottom="@+id/list"
         android:layout_toStartOf="@+id/btnSend"
         android:layout_toLeftOf="@+id/btnSend"
         android:ems="10"
