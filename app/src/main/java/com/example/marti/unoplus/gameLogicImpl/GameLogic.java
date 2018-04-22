@@ -1,5 +1,7 @@
 package com.example.marti.unoplus.gameLogicImpl;
 
+import android.widget.ImageView;
+
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.cards.CardEffects;
 import com.example.marti.unoplus.cards.Deck;
@@ -16,6 +18,7 @@ public class GameLogic {
     boolean skip = false;       //is the next Player suspended or not
     Card.values lastCardValue;  //The value of the card that is on top of the discard pile
     Card.colors lastCardColor;  //The color of the card that is on top of the discard pile
+    private ImageView caCurrentCard, caStackCard;  //view for current and stack cards
 
     public GameLogic (PlayerList pL, Deck gameDeck) {
         playerList = pL;
