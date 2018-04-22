@@ -7,6 +7,7 @@ import android.widget.ImageView;
 
 import com.example.marti.unoplus.R;
 import com.example.marti.unoplus.cards.Card;
+import com.example.marti.unoplus.gameLogicImpl.GameLogic;
 
 /**
  * Created by ekzhu on 16.04.2018.

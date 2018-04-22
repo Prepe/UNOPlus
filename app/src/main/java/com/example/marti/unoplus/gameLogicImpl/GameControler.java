@@ -1,6 +1,11 @@
 package com.example.marti.unoplus.gameLogicImpl;
 
+import android.content.Context;
+import android.util.DisplayMetrics;
+import android.view.WindowManager;
+
 import com.example.marti.unoplus.cards.Card;
+import com.example.marti.unoplus.cards.CardViewAdapter;
 import com.example.marti.unoplus.cards.Deck;
 import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.players.PlayerList;
@@ -47,6 +52,8 @@ public class GameControler {
         }
     }
 
+
+
     //Method for all Players to call to draw Cards form the Deck
     public LinkedList<Card> drawCard() {
         LinkedList<Card> cards = new LinkedList<>();
@@ -91,5 +98,7 @@ public class GameControler {
 
         return card;
     }
+
+
 
 }

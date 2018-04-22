@@ -4,6 +4,7 @@ import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.gameLogicImpl.GameControler;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class Player {
 
@@ -11,6 +12,10 @@ public class Player {
     public GameControler gameController;
 
     LinkedList<Card> cards;
+
+    public List<Card> getHand() {
+        return this.cards;
+    }
 
     public String getName(){
         return this.name;

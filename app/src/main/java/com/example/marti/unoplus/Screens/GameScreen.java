@@ -5,10 +5,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.example.marti.unoplus.R;
-import com.example.marti.unoplus.players.Player;
+import com.example.marti.unoplus.cards.Card;
+import com.example.marti.unoplus.cards.CardViewAdapter;
+import com.example.marti.unoplus.gameLogicImpl.GameLogic;
+
+import java.util.LinkedList;
+
 
 public class GameScreen extends AppCompatActivity {
     public GameScreen() {
@@ -30,6 +36,7 @@ public class GameScreen extends AppCompatActivity {
         ListView lv = (ListView)findViewById(R.id.list);
         lv.setAdapter(adapter);
 
-
     }
+
+
 }
