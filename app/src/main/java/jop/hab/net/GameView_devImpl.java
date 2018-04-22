@@ -14,7 +14,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.marti.unoplus.Card;
+import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.R;
 
 public class GameView_devImpl extends AppCompatActivity implements ObserverInterface {

@@ -10,8 +10,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import com.example.marti.unoplus.Deck;
-import com.example.marti.unoplus.PlayerList;
+import com.example.marti.unoplus.cards.Deck;
+import com.example.marti.unoplus.players.PlayerList;
 import com.example.marti.unoplus.R;
 
 import com.example.marti.unoplus.gameLogicImpl.GameControler;

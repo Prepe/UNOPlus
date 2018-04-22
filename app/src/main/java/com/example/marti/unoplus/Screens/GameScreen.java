@@ -23,19 +23,12 @@ public class GameScreen extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.game_screen);
 
-<<<<<<< HEAD
-=======
 
->>>>>>> master
         String[] players = {"Player 1", "Player2", "Player3", "Player4"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),  android.R.layout.simple_list_item_1, players);
 
         ListView lv = (ListView)findViewById(R.id.list);
         lv.setAdapter(adapter);
 
-<<<<<<< HEAD
-=======
-
->>>>>>> master
     }
 }

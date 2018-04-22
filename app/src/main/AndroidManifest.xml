@@ -60,20 +60,15 @@
 
         </activity>
         <activity
-            android:name="jop.hab.net.FullscreenActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_fullscreen"
-            android:theme="@style/FullscreenTheme" />
-        <activity
             android:name="jop.hab.net.MainActivityTest"
             android:label="@string/title_activity_main_test"
-            android:theme="@style/AppTheme">
+            android:theme="@style/FullscreenTheme">
 
         </activity>
         <activity
             android:name="jop.hab.net.GameView_devImpl"
             android:label="@string/title_activity_game_view_dev_impl"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/FullscreenTheme"></activity>
     </application>
 
 </manifest>

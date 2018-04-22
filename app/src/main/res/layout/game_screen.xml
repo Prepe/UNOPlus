@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-<<<<<<< HEAD
     android:background="@drawable/gamebg"
     android:orientation="horizontal">
 
@@ -13,18 +12,9 @@
         android:layout_height="231dp"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="@+id/unostack"
-        app:layout_constraintTop_toTopOf="@+id/unostack"/>
-
-
+        app:layout_constraintTop_toTopOf="@+id/unostack" />
 
     <ImageView
-
-=======
-    android:background="@drawable/gamebg">
-
-
-    <ImageView
->>>>>>> master
         android:id="@+id/unostack"
         android:layout_width="200dp"
         android:layout_height="179dp"
@@ -32,20 +22,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="52dp"
         app:srcCompat="@drawable/unostack" />
-<<<<<<< HEAD
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="15dp"
-        android:layout_marginRight="15dp"
-        android:background="@drawable/unounobutton" />
-
-
 
     <TextView
         android:id="@+id/textView"
@@ -60,6 +36,19 @@
         android:text="TextView" />
 
     <Button
+        android:id="@+id/button"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/unounobutton" />
+
+
+
+    <Button
         android:id="@+id/btnSend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -70,7 +59,7 @@
         android:layout_marginRight="196dp"
         android:text="Send" />
 
-    <EditText
+     <EditText
         android:id="@+id/txtSend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -108,8 +97,6 @@
             android:layout_gravity="center"
             android:orientation="horizontal">
 
-
-
             <ImageButton
                 android:id="@+id/btn_b"
                 android:layout_width="wrap_content"
@@ -130,60 +117,4 @@
 
         </LinearLayout>
     </HorizontalScrollView>
-=======
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="15dp"
-        android:layout_marginRight="15dp"
-        android:background="@drawable/unounobutton" />
-
-    <ListView
-        android:id="@+id/list"
-        android:layout_width="150dp"
-        android:layout_height="231dp"
-        android:visibility="visible"
-        app:layout_constraintStart_toStartOf="@+id/unostack"
-        app:layout_constraintTop_toTopOf="@+id/unostack">
-
-    </ListView>
-
-    <HorizontalScrollView
-        android:id="@+id/scrollViewGame"
-        android:layout_width="match_parent"
-        android:layout_height="130dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="0dp"
-        android:layout_marginStart="0dp"
-        android:visibility="visible">
-
-        <LinearLayout
-            android:id="@+id/playerHandLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-        </LinearLayout>
-
-    </HorizontalScrollView>
-
-    <ImageView
-        android:id="@+id/playerHand"
-        android:layout_width="70dp"
-        android:layout_height="130dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:visibility="visible"
-        app:srcCompat="@drawable/red_skip">
-
-    </ImageView>
->>>>>>> master
 </RelativeLayout>

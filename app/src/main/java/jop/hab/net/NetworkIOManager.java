@@ -6,7 +6,7 @@ import android.util.JsonReader;
 import android.util.JsonWriter;
 import android.util.Log;
 
-import com.example.marti.unoplus.Card;
+import com.example.marti.unoplus.cards.Card;
 
 import org.json.JSONException;
 import org.json.JSONObject;
