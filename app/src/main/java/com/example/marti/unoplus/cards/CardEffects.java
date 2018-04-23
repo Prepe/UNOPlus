@@ -1,9 +1,8 @@
 package com.example.marti.unoplus.cards;
 
-import com.example.marti.unoplus.Card;
 import com.example.marti.unoplus.gameLogicImpl.GameControler;
 import com.example.marti.unoplus.gameLogicImpl.GameLogic;
-import com.example.marti.unoplus.Player;
+import com.example.marti.unoplus.players.Player;
 
 /**
  * Created by marti on 10.04.2018.

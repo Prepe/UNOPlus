@@ -1,10 +1,10 @@
 package com.example.marti.unoplus.gameLogicImpl;
 
-import com.example.marti.unoplus.Card;
+import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.cards.CardEffects;
-import com.example.marti.unoplus.Deck;
-import com.example.marti.unoplus.Player;
-import com.example.marti.unoplus.PlayerList;
+import com.example.marti.unoplus.cards.Deck;
+import com.example.marti.unoplus.players.Player;
+import com.example.marti.unoplus.players.PlayerList;
 
 public class GameLogic {
     PlayerList playerList;      //reference to all Players

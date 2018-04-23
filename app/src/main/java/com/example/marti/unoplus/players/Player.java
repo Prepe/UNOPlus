@@ -1,5 +1,6 @@
-package com.example.marti.unoplus;
+package com.example.marti.unoplus.players;
 
+import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.gameLogicImpl.GameControler;
 
 import java.util.LinkedList;
