@@ -2,10 +2,14 @@ package com.example.marti.unoplus.Screens;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.marti.unoplus.R;
 import com.example.marti.unoplus.players.Player;
@@ -29,6 +33,8 @@ public class GameScreen extends AppCompatActivity {
 
         ListView lv = (ListView)findViewById(R.id.list);
         lv.setAdapter(adapter);
+
+
 
     }
 }
