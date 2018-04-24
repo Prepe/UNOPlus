@@ -11,12 +11,16 @@ public class Player {
 
     static String name;
     public GameControler gameController;
-    boolean cheated = false;
+    public static boolean cheated = true;
 
     LinkedList<Card> cards; //Hand
 
     public List<Card> getHand(){
         return this.cards;
+    }
+
+    public int getHandSize() {
+        return getHand().size();
     }
 
     public String getName(){

@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.marti.unoplus.cards.Card;
+import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.R;
 
 public class GameView_devImpl extends AppCompatActivity implements ObserverInterface {
@@ -65,34 +66,6 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                final TextView mTextView = (TextView)view;
-                switch (position) {
-                    case 0:
-                        Toast.makeText(getApplicationContext(), "Player 1", Toast.LENGTH_SHORT).show();
-                        //TO DO
-                        break;
-                    case 1:
-                        Toast.makeText(getApplicationContext(), "Player 2", Toast.LENGTH_SHORT).show();
-                        //TO DO
-                        break;
-                    case 2:
-                        Toast.makeText(getApplicationContext(), "Player 3", Toast.LENGTH_SHORT).show();
-                        //TO DO
-                        break;
-                    case 3:
-                        Toast.makeText(getApplicationContext(), "Plöayer 4", Toast.LENGTH_SHORT).show();
-                        //TO DO
-                        break;
-                    default:
-                        // Nothing do!
-                }
-
-            }
-        });
 
 
         textView = (TextView) findViewById(R.id.textView);
@@ -156,6 +129,38 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
 
                 networkIOManager.writeMsg("g7");
 
+
+            }
+        });
+
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                final TextView mTextView = (TextView)view;
+                switch (position) {
+                    case 0:
+                        //Toast.makeText(getApplicationContext(), "Player 1", Toast.LENGTH_SHORT).show();
+                        //TO DO
+                        if(Player.cheated == true){
+                            //TODO
+                        }
+                        break;
+                    case 1:
+                        Toast.makeText(getApplicationContext(), "Player 2", Toast.LENGTH_SHORT).show();
+                        //TO DO
+                        break;
+                    case 2:
+                        Toast.makeText(getApplicationContext(), "Player 3", Toast.LENGTH_SHORT).show();
+                        //TO DO
+                        break;
+                    case 3:
+                        Toast.makeText(getApplicationContext(), "Plöayer 4", Toast.LENGTH_SHORT).show();
+                        //TO DO
+                        break;
+                    default:
+                        // Nothing do!
+                }
 
             }
         });

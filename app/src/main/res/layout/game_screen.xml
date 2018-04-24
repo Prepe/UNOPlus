@@ -27,19 +27,21 @@
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="63dp"
-        android:text="TextView" />
+        android:text="TextView"
+        android:textAppearance="@style/TextAppearance.AppCompat.Inverse" />
 
     <ListView
         android:id="@+id/list"
         android:layout_width="150dp"
         android:layout_height="231dp"
+        android:scrollbars="none"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="@+id/unostack"
-        app:layout_constraintTop_toTopOf="@+id/unostack"/>
+        app:layout_constraintTop_toTopOf="@+id/unostack" />
 
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/unounobutton"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_alignParentEnd="true"
@@ -66,11 +68,13 @@
         android:layout_width="156dp"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/list"
-        android:layout_toStartOf="@+id/btnSend"
         android:layout_toLeftOf="@+id/btnSend"
+        android:layout_toStartOf="@+id/btnSend"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="stuff" />
+        android:text="stuff"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
+        android:textColor="@android:color/white" />
 
     <ImageView
         android:id="@+id/img_playCard"
@@ -119,4 +123,12 @@
 
         </LinearLayout>
     </HorizontalScrollView>
+
+    <TextView
+        android:id="@+id/countdown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse" />
 </RelativeLayout>
