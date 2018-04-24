@@ -1,19 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/gamebg">
+    android:layout_height="match_parent">
 
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="0dp"
+        android:layout_y="0dp"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/gamebg"
+        tools:layout_editor_absoluteX="206dp"
+        tools:layout_editor_absoluteY="159dp"
+        android:contentDescription="@string/dummy_content" />
+
+    <TextView
+        android:id="@+id/Spieler"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="48dp"
+        android:layout_y="19dp"
+        android:text="@string/spieler"
+        android:textColor="@android:color/white"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        tools:layout_editor_absoluteX="42dp"
+        tools:layout_editor_absoluteY="17dp" />
+
+    <TextView
+        android:id="@+id/player1"
+        android:layout_width="219dp"
+        android:layout_height="42dp"
+        android:layout_x="50dp"
+        android:layout_y="69dp"
+        android:text="@string/player1_connected"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="201dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <TextView
+        android:id="@+id/player2"
+        android:layout_width="219dp"
+        android:layout_height="42dp"
+        android:layout_x="307dp"
+        android:layout_y="69dp"
+        android:text="@string/player2_connected"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="201dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <TextView
+        android:id="@+id/player3"
+        android:layout_width="219dp"
+        android:layout_height="42dp"
+        android:layout_x="51dp"
+        android:layout_y="111dp"
+        android:text="@string/player3_connected"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="201dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <TextView
+        android:id="@+id/player4"
+        android:layout_width="219dp"
+        android:layout_height="42dp"
+        android:layout_x="307dp"
+        android:layout_y="111dp"
+        android:text="@string/player4_connected"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="201dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <TextView
+        android:id="@+id/Optionen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="51dp"
+        android:layout_y="176dp"
+        android:text="@string/optionen"
+        android:textColor="@android:color/white"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="42dp"
+        tools:layout_editor_absoluteY="17dp" />
+
+    <CheckBox
+        android:id="@+id/kartentauschen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="50dp"
+        android:layout_y="248dp"
+        android:text="@string/karten_tauschen"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="68dp"
+        tools:layout_editor_absoluteY="203dp" />
+
+    <CheckBox
+        android:id="@+id/kartenwegwerfen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="50dp"
+        android:layout_y="280dp"
+        android:text="@string/karten_wegwerfen"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="68dp"
+        tools:layout_editor_absoluteY="203dp" />
+
+    <CheckBox
+        android:id="@+id/tischteufel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="50dp"
+        android:layout_y="217dp"
+        android:text="@string/tischteufel"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="68dp"
+        tools:layout_editor_absoluteY="203dp" />
 
     <Button
         android:id="@+id/verbindenbutton"
         android:layout_width="277dp"
         android:layout_height="80dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="63dp"
-        android:layout_x="216dp"
-        android:layout_y="242dp"
-        android:background="@drawable/verbindenbutton" />
-</RelativeLayout>
+        android:layout_x="309dp"
+        android:layout_y="256dp"
+        android:background="@drawable/verbindenbutton"
+        tools:layout_editor_absoluteX="307dp"
+        tools:layout_editor_absoluteY="264dp" />
+
+</AbsoluteLayout>

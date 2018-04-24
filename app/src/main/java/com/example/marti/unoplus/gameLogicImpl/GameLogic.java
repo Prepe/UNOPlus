@@ -73,16 +73,16 @@ public class GameLogic {
         if (reverse) {
             if (skip) {
                 skip = false;
-                //activePlayer = playerList.previousPlayer(playerList.previousPlayer(player));
+                activePlayer = playerList.getPrevious(playerList.getPrevious(player));
             } else {
-                //activePlayer = playerList.previousPlayer(player);
+                activePlayer = playerList.getPrevious(player);
             }
         } else {
             if (skip) {
                 skip = false;
-                //activePlayer = playerList.nextPlayer(playerList.nextPlayer(player));
+                activePlayer = playerList.getNext(playerList.getNext(player));
             } else {
-                //activePlayer = playerList.nextPlayer(player);
+                activePlayer = playerList.getNext(player);
             }
         }
         return activePlayer;

@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gamebg">
+    android:background="@drawable/gamebg"
+    android:orientation="horizontal">
+
 
 
     <ImageView
@@ -15,8 +17,31 @@
         android:layout_marginTop="52dp"
         app:srcCompat="@drawable/unostack" />
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="63dp"
+        android:text="TextView"
+        android:textAppearance="@style/TextAppearance.AppCompat.Inverse" />
+
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="150dp"
+        android:layout_height="231dp"
+        android:scrollbars="none"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="@+id/unostack"
+        app:layout_constraintTop_toTopOf="@+id/unostack" />
+
+
     <Button
-        android:id="@+id/button"
+        android:id="@+id/unounobutton"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_alignParentEnd="true"
@@ -26,15 +51,39 @@
         android:layout_marginRight="15dp"
         android:background="@drawable/unounobutton" />
 
-    <ListView
-        android:id="@+id/list"
-        android:layout_width="150dp"
-        android:layout_height="231dp"
-        android:visibility="visible"
-        app:layout_constraintStart_toStartOf="@+id/unostack"
-        app:layout_constraintTop_toTopOf="@+id/unostack">
 
-    </ListView>
+    <Button
+        android:id="@+id/btnSend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/list"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="164dp"
+        android:layout_marginRight="164dp"
+        android:text="Send" />
+
+    <EditText
+        android:id="@+id/txtSend"
+        android:layout_width="156dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/list"
+        android:layout_toLeftOf="@+id/btnSend"
+        android:layout_toStartOf="@+id/btnSend"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="stuff"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
+        android:textColor="@android:color/white" />
+
+    <ImageView
+        android:id="@+id/img_playCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="102dp"
+        app:srcCompat="@drawable/card_back" />
 
     <HorizontalScrollView
         android:id="@+id/scrollViewGame"
@@ -51,21 +100,35 @@
             android:id="@+id/playerHandLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_gravity="center"
             android:orientation="horizontal">
 
-        </LinearLayout>
+            <ImageButton
+                android:id="@+id/btn_b"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/blue_3" />
 
+            <ImageButton
+                android:id="@+id/btn_r"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/red_8" />
+
+            <ImageButton
+                android:id="@+id/btn_g"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/green_7" />
+
+        </LinearLayout>
     </HorizontalScrollView>
 
-    <ImageView
-        android:id="@+id/playerHand"
-        android:layout_width="70dp"
-        android:layout_height="130dp"
-        android:layout_alignParentBottom="true"
+    <TextView
+        android:id="@+id/countdown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:visibility="visible"
-        app:srcCompat="@drawable/red_skip">
-
-    </ImageView>
+        android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse" />
 </RelativeLayout>

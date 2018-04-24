@@ -3,4 +3,18 @@
 
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+
+
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="title_activity_main_test">MainActivityTest</string>
+    <string name="title_activity_game_view_dev_impl">GameView_devImpl</string>
+    <string name="spieler">Spieler:</string>
+    <string name="optionen">Optionen:</string>
+    <string name="karten_tauschen">Karten tauschen</string>
+    <string name="karten_wegwerfen">Karten wegwerfen</string>
+    <string name="tischteufel">Tischteufel</string>
+    <string name="player1_connected">waiting...</string>
+    <string name="player2_connected">waiting...</string>
+    <string name="player3_connected">waiting...</string>
+    <string name="player4_connected">waiting...</string>
 </resources>

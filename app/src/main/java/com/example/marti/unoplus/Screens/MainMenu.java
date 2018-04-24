@@ -6,8 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-
 import com.example.marti.unoplus.R;
+
+import jop.hab.net.FullscreenActivity;
+import jop.hab.net.MainActivityTest;
 
 public class MainMenu extends AppCompatActivity {
     public MainMenu() {
@@ -34,7 +36,7 @@ public class MainMenu extends AppCompatActivity {
             switch (v.getId()) {
 
                 case R.id.spielerstellen:
-                    startActivity(new Intent(MainMenu.this, GameScreen.class));
+                    startActivity(new Intent(MainMenu.this, MainActivityTest.class));
                     break;
 
                 case R.id.spielbeitreten:

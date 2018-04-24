@@ -4,13 +4,24 @@ import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.gameLogicImpl.GameControler;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class Player {
 
+
     static String name;
     public GameControler gameController;
+    public static boolean cheated = true;
 
-    LinkedList<Card> cards;
+    LinkedList<Card> cards; //Hand
+
+    public List<Card> getHand(){
+        return this.cards;
+    }
+
+    public int getHandSize() {
+        return getHand().size();
+    }
 
     public String getName(){
         return this.name;
