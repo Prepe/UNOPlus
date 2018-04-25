@@ -10,6 +10,7 @@ public class Player {
 
 
     static String name;
+    static int ID;
     public GameControler gameController;
     public static boolean cheated = true;
 
@@ -25,6 +26,14 @@ public class Player {
 
     public String getName(){
         return this.name;
+    }
+
+    public Player(int ID){
+        this.ID = ID;
+    }
+
+    public int getID(){
+        return ID;
     }
 
     public void drawCard(){
