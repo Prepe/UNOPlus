@@ -13,11 +13,13 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.marti.unoplus.R;
+import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.players.Player;
 
 import jop.hab.net.MainActivityTest;
@@ -32,6 +34,9 @@ public class GameScreen extends AppCompatActivity {
 
     private Context context;
 
+    Card currentPlayCard;
+    ImageView playCardImgView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +44,8 @@ public class GameScreen extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.game_screen);
+
+        this.playCardImgView = (ImageView) findViewById(R.id.img_playCard);
 
 
         String[] players = {"Player 1", "Player2", "Player3", "Player4"};
@@ -101,6 +108,18 @@ public class GameScreen extends AppCompatActivity {
 
 
     }
+
+
+    public void UpdateCurrentPlayCard(Card.colors color, Card.values value)
+    {
+        if(color.equals(Card.colors.RED) && value.equals((Card.values.SEVEN)))
+            this.playCardImgView.setImageResource(R.drawable.red_8);
+        else if (color.equals(Card.colors.BLUE) && value.equals((Card.values.EIGHT)))
+            this.playCardImgView.setImageResource(R.drawable.blue_8);
+        this.currentPlayCard = new Card(color, value);
+
+    }
+
 
     public void timeUp(Context context) {
 
