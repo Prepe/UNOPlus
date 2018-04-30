@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.example.marti.unoplus.GameStatics;
 import com.example.marti.unoplus.cards.Deck;
 import com.example.marti.unoplus.players.PlayerList;
 import com.example.marti.unoplus.R;
@@ -28,6 +29,9 @@ public class LobbyScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Initialize network components
+        GameStatics.Initialize(false); //TODO : Determine how server does it.
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
