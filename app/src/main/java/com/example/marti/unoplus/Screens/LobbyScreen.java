@@ -30,6 +30,8 @@ public class LobbyScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        GameStatics.currentActivity = this;
+
         //Initialize network components
         GameStatics.Initialize(false); //TODO : Determine how server does it.
 

@@ -1,5 +1,7 @@
 package com.example.marti.unoplus;
 
+import android.support.v7.app.AppCompatActivity;
+
 import com.example.marti.unoplus.Net.UnoPlusNetwork;
 
 /**
@@ -7,6 +9,8 @@ import com.example.marti.unoplus.Net.UnoPlusNetwork;
  */
 
 public class GameStatics {
+
+    public static AppCompatActivity currentActivity = null;
 
     public static boolean devMode = false; // for tests
 

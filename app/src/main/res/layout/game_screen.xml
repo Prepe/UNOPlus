@@ -52,6 +52,15 @@
         android:layout_marginRight="15dp"
         android:background="@drawable/unounobutton" />
 
+    <Button
+        android:id="@+id/devGetCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="13dp"
+        android:text="dev_Get_Card" />
+
 
     <Button
         android:id="@+id/btnSend"
@@ -104,26 +113,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/btn_b"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/blue_3" />
-
-            <ImageButton
-                android:id="@+id/btn_r"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/red_8" />
-
-            <ImageButton
-                android:id="@+id/btn_g"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/green_7" />
-
         </LinearLayout>
+
     </HorizontalScrollView>
 
     <TextView

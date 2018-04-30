@@ -17,6 +17,8 @@ package com.example.marti.unoplus.Net;
 //In summary the call chain would be:
 //Client : GameScreen.playCard(card) -> GameStatics.net.playCard(cardobject) -> this.NetworkWifiBroadcaster.sendToServerIWantToPlayCard(card)
 
+import com.example.marti.unoplus.GameStatics;
+import com.example.marti.unoplus.Screens.GameScreen;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.players.Player;
 
@@ -45,11 +47,22 @@ public class UnoPlusNetwork {
 
     //Called by Client
     //Called by network objects when a message from server is recieved to take a card in the owners hand
-    void CLIENT_GetNewCardForHand(int playerid, Card card) {
+    public void CLIENT_GetNewCardForHand(int playerid, Card card) {
         //TODO :
         // Check if that playerid belongs to me
         // Get my player object and create card in hand
         // Update Gamescreen ui
+
+        GameScreen game = (GameScreen) GameStatics.currentActivity;
+        if(game == null)
+        {
+
+            return;
+        }
+        //TODO : Check if it is my player id
+
+        //if i am the player with that player id and am in game screen:
+        game.addCardToHand(card);
     }
 
 

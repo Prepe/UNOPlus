@@ -16,25 +16,33 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.marti.unoplus.Client.HandCardView;
 import com.example.marti.unoplus.Client.PlayedCardView;
+import com.example.marti.unoplus.GameStatics;
+import com.example.marti.unoplus.Net.UnoPlusNetwork;
 import com.example.marti.unoplus.R;
 import com.example.marti.unoplus.Server.ServerLogic;
 import com.example.marti.unoplus.cards.Card;
+import com.example.marti.unoplus.cards.CardView;
 import com.example.marti.unoplus.players.Player;
+
+import java.util.ArrayList;
 
 import jop.hab.net.MainActivityTest;
 
 public class GameScreen extends AppCompatActivity {
     public GameScreen() {
         super();
+        this.handCards = new ArrayList<HandCardView>();
     }
 
     Button unoButton;
-
+    Button devButton;
 
     private Context context;
     public ServerLogic serverLogic=null;
@@ -43,9 +51,13 @@ public class GameScreen extends AppCompatActivity {
     Card currentPlayCard;
     PlayedCardView playedCardView = null;
 
+    ArrayList<HandCardView> handCards = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        GameStatics.currentActivity = this;
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -91,6 +103,13 @@ public class GameScreen extends AppCompatActivity {
 
         unoButton = (Button) findViewById(R.id.unounobutton);
         unoButton.setOnClickListener(handler);
+
+        if(GameStatics.devMode == true)
+        {
+            devButton = (Button) findViewById(R.id.devGetCard);
+            devButton.setOnClickListener(handler);
+            GameStatics.net = new UnoPlusNetwork(true);
+        }
 
         final TextView myCounter = (TextView) findViewById(R.id.countdown);
         new CountDownTimer(20000, 1000) {
@@ -155,6 +174,10 @@ public class GameScreen extends AppCompatActivity {
                 case R.id.unounobutton:
                     Toast.makeText(getApplicationContext(), "Uno!!", Toast.LENGTH_SHORT).show();
                     break;
+
+                case R.id.devGetCard:
+                    GameStatics.net.CLIENT_GetNewCardForHand('0', new Card(Card.colors.BLUE, Card.values.FIVE));
+                    break;
             }
         }
     };
@@ -163,4 +186,16 @@ public class GameScreen extends AppCompatActivity {
         this.player = new Player(0);
 
     }
+
+    public void addCardToHand(Card card){
+        HandCardView cardview = new HandCardView(GameScreen.this, this);
+        cardview.updateCard(card);
+        this.handCards.add(cardview);
+
+        LinearLayout handBox = (LinearLayout) findViewById(R.id.playerHandLayout);
+        ((ViewGroup)cardview.view.getParent()).removeView(cardview.view);
+        handBox.addView(cardview.view);
+
+    }
+
 }
