@@ -12,11 +12,11 @@ import com.example.marti.unoplus.cards.Card;
  * Created by ekzhu on 16.04.2018.
  */
 
-public class CardViewAdapter extends AppCompatImageView {
+public class CardView extends AppCompatImageView {
 
     private Card card;
 
-    public CardViewAdapter(Context context, Card card) {
+    public CardView(Context context, Card card) {
         super(context);
         this.card = card;
         createImageView();
