@@ -50,6 +50,12 @@ public class Card implements Serializable{
         this.value = values.valueOf(val);
     }
 
+    public Card (Card.colors color, Card.values value)
+    {
+        this.color = color;
+        this.value = value;
+    }
+
     Card(int cardColor, int cardValue){
 
         this.color = colors.values()[cardColor];
