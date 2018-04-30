@@ -7,6 +7,9 @@ import com.example.marti.unoplus.Net.UnoPlusNetwork;
  */
 
 public class GameStatics {
+
+    public static boolean devMode = false; // for tests
+
     //AppCompatActivity currentActivity;
 
     //Forbid instantiation, is a static class

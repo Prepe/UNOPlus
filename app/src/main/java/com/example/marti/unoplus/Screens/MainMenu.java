@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+
+import com.example.marti.unoplus.GameStatics;
 import com.example.marti.unoplus.R;
 
 import jop.hab.net.FullscreenActivity;
@@ -28,6 +30,7 @@ public class MainMenu extends AppCompatActivity {
         findViewById(R.id.spielbeitreten).setOnClickListener(handler);
         findViewById(R.id.einstellungen).setOnClickListener(handler);
         findViewById(R.id.exitbutton).setOnClickListener(handler);
+        findViewById(R.id.devModeButton).setOnClickListener(handler);
     }
 
     View.OnClickListener handler = new View.OnClickListener(){
@@ -49,6 +52,11 @@ public class MainMenu extends AppCompatActivity {
 
                 case R.id.exitbutton:
                     System.exit(0);
+                    break;
+
+                case R.id.devModeButton:
+                    GameStatics.devMode = true;
+                    startActivity(new Intent(MainMenu.this, GameScreen.class));
                     break;
             }
         }

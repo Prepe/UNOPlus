@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gamebg"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:id="@+id/game_screen">
 
 
 
@@ -77,13 +78,14 @@
         android:textColor="@android:color/white" />
 
     <ImageView
-        android:id="@+id/img_playCard"
+        android:id="@+id/viewPlayedCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="102dp"
-        app:srcCompat="@drawable/card_back" />
+        android:layout_marginTop="102dp"/>
+        <!--app:srcCompat="@drawable/card_back"/-->
+
 
     <HorizontalScrollView
         android:id="@+id/scrollViewGame"

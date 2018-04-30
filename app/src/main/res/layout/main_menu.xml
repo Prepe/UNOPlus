@@ -53,6 +53,20 @@
         android:layout_y="283dp"
         android:background="@drawable/exitbutton" />
 
+    <Button
+        android:id="@+id/devModeButton"
+        android:layout_width="100dp"
+        android:layout_height="90dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/spielerstellen"
+        android:layout_marginLeft="25dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="13dp"
+        android:layout_x="430dp"
+        android:layout_y="283dp"
+        android:background="@drawable/spielerstellenbutton" />
+
     <ImageView
         android:id="@+id/unotemplate"
         android:layout_width="wrap_content"

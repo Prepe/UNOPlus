@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -18,7 +20,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.marti.unoplus.Client.PlayedCardView;
 import com.example.marti.unoplus.R;
+import com.example.marti.unoplus.Server.ServerLogic;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.players.Player;
 
@@ -33,9 +37,11 @@ public class GameScreen extends AppCompatActivity {
 
 
     private Context context;
+    public ServerLogic serverLogic=null;
+    Player player=null;
 
     Card currentPlayCard;
-    ImageView playCardImgView;
+    PlayedCardView playedCardView = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +50,6 @@ public class GameScreen extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.game_screen);
-
-        this.playCardImgView = (ImageView) findViewById(R.id.img_playCard);
-
 
         String[] players = {"Player 1", "Player2", "Player3", "Player4"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),  android.R.layout.simple_list_item_1, players);
@@ -109,15 +112,21 @@ public class GameScreen extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onStart(){
+        super.onStart();
 
-    public void UpdateCurrentPlayCard(Card.colors color, Card.values value)
+        this.playedCardView = new PlayedCardView(this.getApplicationContext(), this);
+
+        this.playedCardView.updateCard(new Card(Card.colors.RED, Card.values.EIGHT));
+
+
+    }
+
+
+    public void UpdateCurrentPlayCard(Card card)
     {
-        if(color.equals(Card.colors.RED) && value.equals((Card.values.SEVEN)))
-            this.playCardImgView.setImageResource(R.drawable.red_8);
-        else if (color.equals(Card.colors.BLUE) && value.equals((Card.values.EIGHT)))
-            this.playCardImgView.setImageResource(R.drawable.blue_8);
-        this.currentPlayCard = new Card(color, value);
-
+        this.playedCardView.updateCard(card);
     }
 
 
@@ -149,4 +158,9 @@ public class GameScreen extends AppCompatActivity {
             }
         }
     };
+    private void setUpDevGame(){
+        this.serverLogic = new ServerLogic();
+        this.player = new Player(0);
+
+    }
 }

@@ -12,6 +12,7 @@ public class TakeDeck {
 
     ArrayList<Card> cards = null;
 
+
     public TakeDeck()
     {
         this.cards = new ArrayList<Card>();
