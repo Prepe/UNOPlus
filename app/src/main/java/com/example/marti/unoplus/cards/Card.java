@@ -63,6 +63,11 @@ public class Card implements Serializable{
 
     }
 
+    public boolean hasSameCardValueAs(Card otherCard)
+    {
+        return (this.value == otherCard.value && this.color == otherCard.color);
+    }
+
     public colors getColor(){
         return this.color;
     }

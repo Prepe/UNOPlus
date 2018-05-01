@@ -13,17 +13,20 @@ import com.example.marti.unoplus.cards.Card;
  */
 
 public class HandCardView {
-    Card card = null;
+    public Card card = null;
     public ImageView view;
 
-    public void updateCard(Card card){
+
+    public HandCardView(Context context, GameScreen screen, Card card) {
         this.card = card;
+        this.view = new ImageView(context);
+        this.view.setTag(this);
         this.updateCardPicture();
+        if(this.view != null)
+        {
+            this.view.setOnTouchListener(new HandCardTouchListener());
+        }
 
-    }
-
-    public HandCardView(Context context, GameScreen screen) {
-        this.view = (ImageView) screen.findViewById(R.id.viewPlayedCard);
     }
 
     public void updateCardPicture() {

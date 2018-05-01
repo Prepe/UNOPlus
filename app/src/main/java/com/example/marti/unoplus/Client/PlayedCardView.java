@@ -30,6 +30,8 @@ public class PlayedCardView{
 
     public PlayedCardView(Context context, GameScreen screen) {
         this.view = (ImageView) screen.findViewById(R.id.viewPlayedCard);
+        this.view.setTag(this);
+        this.view.setOnDragListener(new HandCardDragListener());
     }
 
     public void updateCardPicture() {
