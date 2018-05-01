@@ -39,12 +39,13 @@ public class NetworkIOManager {
 
     String hostAdress;
 
-    Card actCard;
+
 
     boolean MODE_IS_SERVER = false;
     static final int MESSAGE_READ = 1;
 
     String testText;
+    GameActions gameAction;
 
     public NetworkIOManager(ObserverInterface observerInterface) {
         this.observerInterface = observerInterface;
@@ -70,6 +71,10 @@ public class NetworkIOManager {
         return testText;
     }
 
+    public GameActions getGameAction() {
+        return gameAction;
+    }
+
     public void open() {
 
         if (MODE_IS_SERVER) {
@@ -92,12 +97,12 @@ public class NetworkIOManager {
         sendReceive.write(msg.getBytes());
     }
 
-    public void writeCard(Card c) {
+   /* public void writeCard(Card c) {
 
 
         sendReceive.write(toJSon(c).getBytes());
 
-    }
+    }*/
 
     public void writeGameaction(GameActions gameAction) {
 
@@ -117,7 +122,7 @@ public class NetworkIOManager {
         return gameAction;
     }
 
-        public String toJSon(Card c) {
+      /*  public String toJSon(Card c) {
 
             try {
 
@@ -162,7 +167,7 @@ public class NetworkIOManager {
 
 
             return null;
-        }
+        }*/
 
 
 
@@ -175,14 +180,16 @@ public class NetworkIOManager {
                     case MESSAGE_READ:
                         byte[] readBuffer = (byte[]) msg.obj;
                         String tmpmsg = new String(readBuffer, 0, msg.arg1);
-                        String tmpcardString = new String(readBuffer, 0, msg.arg1);
+                        //String tmpcardString = new String(readBuffer, 0, msg.arg1);
 
 
-                        testText = tmpmsg;
+                       // testText = tmpmsg;
 
-                        actCard = fromJsonString(tmpcardString);
+                       gameAction = receiveGameaction(tmpmsg);
 
-                        Log.d("@handler", testText);
+                       callGameController(gameAction);
+
+                        Log.d("@handler", tmpmsg);
 
 
                         observerInterface.dataChanged();
@@ -195,12 +202,7 @@ public class NetworkIOManager {
             }
         });
 
-        public Card getCard() {
 
-            return actCard;
-
-
-        }
 
 
         public class ServerClass extends Thread {
