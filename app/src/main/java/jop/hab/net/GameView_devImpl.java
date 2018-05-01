@@ -30,6 +30,7 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
     TextView textView;
     EditText editTextSend;
     Button btnSend;
+    Button btnUnoUno;
     ImageButton btnr8;
     ImageButton btng7;
     ImageButton btnb3;
@@ -72,6 +73,7 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
         editTextSend = (EditText) findViewById(R.id.txtSend);
 
         btnSend = (Button) findViewById(R.id.btnSend);
+        btnUnoUno = (Button) findViewById(R.id.unounobutton);
         btnb3 = (ImageButton) findViewById(R.id.btn_b);
         btng7 = (ImageButton) findViewById(R.id.btn_g);
         btnr8 = (ImageButton) findViewById(R.id.btn_r);
@@ -100,7 +102,16 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
             }
         });
 
-        btnr8.setOnClickListener(new View.OnClickListener() {
+        btnUnoUno.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                networkIOManager.writeMsg("unouno");
+
+            }
+        });
+
+       /* btnr8.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -133,7 +144,7 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
             }
         });
 
-
+        */
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
@@ -172,11 +183,18 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
 
         textView.setText(networkIOManager.getTestText());
         setCard(networkIOManager.getTestText());
+        sayUno(networkIOManager.getTestText());
 
         //todo Card holen
         //card = networkIOManager.getCard();
 
 
+    }
+
+    public void sayUno(String unoUno) {
+        if (unoUno.equals("unouno")) {
+            Toast.makeText(getApplicationContext(), "UNOOO", Toast.LENGTH_SHORT).show();
+        }
     }
 
     // nur für Demo Zwecke

@@ -11,8 +11,7 @@ import java.util.ArrayList;
 public class PlayDeck {
     ArrayList<Card> cards = null;
 
-    public PlayDeck()
-    {
+    public PlayDeck() {
         this.cards = new ArrayList<Card>();
     }
 }
