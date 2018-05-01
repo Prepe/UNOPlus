@@ -2,11 +2,11 @@ package jop.hab.net;
 
 import android.os.Handler;
 import android.os.Message;
-import android.util.JsonReader;
-import android.util.JsonWriter;
 import android.util.Log;
 
+import com.example.marti.unoplus.GameActions;
 import com.example.marti.unoplus.cards.Card;
+import com.example.marti.unoplus.gameLogicImpl.GameControler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,8 +14,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.Writer;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -25,7 +23,7 @@ import java.net.Socket;
  */
 
 public class NetworkIOManager {
-
+    GameControler GC;
 
     ObserverInterface observerInterface;
 
@@ -335,5 +333,23 @@ public class NetworkIOManager {
             }
         }
 
-
+        void callGameController (GameActions action) {
+            switch (action.action) {
+                case DRAW_CARD:
+                    GC.drawCard(action.playerID);
+                    break;
+                case DROP_CARD:
+                    GC.dropCard(action.playerID);
+                    break;
+                case TRADE_CARD:
+                    //GC.tradeCard();
+                    break;
+                case PLAY_CARD:
+                    GC.playCard(action.playerID,action.card);
+                    break;
+                case WISH_COLOR:
+                    GC.colorWish(action.playerID,action.colorWish);
+                    break;
+            }
+        }
     }
