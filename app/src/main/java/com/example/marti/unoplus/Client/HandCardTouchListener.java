@@ -8,7 +8,7 @@ import android.view.View;
  * Created by ekzhu on 01.05.2018.
  */
 
-public class HandCardTouchListener implements View.OnTouchListener{
+public class HandCardTouchListener implements View.OnTouchListener {
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {

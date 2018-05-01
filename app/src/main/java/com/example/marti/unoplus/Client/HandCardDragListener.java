@@ -10,16 +10,14 @@ import com.example.marti.unoplus.GameStatics;
  * Created by ekzhu on 01.05.2018.
  */
 
-public class HandCardDragListener implements View.OnDragListener{
+public class HandCardDragListener implements View.OnDragListener {
     // Drawable enterShape = getResources().getDrawable(R.drawable.all_blue);
     //Drawable normalShape = getResources().getDrawable(R.drawable.all_red);
 
     @Override
-    public boolean onDrag(View v, DragEvent event)
-    {
+    public boolean onDrag(View v, DragEvent event) {
         int action = event.getAction();
-        switch (event.getAction())
-        {
+        switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_STARTED:
                 // do nothing
                 break;
@@ -31,19 +29,10 @@ public class HandCardDragListener implements View.OnDragListener{
                 break;
             case DragEvent.ACTION_DROP:
 
-                ImageView droppedview = (ImageView)event.getLocalState();
-                HandCardView handcard = (HandCardView)droppedview.getTag();
+                ImageView droppedview = (ImageView) event.getLocalState();
+                HandCardView handcard = (HandCardView) droppedview.getTag();
 
                 GameStatics.net.CLIENT_PlayCard(handcard.card);
-/*
-                // Dropped, reassign View to ViewGroup
-                View view = (View) event.getLocalState();
-                ViewGroup owner = (ViewGroup) view.getParent();
-                owner.removeView(view);
-                LinearLayout container = (LinearLayout) v;
-                container.addView(view);
-                view.setVisibility(View.VISIBLE);
-                */
                 break;
             case DragEvent.ACTION_DRAG_ENDED:
                 //            v.setBackgroundDrawable(normalShape);

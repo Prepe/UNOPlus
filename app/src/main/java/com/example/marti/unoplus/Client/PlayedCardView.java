@@ -2,27 +2,22 @@ package com.example.marti.unoplus.Client;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatImageView;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.example.marti.unoplus.R;
 import com.example.marti.unoplus.Screens.GameScreen;
 import com.example.marti.unoplus.cards.Card;
 
-import static com.example.marti.unoplus.cards.CardView.getCardPicture;
-
 /**
  * Created by ekzhu on 30.04.2018.
  */
 
-public class PlayedCardView{
+public class PlayedCardView {
 
     Card card = null;
     ImageView view;
 
-    public void updateCard(Card card){
+    public void updateCard(Card card) {
         this.card = card;
         this.updateCardPicture();
 
@@ -35,8 +30,7 @@ public class PlayedCardView{
     }
 
     public void updateCardPicture() {
-        if (this.card == null)
-        {
+        if (this.card == null) {
             this.view.setBackground(this.view.getResources().getDrawable(R.drawable.card_back));
             return;
         }
@@ -250,7 +244,6 @@ public class PlayedCardView{
         }
         this.view.setBackground(pic);
     }
-
 
 
 }

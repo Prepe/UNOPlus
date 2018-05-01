@@ -2,21 +2,17 @@ package com.example.marti.unoplus.Screens;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -29,12 +25,9 @@ import com.example.marti.unoplus.Net.UnoPlusNetwork;
 import com.example.marti.unoplus.R;
 import com.example.marti.unoplus.Server.ServerLogic;
 import com.example.marti.unoplus.cards.Card;
-import com.example.marti.unoplus.cards.CardView;
 import com.example.marti.unoplus.players.Player;
 
 import java.util.ArrayList;
-
-import jop.hab.net.MainActivityTest;
 
 public class GameScreen extends AppCompatActivity {
     public GameScreen() {
@@ -46,8 +39,8 @@ public class GameScreen extends AppCompatActivity {
     Button devButton;
 
     private Context context;
-    public ServerLogic serverLogic=null;
-    Player player=null;
+    public ServerLogic serverLogic = null;
+    Player player = null;
 
     Card currentPlayCard;
     PlayedCardView playedCardView = null;
@@ -66,21 +59,21 @@ public class GameScreen extends AppCompatActivity {
         setContentView(R.layout.game_screen);
 
         String[] players = {"Player 1", "Player2", "Player3", "Player4"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),  android.R.layout.simple_list_item_1, players);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, players);
 
-        ListView lv = (ListView)findViewById(R.id.list);
+        ListView lv = findViewById(R.id.list);
         lv.setAdapter(adapter);
 
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                final TextView mTextView = (TextView)view;
+                final TextView mTextView = (TextView) view;
                 switch (position) {
                     case 0:
                         //Toast.makeText(getApplicationContext(), "Player 1", Toast.LENGTH_SHORT).show();
                         //TO DO
-                        if(Player.cheated == true){
+                        if (Player.cheated) {
                             //TODO
                         }
                         break;
@@ -103,17 +96,16 @@ public class GameScreen extends AppCompatActivity {
             }
         });
 
-        unoButton = (Button) findViewById(R.id.unounobutton);
+        unoButton = findViewById(R.id.unounobutton);
         unoButton.setOnClickListener(handler);
 
-        if(GameStatics.devMode == true)
-        {
-            devButton = (Button) findViewById(R.id.devGetCard);
+        if (GameStatics.devMode) {
+            devButton = findViewById(R.id.devGetCard);
             devButton.setOnClickListener(handler);
             GameStatics.net = new UnoPlusNetwork(true);
         }
 
-        final TextView myCounter = (TextView) findViewById(R.id.countdown);
+        final TextView myCounter = findViewById(R.id.countdown);
         new CountDownTimer(20000, 1000) {
 
             @Override
@@ -134,7 +126,7 @@ public class GameScreen extends AppCompatActivity {
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
 
         this.playedCardView = new PlayedCardView(this.getApplicationContext(), this);
@@ -145,8 +137,7 @@ public class GameScreen extends AppCompatActivity {
     }
 
 
-    public void UpdateCurrentPlayCard(Card card)
-    {
+    public void UpdateCurrentPlayCard(Card card) {
         this.playedCardView.updateCard(card);
     }
 
@@ -178,40 +169,37 @@ public class GameScreen extends AppCompatActivity {
                     break;
 
                 case R.id.devGetCard:
-                    Card.colors rngcolor = GameStatics.randomEnum(Card.colors.class);
-                    Card.values rngvalue = GameStatics.randomEnum(Card.values.class);
-                    GameStatics.net.CLIENT_GetNewCardForHand('0', new Card(Card.colors.BLUE, Card.values.FIVE));
+                    Card.colors rndcolor = GameStatics.randomEnum(Card.colors.class);
+                    Card.values rndvalue = GameStatics.randomEnum(Card.values.class);
+                    GameStatics.net.CLIENT_GetNewCardForHand('0', new Card(rndcolor, rndvalue));
                     break;
             }
         }
     };
-    private void setUpDevGame(){
+
+    private void setUpDevGame() {
         this.serverLogic = new ServerLogic();
         this.player = new Player(0);
 
     }
 
-    public void addCardToHand(Card card){
+    public void addCardToHand(Card card) {
         HandCardView cardview = new HandCardView(GameScreen.this, this, card);
         this.handCards.add(cardview);
 
-        LinearLayout handBox = (LinearLayout) findViewById(R.id.playerHandLayout);
+        LinearLayout handBox = findViewById(R.id.playerHandLayout);
         handBox.addView(cardview.view);
 
     }
 
-    public void removeCardFromHand(Card card)
-    {
-        if(GameStatics.devMode == true)
-        {
+    public void removeCardFromHand(Card card) {
+        if (GameStatics.devMode) {
             Log.d("GameDebug", "Gamescreen tries to remove following card from hand :" + card.value.toString() + " " + card.color.toString());
         }
 
-        LinearLayout handBox = (LinearLayout) findViewById(R.id.playerHandLayout);
-        for (HandCardView c : this.handCards)
-        {
-            if(c.card.hasSameCardValueAs(card))
-            {
+        LinearLayout handBox = findViewById(R.id.playerHandLayout);
+        for (HandCardView c : this.handCards) {
+            if (c.card.hasSameCardValueAs(card)) {
                 Log.d("GameDebug", "Found it in players hand!");
 
                 handBox.removeView(c.view);

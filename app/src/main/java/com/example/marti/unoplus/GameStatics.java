@@ -19,11 +19,10 @@ public class GameStatics {
     //AppCompatActivity currentActivity;
 
     //Forbid instantiation, is a static class
-    private GameStatics()
-    {}
+    private GameStatics() {
+    }
 
-    public static void Initialize(boolean isServer)
-    {
+    public static void Initialize(boolean isServer) {
         GameStatics.random = new Random();
         GameStatics.net = new UnoPlusNetwork(isServer);
     }
@@ -31,8 +30,8 @@ public class GameStatics {
     public static UnoPlusNetwork net = null;
     public static Random random = null;
 
-    public static <T extends Enum<?>> T randomEnum(Class<T> clazz){
-        int x = GameStatics.random.nextInt(clazz.getEnumConstants().length);
+    public static <T extends Enum<?>> T randomEnum(Class<T> clazz) {
+        int x = GameStatics.random.nextInt(clazz.getEnumConstants().length-1);
         return clazz.getEnumConstants()[x];
     }
 }

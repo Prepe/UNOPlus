@@ -22,16 +22,14 @@ public class HandCardView {
         this.view = new ImageView(context);
         this.view.setTag(this);
         this.updateCardPicture();
-        if(this.view != null)
-        {
+        if (this.view != null) {
             this.view.setOnTouchListener(new HandCardTouchListener());
         }
 
     }
 
     public void updateCardPicture() {
-        if (this.card == null)
-        {
+        if (this.card == null) {
             this.view.setBackground(this.view.getResources().getDrawable(R.drawable.card_back));
             return;
         }

@@ -10,15 +10,19 @@ import java.util.List;
 
 public class GameActions {
     public enum actions {
-        PLAY_CARD (0),
-        DRAW_CARD (1),
-        WISH_COLOR (2),
-        DROP_CARD (3),
-        TRADE_CARD (4);
+        PLAY_CARD(0),
+        DRAW_CARD(1),
+        WISH_COLOR(2),
+        DROP_CARD(3),
+        TRADE_CARD(4);
 
         private int value;
-        private actions(int value){this.value = value;}
+
+        private actions(int value) {
+            this.value = value;
+        }
     }
+
     public actions action;
     public Integer playerID;
     public Integer nextPlayerID;

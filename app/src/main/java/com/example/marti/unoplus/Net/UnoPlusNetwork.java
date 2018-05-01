@@ -17,13 +17,14 @@ package com.example.marti.unoplus.Net;
 //In summary the call chain would be:
 //Client : GameScreen.playCard(card) -> GameStatics.net.playCard(cardobject) -> this.NetworkWifiBroadcaster.sendToServerIWantToPlayCard(card)
 
+import android.util.Log;
+
 import com.example.marti.unoplus.GameStatics;
 import com.example.marti.unoplus.Screens.GameScreen;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.players.Player;
 
 import java.util.ArrayList;
-import android.util.Log;
 
 //That way we have a central and global accessible point through which all network-relevant
 //data gets sent via function call chains

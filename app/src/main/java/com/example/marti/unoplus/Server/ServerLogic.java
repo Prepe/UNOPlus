@@ -6,8 +6,7 @@ package com.example.marti.unoplus.Server;
 
 public class ServerLogic {
 
-    public ServerLogic()
-    {
+    public ServerLogic() {
         this.takedeck = new TakeDeck();
         this.takedeck.CreateCards();
         this.playdeck = new PlayDeck();
