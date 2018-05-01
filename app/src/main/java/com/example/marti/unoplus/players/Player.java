@@ -37,20 +37,22 @@ public class Player {
     }
 
     public void drawCard(){
-        for(Card c : gameController.drawCard() ){
+       /* for(Card c : gameController.drawCard() ){
             cards.add(c);
         }
-
+*/
     }
 
     public void playCard(Card c){
-        gameController.playCard(this, c);
+        gameController.playCard(1, c);
     }
 
     public void dropCard(Card c){
+        /*
         if(gameController.dropCard()) {
             cards.remove(c);
         }
+        */
     }
 
     public void TradeCard(Card c, Player p){
