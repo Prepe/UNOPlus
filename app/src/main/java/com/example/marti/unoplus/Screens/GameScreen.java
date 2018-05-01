@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -37,6 +38,7 @@ public class GameScreen extends AppCompatActivity {
 
     Button unoButton;
     Button devButton;
+    TextView numCards;
 
     private Context context;
     public ServerLogic serverLogic = null;
@@ -57,6 +59,10 @@ public class GameScreen extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.game_screen);
+
+        //numCards = (TextView)findViewById(R.id.numCards1);
+        numCards = (TextView) findViewById(R.id.numCards1);
+
 
         String[] players = {"Player 1", "Player2", "Player3", "Player4"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, players);
@@ -187,6 +193,17 @@ public class GameScreen extends AppCompatActivity {
         HandCardView cardview = new HandCardView(GameScreen.this, this, card);
         this.handCards.add(cardview);
 
+            int numCardshand = 0;
+            for(int i = 0; i < handCards.size(); i++){
+
+                numCardshand++;
+            }
+
+            String s = Integer.toString(numCardshand);
+            System.out.println(numCardshand);
+            numCards.setText("( "+s+" )");
+
+
         LinearLayout handBox = findViewById(R.id.playerHandLayout);
         handBox.addView(cardview.view);
 
@@ -204,10 +221,23 @@ public class GameScreen extends AppCompatActivity {
 
                 handBox.removeView(c.view);
                 this.handCards.remove(c);
+
+                    int numCardshand = 0;
+                    for(int i = 0; i < handCards.size(); i++){
+
+                        numCardshand++;
+                    }
+
+                    String s = Integer.toString(numCardshand);
+                    System.out.println(numCardshand);
+                    numCards.setText("( "+s+" )");
+
                 return;
             }
         }
         Log.d("GameDebug", "Didn't find it.... fix plz");
+
+
     }
 
 }

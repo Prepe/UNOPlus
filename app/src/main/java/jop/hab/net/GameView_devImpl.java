@@ -74,7 +74,7 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
 
         btnSend = (Button) findViewById(R.id.btnSend);
         btnUnoUno = (Button) findViewById(R.id.unounobutton);
-        btnb3 = (ImageButton) findViewById(R.id.btn_b);
+        btnb3 =
         btng7 = (ImageButton) findViewById(R.id.btn_g);
         btnr8 = (ImageButton) findViewById(R.id.btn_r);
         playCard = (ImageView) findViewById(R.id.img_playCard);
