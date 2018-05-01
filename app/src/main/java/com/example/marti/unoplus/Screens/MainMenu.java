@@ -41,11 +41,11 @@ public class MainMenu extends AppCompatActivity {
             switch (v.getId()) {
 
                 case R.id.spielerstellen:
-                    startActivity(new Intent(MainMenu.this, MainActivityTest.class));
+                    startActivity(new Intent(MainMenu.this, LobbyScreen.class));
                     break;
 
                 case R.id.spielbeitreten:
-                    startActivity(new Intent(MainMenu.this, LobbyScreen.class));
+                    startActivity(new Intent(MainMenu.this, MainActivityTest.class));
                     break;
 
                 case R.id.einstellungen:
