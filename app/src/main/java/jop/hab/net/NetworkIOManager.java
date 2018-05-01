@@ -6,7 +6,9 @@ import android.util.JsonReader;
 import android.util.JsonWriter;
 import android.util.Log;
 
+import com.example.marti.unoplus.GameActions;
 import com.example.marti.unoplus.cards.Card;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -96,244 +98,258 @@ public class NetworkIOManager {
 
     }
 
+    public void writeGameaction(GameActions gameAction) {
+
+        Gson gson = new Gson();
+
+        String GameActionString = gson.toJson(gameAction);
+
+        sendReceive.write(GameActionString.getBytes());
+    }
+
+    public GameActions receiveGameaction(String gameActionString) {
+
+        Gson gson = new Gson();
+
+        GameActions gameAction = gson.fromJson(gameActionString, GameActions.class);
+
+        return gameAction;
+    }
+
+    public String toJSon(Card c) {
+
+        try {
+
+            // convert Java Object to JSON
+            //Object gets into a special formatted String
+
+            JSONObject jsonObj = new JSONObject();
+
+            jsonObj.put("value", c.getValue());
+
+            jsonObj.put("color", c.getColor());
 
 
-        public String toJSon(Card c) {
-
-            try {
-
-                // convert Java Object to JSON
-                //Object gets into a special formatted String
-
-                JSONObject jsonObj = new JSONObject();
-
-                jsonObj.put("value", c.getValue());
-
-                jsonObj.put("color", c.getColor());
+            return jsonObj.toString();
 
 
-                return jsonObj.toString();
-
-
-            } catch (JSONException ex) {
-                ex.printStackTrace();
-
-            }
-
-
-            return null;
-
-        }
-
-        public Card fromJsonString (String cardString){
-            try {
-                JSONObject jObj = new JSONObject(cardString);
-                String color = jObj.getString("color");
-                String value = jObj.getString("value");
-
-
-
-               Card fromStringconvertCard = new Card(color,value);
-
-               return fromStringconvertCard;
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-
-            return null;
-        }
-
-
-
-        Handler handler = new Handler(new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg) {
-
-                switch (msg.what) {
-
-                    case MESSAGE_READ:
-                        byte[] readBuffer = (byte[]) msg.obj;
-                        String tmpmsg = new String(readBuffer, 0, msg.arg1);
-                        String tmpcardString = new String(readBuffer, 0, msg.arg1);
-
-
-                        testText = tmpmsg;
-
-                        actCard = fromJsonString(tmpcardString);
-
-                        Log.d("@handler", testText);
-
-
-                        observerInterface.dataChanged();
-
-
-                        break;
-                }
-
-                return true;
-            }
-        });
-
-        public Card getCard() {
-
-            return actCard;
-
+        } catch (JSONException ex) {
+            ex.printStackTrace();
 
         }
 
 
-        public class ServerClass extends Thread {
+        return null;
 
-            Socket socket;
-            ServerSocket serverSocket;
+    }
 
-            @Override
-            public void run() {
-
-
-                Log.d("@serverclass", "Serverclass running");
-
-                try {
-//                    Log.d("socket",serverSocket.toString());
-                    serverSocket = new ServerSocket(8888);
-                    socket = serverSocket.accept();
+    public Card fromJsonString(String cardString) {
+        try {
+            JSONObject jObj = new JSONObject(cardString);
+            String color = jObj.getString("color");
+            String value = jObj.getString("value");
 
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.d("@error", "sc catched");
-                }
-                // sendReceive = new SendReceive(socket,serverSocket);
-                sendReceive = new SendReceive(socket);
+            Card fromStringconvertCard = new Card(color, value);
 
-                sendReceive.start();
+            return fromStringconvertCard;
 
-
-            }
-        }
-
-        private class SendReceive extends Thread {
-
-
-            private Socket socket;
-            private InputStream inputStream;
-            private OutputStream outputStream;
-
-            /* public SendReceive(Socket socket, ServerSocket serverSocket) {
-
-
-
-                 this.socket = socket;
-                 try {
-                     socket.connect(serverSocket.getLocalSocketAddress());
-                 } catch (IOException e) {
-                     e.printStackTrace();
-                 }
-
-
-                 try {
-                     Log.d("@sendreceive","sr created1");
-
-                     this.inputStream = socket.getInputStream();
-                     this.outputStream = socket.getOutputStream();
-
-                 } catch (IOException e) {
-                     e.printStackTrace();
-                 }
-
-             }*/
-            public SendReceive(Socket socket) {
-
-
-                this.socket = socket;
-
-                try {
-                    Log.d("@sendreceive", "sr created2");
-
-                    this.inputStream = socket.getInputStream();
-                    this.outputStream = socket.getOutputStream();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-
-            @Override
-            public void run() {
-
-                Log.d("@sendreceive", "sr running2");
-
-
-                byte[] buffer = new byte[1024];
-                int bytes;
-
-                while (socket != null) {
-
-                    try {
-                        bytes = inputStream.read(buffer);
-                        if (bytes > 0) {
-
-                            handler.obtainMessage(MESSAGE_READ, bytes, -1, buffer).sendToTarget();
-
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-
-                }
-
-
-            }
-
-
-            public void write(byte[] bytes) {
-
-                try {
-
-                    Log.d("@write", bytes.toString());
-
-                    outputStream.write(bytes);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
 
-        public class ClientClass extends Thread {
+        return null;
+    }
 
-            Socket socket;
-            String hostAdd;
 
-            public ClientClass(String hostAddress) {
+    Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
 
-                Log.d("@clientclass", hostAddress);
-                hostAdd = hostAddress;
-                socket = new Socket();
+            switch (msg.what) {
+
+                case MESSAGE_READ:
+                    byte[] readBuffer = (byte[]) msg.obj;
+                    String tmpmsg = new String(readBuffer, 0, msg.arg1);
+                    String tmpcardString = new String(readBuffer, 0, msg.arg1);
+
+
+                    testText = tmpmsg;
+
+                    actCard = fromJsonString(tmpcardString);
+
+                    Log.d("@handler", testText);
+
+
+                    observerInterface.dataChanged();
+
+
+                    break;
             }
 
-            @Override
-            public void run() {
-                super.run();
-                try {
-
-                    Log.d("socket", socket.toString());
-                    socket.connect(new InetSocketAddress(hostAdd, 8888), 500);
-
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                sendReceive = new SendReceive(socket);
-                sendReceive.start();
-            }
+            return true;
         }
+    });
+
+    public Card getCard() {
+
+        return actCard;
 
 
     }
+
+
+    public class ServerClass extends Thread {
+
+        Socket socket;
+        ServerSocket serverSocket;
+
+        @Override
+        public void run() {
+
+
+            Log.d("@serverclass", "Serverclass running");
+
+            try {
+//                    Log.d("socket",serverSocket.toString());
+                serverSocket = new ServerSocket(8888);
+                socket = serverSocket.accept();
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.d("@error", "sc catched");
+            }
+            // sendReceive = new SendReceive(socket,serverSocket);
+            sendReceive = new SendReceive(socket);
+
+            sendReceive.start();
+
+
+        }
+    }
+
+    private class SendReceive extends Thread {
+
+
+        private Socket socket;
+        private InputStream inputStream;
+        private OutputStream outputStream;
+
+        /* public SendReceive(Socket socket, ServerSocket serverSocket) {
+
+
+
+             this.socket = socket;
+             try {
+                 socket.connect(serverSocket.getLocalSocketAddress());
+             } catch (IOException e) {
+                 e.printStackTrace();
+             }
+
+
+             try {
+                 Log.d("@sendreceive","sr created1");
+
+                 this.inputStream = socket.getInputStream();
+                 this.outputStream = socket.getOutputStream();
+
+             } catch (IOException e) {
+                 e.printStackTrace();
+             }
+
+         }*/
+        public SendReceive(Socket socket) {
+
+
+            this.socket = socket;
+
+            try {
+                Log.d("@sendreceive", "sr created2");
+
+                this.inputStream = socket.getInputStream();
+                this.outputStream = socket.getOutputStream();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+
+        @Override
+        public void run() {
+
+            Log.d("@sendreceive", "sr running2");
+
+
+            byte[] buffer = new byte[1024];
+            int bytes;
+
+            while (socket != null) {
+
+                try {
+                    bytes = inputStream.read(buffer);
+                    if (bytes > 0) {
+
+                        handler.obtainMessage(MESSAGE_READ, bytes, -1, buffer).sendToTarget();
+
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+
+        }
+
+
+        public void write(byte[] bytes) {
+
+            try {
+
+                Log.d("@write", bytes.toString());
+
+                outputStream.write(bytes);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    public class ClientClass extends Thread {
+
+        Socket socket;
+        String hostAdd;
+
+        public ClientClass(String hostAddress) {
+
+            Log.d("@clientclass", hostAddress);
+            hostAdd = hostAddress;
+            socket = new Socket();
+        }
+
+        @Override
+        public void run() {
+            super.run();
+            try {
+
+                Log.d("socket", socket.toString());
+                socket.connect(new InetSocketAddress(hostAdd, 8888), 500);
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            sendReceive = new SendReceive(socket);
+            sendReceive.start();
+        }
+    }
+
+
+}
