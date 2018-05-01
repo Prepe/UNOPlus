@@ -116,6 +116,10 @@ public class GameScreen extends AppCompatActivity {
 
             @Override
             public void onFinish() {
+                Card.colors rndcolor = GameStatics.randomEnum(Card.colors.class);
+                Card.values rndvalue = GameStatics.randomEnum(Card.values.class);
+                GameStatics.net.CLIENT_GetNewCardForHand('0', new Card(rndcolor, rndvalue));
+
                 Toast.makeText(getApplicationContext(), "ZEIT VORBEI! Karte gezogen", Toast.LENGTH_LONG).show();
                 //timeUp(context);    eventuell so oder mit TOAST
                 this.start();
