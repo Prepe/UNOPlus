@@ -68,7 +68,7 @@ public class UnoPlusNetwork {
 
     //Called by Client
     // called by GameScreen if client wants to play a card by dropping the card to the playdeck spot
-    void CLIENT_PlayCard(Card cardToPlay) {
+    public void CLIENT_PlayCard(Card cardToPlay) {
         //TODO : call internal network objects to send send message to Server : int myplayerid, card whichcardtoplay
     }
 
