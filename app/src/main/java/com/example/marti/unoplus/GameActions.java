@@ -10,40 +10,61 @@ import java.util.List;
 
 public class GameActions {
     public enum actions {
-        PLAY_CARD (0),
-        DRAW_CARD (1),
-        WISH_COLOR (2),
-        DROP_CARD (3),
-        TRADE_CARD (4);
+        UPDATE (0),
+        PLAY_CARD (1),
+        DRAW_CARD (2),
+        WISH_COLOR (3),
+        DROP_CARD (4),
+        TRADE_CARD (5),
+        NEXT_PLAYER (6);
 
         private int value;
-        private actions(int value){this.value = value;}
+        actions(int value){this.value = value;}
     }
+
     public actions action;
     public Integer playerID;
     public Integer nextPlayerID;
+    public Card card;
     public List<Card> cards;
     public Boolean check;
     public Card.colors colorWish;
 
-    public GameActions(actions action, int pID, int nextPID) {
+    //Used to update all players to what card was last played and the who is currently the active player
+    public GameActions (actions action, Card card, int nextPID) {
         this.action = action;
-        playerID = pID;
+        nextPlayerID = nextPID;
+        this.card = card;
+    }
+
+    //Used to tell all players who's turn it currently is (called after game logic has finished)
+    public GameActions(actions action, int nextPID) {
+        this.action = action;
         nextPlayerID = nextPID;
     }
 
+    //Used to tell GC that player wants to play a card and same method gets returned to player if card can be played
+    public GameActions(actions action, int pID, Card card) {
+        this.action = action;
+        playerID = pID;
+        this.card = card;
+    }
+
+    //Used to give 1 player a number of card from the deck
     public GameActions(actions action, int pID, List<Card> drawnCards) {
         this.action = action;
         playerID = pID;
         cards = drawnCards;
     }
 
+    //Used to tell GC what color the player wished after playing a color change or +4
     public GameActions(actions action, int pID, Card.colors color) {
         this.action = action;
         playerID = pID;
         colorWish = color;
     }
 
+    //Used to tell a player if his action is valid (drop a card)
     public GameActions(actions action, int pID, boolean check) {
         this.action = action;
         playerID = pID;

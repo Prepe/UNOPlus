@@ -1,11 +1,13 @@
 package com.example.marti.unoplus.gameLogicImpl;
 
+import com.example.marti.unoplus.GameActions;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.cards.Deck;
 import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.players.PlayerList;
 
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by marti on 10.04.2018.
@@ -17,6 +19,10 @@ public class GameControler {
     GameLogic logic;        //reference to the GameLogic
     int startingHand = 7;   //Amount of Cards every Player gets at the start of the Game
     float turnTime;         //Turn Timer for the Game
+    public GameActions gA;         //Object that gets send to all Players
+    boolean[] calledUNO;    //
+    boolean[] dropedCard;   //
+    boolean[] tradedCard;   //
 
     public GameControler(PlayerList playersList, Deck gameDeck, GameLogic gameLogic) {
         players = playersList;
@@ -24,65 +30,97 @@ public class GameControler {
         logic = gameLogic;
 
         setUpGame();
-        updateAllPlayers();
     }
 
-    //Method to Update all Players
+    //Method to Update all Players after GC and GL have finished
     public void updateAllPlayers() {
-        //TODO update the Players to show what happens
+        if (gA.nextPlayerID != null) {
+            calledUNO[gA.nextPlayerID] = false;
+            dropedCard[gA.nextPlayerID] = false;
+            tradedCard[gA.nextPlayerID] = false;
+        }
+
+        //TODO give GameAction (gA) to network
     }
 
     //Give all Players cards and Play the first Card
     private void setUpGame() {
         deck.shuffle();
         drawHandCardsForPlayers();
-        logic.playTopCard();
+
+        calledUNO = new boolean[players.playerCount()];
+        dropedCard = new boolean[players.playerCount()];
+        tradedCard = new boolean[players.playerCount()];
+
+        gA = new GameActions(GameActions.actions.UPDATE,logic.playTopCard(),logic.activePlayer.getID());
+        updateAllPlayers();
     }
 
     private void drawHandCardsForPlayers() {
         for (Player p : players.getPlayers()) {
+            List<Card> handcards = new LinkedList<>();
             for (int i = 0; i < startingHand; i++) {
-                p.drawCard();
+                handcards.add(deck.draw());
             }
+
+            gA = new GameActions(GameActions.actions.DRAW_CARD,p.getID(),handcards);
+
+            updateAllPlayers();
         }
     }
 
     //Method for all Players to call to draw Cards form the Deck
-    public LinkedList<Card> drawCard() {
-        LinkedList<Card> cards = new LinkedList<>();
+    public void drawCard(int playerID) {
+        List<Card> cards = new LinkedList<>();
         if (deck.isEmptyDeck()) {
             deck.replaceTakeDeck();
         }
         for (int i = 0; i < logic.getCardDrawCount(); i++) {
             cards.add(deck.draw());
         }
-        return cards;
+
+        gA = new GameActions(GameActions.actions.DRAW_CARD,playerID,cards);
+
+        updateAllPlayers();
     }
 
-    //Method for all Players to call when they want to play a Card
-    public boolean playCard(Player player, Card card) {
-        boolean cardOK = logic.checkCard(card);
-        if (cardOK) {
-            logic.runLogic(player, card);
+    //Method for playing cards
+    public void playCard(int player, Card card) {
+        Player p = players.getPlayer(player);
+        //Check if player is allowed to play the card
+        if (logic.checkCard(card, p)) {
+            //Remove the played card from the players hand
+            gA = new GameActions(GameActions.actions.PLAY_CARD,player,card);
+            updateAllPlayers();
+
+            //Run game logic for the card that was played
+            logic.runLogic(p, card);
         }
-        return cardOK;
     }
 
     /*
     * Method that times each Turn for Players
     * When at 0 draws a Card for the active Player
-    * Should be threded
     * */
     private void runTimer() {
         //TODO implement
     }
 
+    public void colorWish (int player, Card.colors color) {
+        logic.wishColor(color);
+        Player p = players.getPlayer(player);
+        logic.nextPlayer(p);
+
+        gA = new GameActions(GameActions.actions.UPDATE,new Card(logic.lastCardColor,logic.lastCardValue),logic.getActivePlayer().getID());
+    }
+
 
     //Method to cheat and drop a Card
-    public boolean dropCard() {
-        //TODO implement
-
-        return false;
+    public void dropCard(int player) {
+        if (!dropedCard[player]) {
+            dropedCard[player] = true;
+            gA = new GameActions(GameActions.actions.DROP_CARD,player,true);
+        }
     }
 
     //Method to cheat and trade a Card with a Player

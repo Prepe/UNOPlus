@@ -45,7 +45,20 @@ public class PlayerList {
 
         return players.get(i-1);
     }
-    
+
+    public Player getPlayer (int ID) {
+        for (Player player : players) {
+            if (player.getID() == ID) {
+                return player;
+            }
+        }
+
+        return null;
+    }
+
+    public int playerCount () {
+        return players.size();
+    }
 
     public Player getFirst(){
         return this.players.getFirst();
