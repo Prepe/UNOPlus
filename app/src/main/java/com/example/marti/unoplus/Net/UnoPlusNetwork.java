@@ -23,6 +23,7 @@ import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.players.Player;
 
 import java.util.ArrayList;
+import android.util.Log;
 
 //That way we have a central and global accessible point through which all network-relevant
 //data gets sent via function call chains
@@ -59,6 +60,12 @@ public class UnoPlusNetwork {
 
             return;
         }
+
+        if(GameStatics.devMode)
+        {
+            Log.d("GameDebug", "CLIENT_GetNewCardForHand : " + playerid + "," + card.value.toString() + " " + card.color.toString());
+        }
+
         //TODO : Check if it is my player id
 
         //if i am the player with that player id and am in game screen:
@@ -70,6 +77,12 @@ public class UnoPlusNetwork {
     // called by GameScreen if client wants to play a card by dropping the card to the playdeck spot
     public void CLIENT_PlayCard(Card cardToPlay) {
         //TODO : call internal network objects to send send message to Server : int myplayerid, card whichcardtoplay
+
+        //For testing purposes and until the network is fully connected with the game we just pretend that we are calling the server
+        if(GameStatics.devMode == true) {
+            Log.d("GameDebug", "CLIENT_PlayCard : " + cardToPlay.value.toString() + " " + cardToPlay.color.toString());
+            SERVER_OnClientMessage_PlayCard(0, cardToPlay);
+        }
     }
 
 
@@ -92,39 +105,63 @@ public class UnoPlusNetwork {
         //          Broadcast to update currently played card
         //          Broadcast start of turn of next player
         // If no : ignore message
+
+        //For testing we just assume the server responds with packets that activate the following functions on the client:
+        if(GameStatics.devMode)
+        {
+            Log.d("GameDebug", "SERVER_OnClientMessage_PlayCard : " + playerid + "," + cardToPlay.value.toString() + " " + cardToPlay.color.toString());
+            CLIENT_OnServerMessage_UpdatePlayedCard(cardToPlay);
+            CLIENT_OnServerMessage_RemoveCardFromHand(0, cardToPlay);
+        }
     }
 
     //Called by Client
     // called by network objects when the Clients network object recieves message from server to end the turn
-    void CLIENT_OnServerMessage_EndOfTurn() {
+    public void CLIENT_OnServerMessage_EndOfTurn() {
         //TODO : Disable all players turn
     }
 
     //Called by Client
     // called by network objects when the Clients network object recieves message from server to remove a card from the players hand
-    void CLIENT_OnServerMessage_RemoveCardFromHand(int playerid, Card cardtoRemove) {
+    public void CLIENT_OnServerMessage_RemoveCardFromHand(int playerid, Card cardtoRemove) {
         //TODO :
         // Check if i'm that player (via playerid)
         // If not : ignore message
         // If yes : remove card from my hand, update hand cards ui
+
+        GameScreen game = (GameScreen) GameStatics.currentActivity;
+        if(game == null)
+        {
+            return;
+        }
+        Log.d("GameDebug", "CLIENT_OnServerMessage_RemoveCardFromHand : " + playerid + "," + cardtoRemove.value.toString() + " " + cardtoRemove.color.toString());
+        game.removeCardFromHand(cardtoRemove);
     }
 
     //Called by Client
     // Called by network objects when network objects recieve message to update the currently played card
-    void CLIENT_OnServerMessage_UpdatePlayedCard(Card newcard) {
+    public void CLIENT_OnServerMessage_UpdatePlayedCard(Card newcard) {
+
+        GameScreen game = (GameScreen) GameStatics.currentActivity;
+        if(game == null)
+        {
+            return;
+        }
+        Log.d("GameDebug", "CLIENT_OnServerMessage_UpdatePlayedCard : " + newcard.value.toString() + " " + newcard.color.toString());
+        game.UpdateCurrentPlayCard(newcard);
 
     }
 
     //Called by Client
     // Called by GameScreen when a player wants to say Uno
-    void CLIENT_SayUno() {
+    public void CLIENT_SayUno() {
         //TODO :
         // Call network objects to s end message to server that player wants to say uno
     }
 
     //Called by Server
     // Called by network objects when Server recieves message that a player wants to say uno
-    void SERVER_OnClientMessage_SayUno(int playerid) {
+    public void SERVER_OnClientMessage_SayUno(int playerid) {
         //calling this function on clients is a no-no!
         if (!this.bIsServer) {
             return;

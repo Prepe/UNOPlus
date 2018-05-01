@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +59,7 @@ public class GameScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         GameStatics.currentActivity = this;
+        GameStatics.Initialize(true);
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -176,6 +178,8 @@ public class GameScreen extends AppCompatActivity {
                     break;
 
                 case R.id.devGetCard:
+                    Card.colors rngcolor = GameStatics.randomEnum(Card.colors.class);
+                    Card.values rngvalue = GameStatics.randomEnum(Card.values.class);
                     GameStatics.net.CLIENT_GetNewCardForHand('0', new Card(Card.colors.BLUE, Card.values.FIVE));
                     break;
             }
@@ -188,14 +192,34 @@ public class GameScreen extends AppCompatActivity {
     }
 
     public void addCardToHand(Card card){
-        HandCardView cardview = new HandCardView(GameScreen.this, this);
-        cardview.updateCard(card);
+        HandCardView cardview = new HandCardView(GameScreen.this, this, card);
         this.handCards.add(cardview);
 
         LinearLayout handBox = (LinearLayout) findViewById(R.id.playerHandLayout);
-        ((ViewGroup)cardview.view.getParent()).removeView(cardview.view);
         handBox.addView(cardview.view);
 
+    }
+
+    public void removeCardFromHand(Card card)
+    {
+        if(GameStatics.devMode == true)
+        {
+            Log.d("GameDebug", "Gamescreen tries to remove following card from hand :" + card.value.toString() + " " + card.color.toString());
+        }
+
+        LinearLayout handBox = (LinearLayout) findViewById(R.id.playerHandLayout);
+        for (HandCardView c : this.handCards)
+        {
+            if(c.card.hasSameCardValueAs(card))
+            {
+                Log.d("GameDebug", "Found it in players hand!");
+
+                handBox.removeView(c.view);
+                this.handCards.remove(c);
+                return;
+            }
+        }
+        Log.d("GameDebug", "Didn't find it.... fix plz");
     }
 
 }
