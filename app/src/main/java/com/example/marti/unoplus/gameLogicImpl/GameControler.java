@@ -92,4 +92,22 @@ public class GameControler {
         return card;
     }
 
+    public Player getWinningPlayer() {
+        for (Player p : players.getPlayers()) {
+            if (p.getHandSize() == 0) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    public boolean won() {
+        for (Player p : players.getPlayers()) {
+            if (p.getHandSize() == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
