@@ -60,17 +60,14 @@ public class MainActivityTest extends AppCompatActivity {
     static final int MESSAGE_READ = 1;
 
 
-    ServerClass serverClass;
-    ClientClass clientClass;
-    SendReceive sendReceive;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test_activity_layout);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
 
 
         initialWork();
@@ -170,7 +167,7 @@ public class MainActivityTest extends AppCompatActivity {
         });
 
 
-        btnSend.setOnClickListener(new View.OnClickListener() {
+      /*  btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -179,7 +176,7 @@ public class MainActivityTest extends AppCompatActivity {
 
 
             }
-        });
+        });*/
     }
 
     WifiP2pManager.ConnectionInfoListener connectionInfoListener = new WifiP2pManager.ConnectionInfoListener() {
@@ -240,10 +237,10 @@ public class MainActivityTest extends AppCompatActivity {
 
         btnOnOff = (Button) findViewById(R.id.onOff);
         btnDiscover = (Button) findViewById(R.id.discover);
-        btnSend = (Button) findViewById(R.id.sendButton);
+
         listView = (ListView) findViewById(R.id.peerListView);
         read_msg_box = (TextView) findViewById(R.id.readMsg);
-        writeMsg = (EditText) findViewById(R.id.writeMsg);
+
         ConnectionStatus = (TextView) findViewById(R.id.connectionStatus);
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         //Für WLAN ON / OFF
@@ -296,7 +293,7 @@ public class MainActivityTest extends AppCompatActivity {
         }
     };
 
-
+/*
     public class ServerClass extends Thread {
 
         Socket socket;
@@ -408,4 +405,5 @@ public class MainActivityTest extends AppCompatActivity {
         }
     }
 
-}
+
+*/}
