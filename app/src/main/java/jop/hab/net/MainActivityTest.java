@@ -239,7 +239,6 @@ public class MainActivityTest extends AppCompatActivity {
         btnDiscover = (Button) findViewById(R.id.discover);
 
         listView = (ListView) findViewById(R.id.peerListView);
-        read_msg_box = (TextView) findViewById(R.id.readMsg);
 
         ConnectionStatus = (TextView) findViewById(R.id.connectionStatus);
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);

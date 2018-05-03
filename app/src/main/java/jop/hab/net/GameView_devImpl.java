@@ -65,9 +65,6 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
         ListView lv = (ListView)findViewById(R.id.list);
         lv.setAdapter(adapter);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
 
         textView = (TextView) findViewById(R.id.textView);
         editTextSend = (EditText) findViewById(R.id.txtSend);
@@ -94,7 +91,7 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
             public void onClick(View v) {
 
 
-                networkIOManager.writeMsg(editTextSend.getText().toString());
+                //networkIOManager.writeMsg(editTextSend.getText().toString());
 
                 //networkIOManager.writeCard(card);
 
@@ -106,7 +103,7 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
             @Override
             public void onClick(View v) {
 
-                networkIOManager.writeMsg("unouno");
+                //networkIOManager.writeMsg("unouno");
 
             }
         });

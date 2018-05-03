@@ -27,7 +27,7 @@ public class GameLogic {
     //Basic GameLogic should only be called when the card is good to play or player has to draw a card (card == null)
     public void runLogic (Player player, Card card) {
         if (card == null) {
-            player.drawCard();
+            //player.drawCard();
         } else {
             playCard(card);
             effects.cardEffect(player, card);
