@@ -2,6 +2,7 @@ package com.example.marti.unoplus.Screens;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
@@ -27,6 +28,9 @@ import com.example.marti.unoplus.R;
 import com.example.marti.unoplus.Server.ServerLogic;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.players.Player;
+import com.example.marti.unoplus.Screens.MainMenu;
+import com.example.marti.unoplus.sound.Sounds;
+import com.example.marti.unoplus.sound.SoundManager;
 
 import java.util.ArrayList;
 
@@ -34,11 +38,14 @@ public class GameScreen extends AppCompatActivity {
     public GameScreen() {
         super();
         this.handCards = new ArrayList<HandCardView>();
+        this.soundManager=soundManager;
     }
 
     Button unoButton;
     Button devButton;
     TextView numCards;
+    CountDownTimer timer;
+    SoundManager soundManager;
 
     private Context context;
     public ServerLogic serverLogic = null;
@@ -55,6 +62,9 @@ public class GameScreen extends AppCompatActivity {
 
         GameStatics.currentActivity = this;
         GameStatics.Initialize(true);
+
+
+        //soundManager.playSound(Sounds.THEMESTOP);    TODO fix bug
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -112,7 +122,7 @@ public class GameScreen extends AppCompatActivity {
         }
 
         final TextView myCounter = findViewById(R.id.countdown);
-        new CountDownTimer(20000, 1000) {
+        timer = new CountDownTimer(20000, 1000) {
 
             @Override
             public void onFinish() {
@@ -142,6 +152,12 @@ public class GameScreen extends AppCompatActivity {
         this.playedCardView = new PlayedCardView(this.getApplicationContext(), this);
 
         this.playedCardView.updateCard(new Card(Card.colors.RED, Card.values.EIGHT));
+
+        for(int i = 0; i < 7; i++) {
+            Card.colors rndcolor = GameStatics.randomEnum(Card.colors.class);
+            Card.values rndvalue = GameStatics.randomEnum(Card.values.class);
+            GameStatics.net.CLIENT_GetNewCardForHand('0', new Card(rndcolor, rndvalue));
+        }
 
 
     }
@@ -225,6 +241,8 @@ public class GameScreen extends AppCompatActivity {
 
                 handBox.removeView(c.view);
                 this.handCards.remove(c);
+                //soundManager.playSound(Sounds.DROPCARD);   TODO fix bug
+                timer.start();
 
                     int numCardshand = 0;
                     for(int i = 0; i < handCards.size(); i++){

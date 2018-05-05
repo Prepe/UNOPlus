@@ -9,6 +9,9 @@ import android.view.WindowManager;
 
 import com.example.marti.unoplus.GameStatics;
 import com.example.marti.unoplus.R;
+import com.example.marti.unoplus.sound.Sounds;
+import com.example.marti.unoplus.sound.SoundManager;
+
 
 import jop.hab.net.FullscreenActivity;
 import jop.hab.net.MainActivityTest;
@@ -17,6 +20,8 @@ public class MainMenu extends AppCompatActivity {
     public MainMenu() {
         super();
     }
+
+    SoundManager soundManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +38,12 @@ public class MainMenu extends AppCompatActivity {
         findViewById(R.id.einstellungen).setOnClickListener(handler);
         findViewById(R.id.exitbutton).setOnClickListener(handler);
         findViewById(R.id.devModeButton).setOnClickListener(handler);
+
+        //soundManager.playSound(Sounds.THEMESTART);
     }
+
+
+
 
     View.OnClickListener handler = new View.OnClickListener(){
         public void onClick(View v) {
