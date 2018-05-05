@@ -13,8 +13,8 @@ public class Deck {
 
     public Deck() {
         this.deck = new ArrayList<>();
-        decksinit();
-        buildDeck();
+        //decksinit();
+        //buildDeck();
     }
 
     Deck playeddeck; //deck where players take cards from ('graveyard')
