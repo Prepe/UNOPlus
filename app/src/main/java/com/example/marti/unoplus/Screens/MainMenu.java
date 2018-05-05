@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.media.MediaPlayer;
 
 import com.example.marti.unoplus.GameStatics;
 import com.example.marti.unoplus.R;
@@ -39,7 +40,8 @@ public class MainMenu extends AppCompatActivity {
         findViewById(R.id.exitbutton).setOnClickListener(handler);
         findViewById(R.id.devModeButton).setOnClickListener(handler);
 
-        //soundManager.playSound(Sounds.THEMESTART);
+        soundManager = new SoundManager(this);
+        soundManager.playSound(Sounds.THEMESTART);
     }
 
 
@@ -51,10 +53,12 @@ public class MainMenu extends AppCompatActivity {
             switch (v.getId()) {
 
                 case R.id.spielerstellen:
+                    soundManager.playSound(Sounds.THEMESTOP);
                     startActivity(new Intent(MainMenu.this, LobbyScreen.class));
                     break;
 
                 case R.id.spielbeitreten:
+                    soundManager.playSound(Sounds.THEMESTOP);
                     startActivity(new Intent(MainMenu.this, MainActivityTest.class));
                     break;
 
@@ -63,10 +67,12 @@ public class MainMenu extends AppCompatActivity {
                     break;
 
                 case R.id.exitbutton:
+                    soundManager.playSound(Sounds.THEMESTOP);
                     System.exit(0);
                     break;
 
                 case R.id.devModeButton:
+                    soundManager.playSound(Sounds.THEMESTOP);
                     GameStatics.devMode = true;
                     startActivity(new Intent(MainMenu.this, GameScreen.class));
                     break;

@@ -63,8 +63,8 @@ public class GameScreen extends AppCompatActivity {
         GameStatics.currentActivity = this;
         GameStatics.Initialize(true);
 
-
-        //soundManager.playSound(Sounds.THEMESTOP);    TODO fix bug
+        soundManager = new SoundManager(this);
+        soundManager.playSound(Sounds.THEMESTOP);
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -241,7 +241,7 @@ public class GameScreen extends AppCompatActivity {
 
                 handBox.removeView(c.view);
                 this.handCards.remove(c);
-                //soundManager.playSound(Sounds.DROPCARD);   TODO fix bug
+                soundManager.playSound(Sounds.DROPCARD);
                 timer.start();
 
                     int numCardshand = 0;
