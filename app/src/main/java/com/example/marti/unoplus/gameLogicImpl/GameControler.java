@@ -1,6 +1,8 @@
 package com.example.marti.unoplus.gameLogicImpl;
 
 import com.example.marti.unoplus.GameActions;
+import com.example.marti.unoplus.Server.ServerLogic;
+import com.example.marti.unoplus.Server.TakeDeck;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.cards.Deck;
 import com.example.marti.unoplus.players.Player;

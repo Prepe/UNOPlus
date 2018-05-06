@@ -20,9 +20,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.marti.unoplus.Server.ServerLogic;
 import com.example.marti.unoplus.cards.Card;
+import com.example.marti.unoplus.cards.Deck;
+import com.example.marti.unoplus.gameLogicImpl.GameControler;
+import com.example.marti.unoplus.gameLogicImpl.GameLogic;
 import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.R;
+import com.example.marti.unoplus.players.PlayerList;
+
+import java.util.ArrayList;
 
 public class GameView_devImpl extends AppCompatActivity implements ObserverInterface {
 
@@ -53,6 +60,18 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         //Nicht optimal...todo!!!
+
+        PlayerList PL = new PlayerList();
+        ArrayList<Player> pl = new ArrayList<Player>();
+        Player player = new Player(1);
+        pl.add(player);
+        player = new Player(2);
+        pl.add(player);
+        PL.setPlayers(pl);
+        //@TODO player müssen noch korrekt in die Playerlist eingefügt werden, momentan nur zu Probezwecken
+        Deck deck = new Deck();
+        GameLogic GL = new GameLogic(PL, deck);
+        GameControler GC = new GameControler(PL, deck, GL);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -86,7 +105,7 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
         networkIOManager.open();
 
 
-        btnSend.setOnClickListener(new View.OnClickListener() {
+        /*btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -97,7 +116,7 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
 
 
             }
-        });
+        });*/
 
         btnUnoUno.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,7 +182,7 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
                         //TO DO
                         break;
                     case 3:
-                        Toast.makeText(getApplicationContext(), "Plöayer 4", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Player 4", Toast.LENGTH_SHORT).show();
                         //TO DO
                         break;
                     default:

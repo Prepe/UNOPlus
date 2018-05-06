@@ -17,4 +17,6 @@
     <string name="player2_connected">waiting...</string>
     <string name="player3_connected">waiting...</string>
     <string name="player4_connected">waiting...</string>
+    <string name="connection_status">Connection Status</string>
+    <string name="discover">discover</string>
 </resources>

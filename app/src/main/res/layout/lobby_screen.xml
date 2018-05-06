@@ -5,6 +5,51 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <Button
+        android:id="@+id/onOff2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="55dp"
+        android:layout_x="156dp"
+        android:layout_y="15dp"
+        android:text="Wifi On"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/connectionStatus2"
+        android:layout_width="239dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="39dp"
+        android:layout_x="348dp"
+        android:layout_y="29dp"
+        android:text="@string/connection_status"
+        android:textAlignment="center"
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="18sp"
+        android:textStyle="italic"
+        android:visibility="visible" />
+
+    <Button
+        android:id="@+id/discover2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="250dp"
+        android:layout_y="16dp"
+        android:text="@string/discover"
+        android:visibility="visible" />
+
+    <ListView
+        android:id="@+id/peerListView"
+        android:layout_width="485dp"
+        android:layout_height="92dp"
+        android:layout_marginTop="25dp"
+        android:layout_x="47dp"
+        android:layout_y="61dp"
+        android:background="@android:color/holo_orange_light" >
+
+    </ListView>
+
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="wrap_content"
@@ -29,50 +74,6 @@
         android:textStyle="bold"
         tools:layout_editor_absoluteX="42dp"
         tools:layout_editor_absoluteY="17dp" />
-
-    <TextView
-        android:id="@+id/player1"
-        android:layout_width="219dp"
-        android:layout_height="42dp"
-        android:layout_x="50dp"
-        android:layout_y="69dp"
-        android:text="@string/player1_connected"
-        android:textSize="24sp"
-        tools:layout_editor_absoluteX="201dp"
-        tools:layout_editor_absoluteY="16dp" />
-
-    <TextView
-        android:id="@+id/player2"
-        android:layout_width="219dp"
-        android:layout_height="42dp"
-        android:layout_x="307dp"
-        android:layout_y="69dp"
-        android:text="@string/player2_connected"
-        android:textSize="24sp"
-        tools:layout_editor_absoluteX="201dp"
-        tools:layout_editor_absoluteY="16dp" />
-
-    <TextView
-        android:id="@+id/player3"
-        android:layout_width="219dp"
-        android:layout_height="42dp"
-        android:layout_x="51dp"
-        android:layout_y="111dp"
-        android:text="@string/player3_connected"
-        android:textSize="24sp"
-        tools:layout_editor_absoluteX="201dp"
-        tools:layout_editor_absoluteY="16dp" />
-
-    <TextView
-        android:id="@+id/player4"
-        android:layout_width="219dp"
-        android:layout_height="42dp"
-        android:layout_x="307dp"
-        android:layout_y="111dp"
-        android:text="@string/player4_connected"
-        android:textSize="24sp"
-        tools:layout_editor_absoluteX="201dp"
-        tools:layout_editor_absoluteY="16dp" />
 
     <TextView
         android:id="@+id/Optionen"

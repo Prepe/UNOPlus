@@ -18,19 +18,6 @@
         android:layout_marginTop="52dp"
         app:srcCompat="@drawable/unostack" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="63dp"
-        android:text="TextView"
-        android:textAppearance="@style/TextAppearance.AppCompat.Inverse" />
-
     <ListView
         android:id="@+id/list"
         android:layout_width="118dp"
@@ -61,30 +48,6 @@
         android:layout_marginTop="13dp"
         android:text="dev_Get_Card" />
 
-
-    <Button
-        android:id="@+id/btnSend"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/list"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginEnd="164dp"
-        android:layout_marginRight="164dp"
-        android:text="Send" />
-
-    <EditText
-        android:id="@+id/txtSend"
-        android:layout_width="156dp"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/list"
-        android:layout_toLeftOf="@+id/btnSend"
-        android:layout_toStartOf="@+id/btnSend"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="stuff"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
-        android:textColor="@android:color/white" />
 
     <ImageView
         android:id="@+id/viewPlayedCard"
@@ -132,6 +95,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="16dp"
         android:layout_toEndOf="@+id/list"
+        android:layout_toRightOf="@+id/list"
         android:text="(7)"
         android:textAppearance="@style/TextAppearance.AppCompat.Inverse" />
 
@@ -142,6 +106,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="76dp"
         android:layout_toEndOf="@+id/list"
+        android:layout_toRightOf="@+id/list"
         android:text="(7)"
         android:textAppearance="@style/TextAppearance.AppCompat.Inverse" />
 
@@ -152,6 +117,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="136dp"
         android:layout_toEndOf="@+id/list"
+        android:layout_toRightOf="@+id/list"
         android:text="(7)"
         android:textAppearance="@style/TextAppearance.AppCompat.Inverse" />
 
@@ -162,6 +128,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="141dp"
         android:layout_toEndOf="@+id/list"
+        android:layout_toRightOf="@+id/list"
         android:text="(7)"
         android:textAppearance="@style/TextAppearance.AppCompat.Inverse" />
 </RelativeLayout>

@@ -7,18 +7,12 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.TextView;
 
 import com.example.marti.unoplus.GameStatics;
 import com.example.marti.unoplus.cards.Deck;
 import com.example.marti.unoplus.players.PlayerList;
 import com.example.marti.unoplus.R;
 
-import com.example.marti.unoplus.gameLogicImpl.GameControler;
-import com.example.marti.unoplus.gameLogicImpl.GameLogic;
-
-import java.util.ArrayList;
 
 public class LobbyScreen extends AppCompatActivity {
 
@@ -51,10 +45,6 @@ public class LobbyScreen extends AppCompatActivity {
                 boolean kt = false;
                 boolean kw = false;
                 boolean tt = false;
-                TextView p1 = (TextView) findViewById(R.id.player1);
-                TextView p2 = (TextView) findViewById(R.id.player2);
-                TextView p3 = (TextView) findViewById(R.id.player3);
-                TextView p4 = (TextView) findViewById(R.id.player4);
                 CheckBox kartentauschen = (CheckBox) findViewById(R.id.kartentauschen);
                 CheckBox kartenwegwerfen = (CheckBox) findViewById(R.id.kartenwegwerfen);
                 CheckBox tischteufel = (CheckBox) findViewById(R.id.tischteufel);

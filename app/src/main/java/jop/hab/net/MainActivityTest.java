@@ -68,8 +68,6 @@ public class MainActivityTest extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test_activity_layout);
 
-
-
         initialWork();
         exqListener();
 
