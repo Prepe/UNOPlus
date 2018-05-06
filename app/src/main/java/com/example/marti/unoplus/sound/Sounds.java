@@ -5,6 +5,6 @@ package com.example.marti.unoplus.sound;
  */
 
 public enum Sounds {
-    PLAYERTURN, WINNER, DROPCARD, LOOSER, THEMESTART, THEMESTOP
+    PLAYERTURN, WINNER, DROPCARD, DRAWCARD, DEALINGCARD, SHUFFLECARDS, LOOSER, THEMESTART, THEMESTOP
     //noch nicht klar ob mit ENUM
 }

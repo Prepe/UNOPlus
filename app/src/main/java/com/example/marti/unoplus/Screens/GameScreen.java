@@ -57,6 +57,27 @@ public class GameScreen extends AppCompatActivity {
     ArrayList<HandCardView> handCards = null;
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        soundManager.playSound(Sounds.THEMESTART);
+        timer.cancel();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        timer.cancel();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        timer.start();
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -121,6 +142,8 @@ public class GameScreen extends AppCompatActivity {
             GameStatics.net = new UnoPlusNetwork(true);
         }
 
+
+
         final TextView myCounter = findViewById(R.id.countdown);
         timer = new CountDownTimer(20000, 1000) {
 
@@ -153,11 +176,13 @@ public class GameScreen extends AppCompatActivity {
 
         this.playedCardView.updateCard(new Card(Card.colors.RED, Card.values.EIGHT));
 
+        soundManager.playSound(Sounds.DEALINGCARD);
         for(int i = 0; i < 7; i++) {
             Card.colors rndcolor = GameStatics.randomEnum(Card.colors.class);
             Card.values rndvalue = GameStatics.randomEnum(Card.values.class);
             GameStatics.net.CLIENT_GetNewCardForHand('0', new Card(rndcolor, rndvalue));
         }
+
 
 
     }
@@ -210,8 +235,10 @@ public class GameScreen extends AppCompatActivity {
     }
 
     public void addCardToHand(Card card) {
+        soundManager.playSound(Sounds.DRAWCARD);
         HandCardView cardview = new HandCardView(GameScreen.this, this, card);
         this.handCards.add(cardview);
+
 
             int numCardshand = 0;
             for(int i = 0; i < handCards.size(); i++){

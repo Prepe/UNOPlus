@@ -25,6 +25,20 @@ public class MainMenu extends AppCompatActivity {
     SoundManager soundManager;
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        soundManager.playSound(Sounds.THEMESTOP);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        soundManager.playSound(Sounds.THEMESTART);
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
