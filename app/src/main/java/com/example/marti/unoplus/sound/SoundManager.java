@@ -18,6 +18,9 @@ public class SoundManager {
     private final MediaPlayer winner;
     private final MediaPlayer looser;
     private final MediaPlayer theme;
+    private final MediaPlayer drawCard;
+    private final MediaPlayer dealCards;
+    private final MediaPlayer shuffleCards;
     Context context;
 
     public SoundManager(Context mContext) {
@@ -27,6 +30,9 @@ public class SoundManager {
         winner = MediaPlayer.create(mContext, R.raw.winner);
         looser = MediaPlayer.create(mContext, R.raw.looser);
         theme = MediaPlayer.create(mContext, R.raw.unotheme);
+        drawCard = MediaPlayer.create(mContext, R.raw.drawcard);
+        dealCards = MediaPlayer.create(mContext, R.raw.dealingcard);
+        shuffleCards = MediaPlayer.create(mContext, R.raw.cardshuffling);
 
     }
 
@@ -34,6 +40,18 @@ public class SoundManager {
         switch (sound) {
             case DROPCARD:
                 dropCard.start();
+                break;
+
+            case DRAWCARD:
+                drawCard.start();
+                break;
+
+            case DEALINGCARD:
+                dealCards.start();
+                break;
+
+            case SHUFFLECARDS:
+                shuffleCards.start();
                 break;
 
             case PLAYERTURN:
