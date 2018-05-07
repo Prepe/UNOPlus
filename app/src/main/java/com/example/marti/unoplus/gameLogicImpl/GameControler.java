@@ -1,5 +1,6 @@
 package com.example.marti.unoplus.gameLogicImpl;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,7 @@ import android.view.WindowManager;
 
 import com.example.marti.unoplus.GameActions;
 import com.example.marti.unoplus.R;
+import com.example.marti.unoplus.Screens.GameScreen;
 import com.example.marti.unoplus.Server.ServerLogic;
 import com.example.marti.unoplus.Server.TakeDeck;
 import com.example.marti.unoplus.cards.Card;
@@ -15,6 +17,7 @@ import com.example.marti.unoplus.cards.Deck;
 import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.players.PlayerList;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,7 +29,7 @@ import jop.hab.net.ObserverInterface;
  */
 
 public class GameControler extends AppCompatActivity implements ObserverInterface {
-    PlayerList players;     //reference to all Players in the Game
+    PlayerList players;//reference to all Players in the Game
     Deck deck;              //reference to the Deck that is used
     GameLogic logic;        //reference to the GameLogic
     NetworkIOManager NIOmanager;
@@ -59,6 +62,7 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
         NIOmanager.setHostAdress(hostAdress);
         NIOmanager.open();
 
+        setUpGame();
     }
 
     /*public GameControler(PlayerList playersList, Deck gameDeck, GameLogic gameLogic) {
@@ -83,6 +87,17 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
 
     //Give all Players cards and Play the first Card
     private void setUpGame() {
+        players = new PlayerList();
+        ArrayList<Player> pl = new ArrayList<Player>();
+        Player player = new Player(1);
+        pl.add(player);
+        player = new Player(2);
+        pl.add(player);
+        players.setPlayers(pl);
+        //@TODO player müssen noch korrekt in die Playerlist eingefügt werden, momentan nur zu Probezwecken
+        deck = new Deck();
+        logic = new GameLogic(players, deck);
+
         deck.shuffle();
         drawHandCardsForPlayers();
 

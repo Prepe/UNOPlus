@@ -2,6 +2,7 @@ package com.example.marti.unoplus.Screens;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -27,8 +28,12 @@ import com.example.marti.unoplus.Net.UnoPlusNetwork;
 import com.example.marti.unoplus.R;
 import com.example.marti.unoplus.Server.ServerLogic;
 import com.example.marti.unoplus.cards.Card;
+import com.example.marti.unoplus.cards.Deck;
+import com.example.marti.unoplus.gameLogicImpl.GameControler;
+import com.example.marti.unoplus.gameLogicImpl.GameLogic;
 import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.Screens.MainMenu;
+import com.example.marti.unoplus.players.PlayerList;
 import com.example.marti.unoplus.sound.Sounds;
 import com.example.marti.unoplus.sound.SoundManager;
 
@@ -93,7 +98,6 @@ public class GameScreen extends AppCompatActivity {
 
         //numCards = (TextView)findViewById(R.id.numCards1);
         numCards = (TextView) findViewById(R.id.numCards1);
-
 
         String[] players = {"Player 1", "Player2", "Player3", "Player4"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, players);

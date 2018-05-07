@@ -1,5 +1,6 @@
 package jop.hab.net;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -20,6 +21,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.marti.unoplus.Screens.GameScreen;
+import com.example.marti.unoplus.Screens.MainMenu;
 import com.example.marti.unoplus.Server.ServerLogic;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.cards.Deck;
@@ -61,7 +64,7 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
 
         //Nicht optimal...todo!!!
 
-        PlayerList PL = new PlayerList();
+        /*PlayerList PL = new PlayerList();
         ArrayList<Player> pl = new ArrayList<Player>();
         Player player = new Player(1);
         pl.add(player);
@@ -71,7 +74,8 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
         //@TODO player müssen noch korrekt in die Playerlist eingefügt werden, momentan nur zu Probezwecken
         Deck deck = new Deck();
         GameLogic GL = new GameLogic(PL, deck);
-        //GameControler GC = new GameControler(PL, deck, GL);
+        GameControler GC = new GameControler();
+        GC.setUpGame();*/
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
