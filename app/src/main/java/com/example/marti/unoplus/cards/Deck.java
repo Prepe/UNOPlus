@@ -78,7 +78,7 @@ public class Deck {
             for (int x = 0; x < 2; x++) {
                 int action = (x == 0) ? 13 : 14;
                 //takedeck.deck.add(new Card(5, action));
-                deck.add(new Card(5, action));
+                deck.add(new Card(4, action));
             }
         }
     }
