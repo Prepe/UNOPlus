@@ -1,6 +1,13 @@
 package com.example.marti.unoplus.gameLogicImpl;
 
+import android.os.Bundle;
+import android.os.StrictMode;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Window;
+import android.view.WindowManager;
+
 import com.example.marti.unoplus.GameActions;
+import com.example.marti.unoplus.R;
 import com.example.marti.unoplus.Server.ServerLogic;
 import com.example.marti.unoplus.Server.TakeDeck;
 import com.example.marti.unoplus.cards.Card;
@@ -12,12 +19,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import jop.hab.net.NetworkIOManager;
+import jop.hab.net.ObserverInterface;
 
 /**
  * Created by marti on 10.04.2018.
  */
 
-public class GameControler {
+public class GameControler extends AppCompatActivity implements ObserverInterface {
     PlayerList players;     //reference to all Players in the Game
     Deck deck;              //reference to the Deck that is used
     GameLogic logic;        //reference to the GameLogic
@@ -28,17 +36,42 @@ public class GameControler {
     boolean[] calledUNO;    //
     boolean[] dropedCard;   //
     boolean[] tradedCard;   //
+    String hostAdress;
+    String mode;
 
-    public GameControler(PlayerList playersList, Deck gameDeck, GameLogic gameLogic) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        setContentView(R.layout.game_screen);
+
+        hostAdress = getIntent().getStringExtra("adress");
+        mode = getIntent().getStringExtra("mode");
+
+        NIOmanager = new NetworkIOManager(this);
+        NIOmanager.setMode(mode);
+        NIOmanager.setHostAdress(hostAdress);
+        NIOmanager.open();
+
+    }
+
+    /*public GameControler(PlayerList playersList, Deck gameDeck, GameLogic gameLogic) {
         players = playersList;
         deck = gameDeck;
         logic = gameLogic;
 
         setUpGame();
-    }
+    }*/
 
     //Method to Update all Players after GC and GL have finished
     public void updateAllPlayers() {
+
         if (gA.nextPlayerID != null) {
             calledUNO[gA.nextPlayerID] = false;
             dropedCard[gA.nextPlayerID] = false;
@@ -153,4 +186,8 @@ public class GameControler {
         return false;
     }
 
+    @Override
+    public void dataChanged() {
+
+    }
 }

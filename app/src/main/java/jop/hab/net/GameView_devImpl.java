@@ -71,7 +71,7 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
         //@TODO player müssen noch korrekt in die Playerlist eingefügt werden, momentan nur zu Probezwecken
         Deck deck = new Deck();
         GameLogic GL = new GameLogic(PL, deck);
-        GameControler GC = new GameControler(PL, deck, GL);
+        //GameControler GC = new GameControler(PL, deck, GL);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);

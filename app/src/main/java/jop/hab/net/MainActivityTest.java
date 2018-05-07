@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.marti.unoplus.R;
+import com.example.marti.unoplus.gameLogicImpl.GameControler;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -189,7 +190,7 @@ public class MainActivityTest extends AppCompatActivity {
               //  serverClass = new ServerClass();
                 //serverClass.start();
 
-                Intent i = new Intent(getBaseContext(),GameView_devImpl.class);
+                Intent i = new Intent(getBaseContext(),GameControler.class);
                 i.putExtra("mode", "server");
                 i.putExtra("adress", groupOwnerAdress.getHostAddress());
                 startActivity(i);
@@ -203,7 +204,7 @@ public class MainActivityTest extends AppCompatActivity {
                // clientClass.start();
 
 
-                Intent i = new Intent(getBaseContext(),GameView_devImpl.class);
+                Intent i = new Intent(getBaseContext(),GameControler.class);
                 i.putExtra("mode", "client");
                 i.putExtra("adress", groupOwnerAdress.getHostAddress());
                 startActivity(i);
