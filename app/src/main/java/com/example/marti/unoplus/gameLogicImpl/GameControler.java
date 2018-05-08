@@ -221,8 +221,30 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
         //wenn etwas empfangen wird, dann wird diese Methode vom NIO gecallt (Übers ObserverINterface)
 
         recievedGA = NIOmanager.getGameAction();
+        callGameController(recievedGA);
 
         //von diesem Punkt weg, wisst ihr, dass neue Daten bereit sind und ihr die Änderungen zeichnen könnt
 
+    }
+
+
+    void callGameController (GameActions action) {
+        switch (action.action) {
+            case DRAW_CARD:
+                drawCard(action.playerID);
+                break;
+            case DROP_CARD:
+                dropCard(action.playerID);
+                break;
+            case TRADE_CARD:
+                //GC.tradeCard();
+                break;
+            case PLAY_CARD:
+                playCard(action.playerID,action.card);
+                break;
+            case WISH_COLOR:
+                colorWish(action.playerID,action.colorWish);
+                break;
+        }
     }
 }

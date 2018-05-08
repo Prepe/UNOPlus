@@ -364,23 +364,5 @@ public class NetworkIOManager {
             }
         }
 
-        void callGameController (GameActions action) {
-            switch (action.action) {
-                case DRAW_CARD:
-                    GC.drawCard(action.playerID);
-                    break;
-                case DROP_CARD:
-                    GC.dropCard(action.playerID);
-                    break;
-                case TRADE_CARD:
-                    //GC.tradeCard();
-                    break;
-                case PLAY_CARD:
-                    GC.playCard(action.playerID,action.card);
-                    break;
-                case WISH_COLOR:
-                    GC.colorWish(action.playerID,action.colorWish);
-                    break;
-            }
-        }
+
     }
