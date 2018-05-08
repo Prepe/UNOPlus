@@ -22,6 +22,7 @@ public class GameLogic {
         deck = gameDeck;
 
         activePlayer = playerList.getFirst();
+
     }
 
     //Basic GameLogic should only be called when the card is good to play or player has to draw a card (card == null)
@@ -162,7 +163,7 @@ public class GameLogic {
         Card card = deck.draw();
         lastCardValue = card.value;
         lastCardColor = card.color;
-        effects.cardEffect(null, card);
+      //  effects.cardEffect(null, card);
         return  card;
     }
 

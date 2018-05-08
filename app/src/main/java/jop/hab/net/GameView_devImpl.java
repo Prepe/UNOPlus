@@ -211,6 +211,11 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
 
     }
 
+    @Override
+    public void NIOReady() {
+
+    }
+
     public void sayUno(String unoUno) {
         if (unoUno.equals("unouno")) {
             Toast.makeText(getApplicationContext(), "UNOOO", Toast.LENGTH_SHORT).show();
