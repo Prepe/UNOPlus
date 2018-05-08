@@ -29,6 +29,7 @@ public class GameActions {
     public List<Card> cards;
     public Boolean check;
     public Card.colors colorWish;
+    public boolean gcSend = false;
 
     //Used to update all players to what card was last played and the who is currently the active player
     public GameActions (actions action, Card card, int nextPID) {

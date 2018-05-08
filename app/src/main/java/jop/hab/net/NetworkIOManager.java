@@ -10,6 +10,7 @@ import com.example.marti.unoplus.GameActions;
 import com.example.marti.unoplus.cards.Card;
 import com.google.gson.Gson;
 import com.example.marti.unoplus.gameLogicImpl.GameControler;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -113,18 +114,31 @@ public class NetworkIOManager {
 
     public void writeGameaction(GameActions gameAction) {
 
-        Gson gson = new Gson();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setLenient();
+        Gson gson = gsonBuilder.create();
 
         String GameActionString = gson.toJson(gameAction);
+
+        Log.d("GSON Senden", GameActionString);
 
         sendReceive.write(GameActionString.getBytes());
     }
 
     public GameActions receiveGameaction(String gameActionString) {
 
-        Gson gson = new Gson();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setLenient();
+        Gson gson = gsonBuilder.create();
 
-        GameActions gameAction = gson.fromJson(gameActionString, GameActions.class);
+
+        try {
+
+             gameAction = gson.fromJson(gameActionString, GameActions.class);
+        }catch (Exception e){
+
+            Log.e("JSon error","error");
+        }
 
         return gameAction;
     }
@@ -191,13 +205,14 @@ public class NetworkIOManager {
 
 
                        // testText = tmpmsg;
+                        Log.d("JSon Empfangen", tmpmsg);
 
                        gameAction = receiveGameaction(tmpmsg);
+
 
                        //versteh ich nicht:
 //                       callGameController(gameAction);
 
-                        Log.d("@handler", tmpmsg);
 
                         //wenn Daten über den handler empfangen werden, wird Observer informiert.
                         observerInterface.dataChanged();
@@ -303,16 +318,19 @@ public class NetworkIOManager {
                 observerInterface.NIOReady();
 
 
-                byte[] buffer = new byte[1024];
+                byte[] buffer;
+
                 int bytes;
 
                 while (socket != null) {
 
                     try {
+                        buffer = new byte[8192];
                         bytes = inputStream.read(buffer);
                         if (bytes > 0) {
 
                             handler.obtainMessage(MESSAGE_READ, bytes, -1, buffer).sendToTarget();
+
 
                         }
                     } catch (IOException e) {

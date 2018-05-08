@@ -77,7 +77,6 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
         NIOmanager.open();
 
 
-
         try {
             Thread.sleep(10000);
         } catch (InterruptedException e) {
@@ -100,14 +99,21 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
     public void updateAllPlayers() {
 
         if (gA.nextPlayerID != null) {
-            calledUNO[gA.nextPlayerID] = false;
-            dropedCard[gA.nextPlayerID] = false;
-            tradedCard[gA.nextPlayerID] = false;
+            calledUNO[gA.nextPlayerID - 1] = false;
+            dropedCard[gA.nextPlayerID - 1] = false;
+            tradedCard[gA.nextPlayerID - 1] = false;
         }
 
-        Log.d("Time","updateAllPLayrs will schon was vom NIO");
+        Log.d("Time", "updateAllPLayrs will schon was vom NIO");
+
+        gA.gcSend = true;
 
         NIOmanager.writeGameaction(gA);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     //Give all Players cards and Play the first Card
@@ -130,8 +136,8 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
         dropedCard = new boolean[players.playerCount()];
         tradedCard = new boolean[players.playerCount()];
 
-        gA = new GameActions(GameActions.actions.UPDATE,logic.playTopCard(),logic.activePlayer.getID());
-        updateAllPlayers();
+        // gA = new GameActions(GameActions.actions.UPDATE,logic.playTopCard(),logic.activePlayer.getID());
+        //updateAllPlayers();
     }
 
     private void drawHandCardsForPlayers() {
@@ -141,7 +147,7 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
                 handcards.add(deck.draw());
             }
 
-            gA = new GameActions(GameActions.actions.DRAW_CARD,p.getID(),handcards);
+            gA = new GameActions(GameActions.actions.DRAW_CARD, p.getID(), handcards);
 
             updateAllPlayers();
         }
@@ -157,7 +163,7 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
             cards.add(deck.draw());
         }
 
-        gA = new GameActions(GameActions.actions.DRAW_CARD,playerID,cards);
+        gA = new GameActions(GameActions.actions.DRAW_CARD, playerID, cards);
 
         updateAllPlayers();
     }
@@ -168,7 +174,7 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
         //Check if player is allowed to play the card
         if (logic.checkCard(card, p)) {
             //Remove the played card from the players hand
-            gA = new GameActions(GameActions.actions.PLAY_CARD,player,card);
+            gA = new GameActions(GameActions.actions.PLAY_CARD, player, card);
             updateAllPlayers();
 
             //Run game logic for the card that was played
@@ -184,12 +190,12 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
         //TODO implement
     }
 
-    public void colorWish (int player, Card.colors color) {
+    public void colorWish(int player, Card.colors color) {
         logic.wishColor(color);
         Player p = players.getPlayer(player);
         logic.nextPlayer(p);
 
-        gA = new GameActions(GameActions.actions.UPDATE,new Card(logic.lastCardColor,logic.lastCardValue),logic.getActivePlayer().getID());
+        gA = new GameActions(GameActions.actions.UPDATE, new Card(logic.lastCardColor, logic.lastCardValue), logic.getActivePlayer().getID());
     }
 
 
@@ -197,7 +203,7 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
     public void dropCard(int player) {
         if (!dropedCard[player]) {
             dropedCard[player] = true;
-            gA = new GameActions(GameActions.actions.DROP_CARD,player,true);
+            gA = new GameActions(GameActions.actions.DROP_CARD, player, true);
         }
     }
 
@@ -233,6 +239,8 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
         //wenn etwas empfangen wird, dann wird diese Methode vom NIO gecallt (Übers ObserverINterface)
 
         recievedGA = NIOmanager.getGameAction();
+
+
         callGameController(recievedGA);
 
         //von diesem Punkt weg, wisst ihr, dass neue Daten bereit sind und ihr die Änderungen zeichnen könnt
@@ -244,28 +252,31 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
 
 
         Log.d("NIO Status", "NIO READY -Call in GC");
-      //  setUpGame();
+        //  setUpGame();
 
     }
 
 
-    void callGameController (GameActions action) {
-        switch (action.action) {
-            case DRAW_CARD:
-                drawCard(action.playerID);
-                break;
-            case DROP_CARD:
-                dropCard(action.playerID);
-                break;
-            case TRADE_CARD:
-                //GC.tradeCard();
-                break;
-            case PLAY_CARD:
-                playCard(action.playerID,action.card);
-                break;
-            case WISH_COLOR:
-                colorWish(action.playerID,action.colorWish);
-                break;
+    void callGameController(GameActions action) {
+
+        if (action.gcSend==false){
+            switch (action.action) {
+                case DRAW_CARD:
+                    drawCard(action.playerID);
+                    break;
+                case DROP_CARD:
+                    dropCard(action.playerID);
+                    break;
+                case TRADE_CARD:
+                    //GC.tradeCard();
+                    break;
+                case PLAY_CARD:
+                    playCard(action.playerID, action.card);
+                    break;
+                case WISH_COLOR:
+                    colorWish(action.playerID, action.colorWish);
+                    break;
+            }
         }
     }
 }
