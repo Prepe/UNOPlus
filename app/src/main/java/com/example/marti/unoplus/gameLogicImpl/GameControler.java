@@ -130,8 +130,7 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
         dropedCard = new boolean[players.playerCount()];
         tradedCard = new boolean[players.playerCount()];
 
-        gA = new GameActions(GameActions.actions.UPDATE,playTopCard(),logic.activePlayer.getID());
-        updateAllPlayers();
+        playTopCard();
     }
 
     private void drawHandCardsForPlayers() {
@@ -269,10 +268,11 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
         }
     }
 
-    Card playTopCard() {
+    void playTopCard() {
         Card topCard = deck.draw();
         logic.playTopCard(topCard);
-        return topCard;
+        gA = new GameActions(GameActions.actions.UPDATE,topCard,logic.activePlayer.getID());
+        updateAllPlayers();
     }
 
 }
