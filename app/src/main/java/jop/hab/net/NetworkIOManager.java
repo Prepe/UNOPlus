@@ -296,6 +296,8 @@ public class NetworkIOManager {
 
                 Log.d("@sendreceive", "sr running2");
 
+                Log.d("Time","SendRecieveist jetzt gestartet");
+
 
                 byte[] buffer = new byte[1024];
                 int bytes;

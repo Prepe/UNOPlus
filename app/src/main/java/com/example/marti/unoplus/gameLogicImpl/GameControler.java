@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -94,6 +95,8 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
             dropedCard[gA.nextPlayerID] = false;
             tradedCard[gA.nextPlayerID] = false;
         }
+
+        Log.d("Time","updateAllPLayrs will schon was vom NIO");
 
         NIOmanager.writeGameaction(gA);
     }
