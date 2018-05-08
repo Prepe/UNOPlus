@@ -76,13 +76,16 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
         NIOmanager.setHostAdress(hostAdress);
         NIOmanager.open();
 
+
+        /*
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        setUpGame();
+*/
+        //verschoben in NIOReady Call ;-)
+        //setUpGame();
     }
 
     /*public GameControler(PlayerList playersList, Deck gameDeck, GameLogic gameLogic) {
@@ -233,6 +236,15 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
         callGameController(recievedGA);
 
         //von diesem Punkt weg, wisst ihr, dass neue Daten bereit sind und ihr die Änderungen zeichnen könnt
+
+    }
+
+    @Override
+    public void NIOReady() {
+
+
+        Log.d("NIO Status", "NIO READY -Call in GC");
+        setUpGame();
 
     }
 

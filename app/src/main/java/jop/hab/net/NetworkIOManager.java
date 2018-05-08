@@ -299,6 +299,10 @@ public class NetworkIOManager {
                 Log.d("Time","SendRecieveist jetzt gestartet");
 
 
+                //Jz is alles bereit... des bedeutet GC kann auf NIO zugreifen.. deshalb INterface Callen
+                observerInterface.NIOReady();
+
+
                 byte[] buffer = new byte[1024];
                 int bytes;
 
