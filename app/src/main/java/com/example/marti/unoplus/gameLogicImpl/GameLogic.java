@@ -16,8 +16,11 @@ public class GameLogic {
     boolean skip = false;       //is the next Player suspended or not
     Card.values lastCardValue;  //The value of the card that is on top of the discard pile
     Card.colors lastCardColor;  //The color of the card that is on top of the discard pile
+    GameControler controller;
 
-    public GameLogic (PlayerList pL, Deck gameDeck) {
+    public GameLogic (PlayerList pL, Deck gameDeck, GameControler gc) {
+        controller = gc;
+        effects = new CardEffects(this, gc);
         playerList = pL;
         deck = gameDeck;
 
@@ -158,12 +161,10 @@ public class GameLogic {
     }
 
     //Plays 1 Card from the Deck without logic Checks
-    public Card playTopCard() {
-        Card card = deck.draw();
-        lastCardValue = card.value;
-        lastCardColor = card.color;
-        effects.cardEffect(null, card);
-        return  card;
+    public void playTopCard(Card topCard) {
+        lastCardValue = topCard.value;
+        lastCardColor = topCard.color;
+        effects.cardEffect(null, topCard);
     }
 
     //Tels the game to skip the next player
