@@ -77,15 +77,15 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
         NIOmanager.open();
 
 
-        /*
+
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-*/
+
         //verschoben in NIOReady Call ;-)
-        //setUpGame();
+        setUpGame();
     }
 
     /*public GameControler(PlayerList playersList, Deck gameDeck, GameLogic gameLogic) {
@@ -243,7 +243,7 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
 
 
         Log.d("NIO Status", "NIO READY -Call in GC");
-        setUpGame();
+      //  setUpGame();
 
     }
 

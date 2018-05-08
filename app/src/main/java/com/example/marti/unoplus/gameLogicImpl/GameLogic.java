@@ -25,6 +25,7 @@ public class GameLogic {
         deck = gameDeck;
 
         activePlayer = playerList.getFirst();
+
     }
 
     //Basic GameLogic should only be called when the card is good to play or player has to draw a card (card == null)
