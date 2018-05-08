@@ -127,7 +127,7 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
         players.setPlayers(pl);
         //@TODO player müssen noch korrekt in die Playerlist eingefügt werden, momentan nur zu Probezwecken
         deck = new Deck();
-        logic = new GameLogic(players, deck);
+        logic = new GameLogic(players, deck,this);
 
         deck.shuffle();
         drawHandCardsForPlayers();
