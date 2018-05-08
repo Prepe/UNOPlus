@@ -127,7 +127,7 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
         players.setPlayers(pl);
         //@TODO player müssen noch korrekt in die Playerlist eingefügt werden, momentan nur zu Probezwecken
         deck = new Deck();
-        logic = new GameLogic(players, deck);
+        logic = new GameLogic(players, deck,this);
 
         deck.shuffle();
         drawHandCardsForPlayers();
@@ -138,6 +138,8 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
 
         // gA = new GameActions(GameActions.actions.UPDATE,logic.playTopCard(),logic.activePlayer.getID());
         //updateAllPlayers();
+
+        playTopCard();
     }
 
     private void drawHandCardsForPlayers() {
@@ -230,6 +232,14 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
             }
         }
         return false;
+    }
+
+    public void playTopCard() {
+        Card topCard = deck.draw();
+        logic.playTopCard(topCard);
+        gA = new GameActions(GameActions.actions.UPDATE,topCard,logic.getActivePlayer().getID());
+
+        updateAllPlayers();
     }
 
     @Override
