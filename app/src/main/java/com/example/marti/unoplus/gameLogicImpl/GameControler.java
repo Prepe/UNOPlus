@@ -76,6 +76,12 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
         NIOmanager.setHostAdress(hostAdress);
         NIOmanager.open();
 
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         setUpGame();
     }
 
