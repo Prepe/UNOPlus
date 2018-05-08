@@ -62,7 +62,9 @@ public class MainActivityTest extends AppCompatActivity {
     static final int MESSAGE_READ = 1;
 
 
-
+//Hier wird die Verbindung zwischen den geräten hergstellt. Dann wird die IP Adresse des Hosts und der Mode ("host oder server)
+    //des aktuellen gerätes über einen Intent an den GameController weiter gegben.
+    //siehe weiter unten Zeile 196/212
 
 
     @Override
@@ -191,6 +193,10 @@ public class MainActivityTest extends AppCompatActivity {
               //  serverClass = new ServerClass();
                 //serverClass.start();
 
+                //Wenn das Gerät ein Server ist, wird die eigene IP und der String "server" an den GC weiter gegeben
+                //GC wird gestartet, intent sollte jedem klar sein
+                //Weiter im GC
+
                 Intent i = new Intent(getBaseContext(),GameControler.class);
                 i.putExtra("mode", "server");
                 i.putExtra("adress", groupOwnerAdress.getHostAddress());
@@ -205,6 +211,10 @@ public class MainActivityTest extends AppCompatActivity {
                // clientClass.start();
 
 
+                //Wenn das Gerät ein Client ist, wird die Server IP und der String "client" an den GC weiter gegeben
+
+                //GC wird gestartet, intent sollte jedem klar sein
+                //Weiter im GC
                 Intent i = new Intent(getBaseContext(),GameControler.class);
                 i.putExtra("mode", "client");
                 i.putExtra("adress", groupOwnerAdress.getHostAddress());

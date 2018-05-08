@@ -27,8 +27,15 @@ import java.net.Socket;
  * Created by jopihabich on 15.04.18.
  */
 
+
+//Erklärung des Network: einfach den Zahlen folgen!
+    //Start in der MainActivityTest (is eigentlich unser Lobby Screen... könnte mal unbenannt werden...
+
+
+
 public class NetworkIOManager {
-    GameControler GC;
+   GameControler GC;
+//wird nie instanziert und wird auch nicht benötigt
 
     ObserverInterface observerInterface;
 
@@ -187,11 +194,12 @@ public class NetworkIOManager {
 
                        gameAction = receiveGameaction(tmpmsg);
 
-                       callGameController(gameAction);
+                       //versteh ich nicht:
+//                       callGameController(gameAction);
 
                         Log.d("@handler", tmpmsg);
 
-
+                        //wenn Daten über den handler empfangen werden, wird Observer informiert.
                         observerInterface.dataChanged();
 
 

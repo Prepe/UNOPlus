@@ -28,6 +28,8 @@ import jop.hab.net.ObserverInterface;
  * Created by marti on 10.04.2018.
  */
 
+//Der GC muss das ObserverInterface implementieren, wichtig für automatische Datenabrfrage (Observer Pattern)
+
 public class GameControler extends AppCompatActivity implements ObserverInterface {
     PlayerList players;//reference to all Players in the Game
     Deck deck;              //reference to the Deck that is used
@@ -41,6 +43,10 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
     boolean[] tradedCard;   //
     String hostAdress;
     String mode;
+    GameActions recievedGA;
+
+    //Lokale GameAction für empfangene Spielzüge
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +60,15 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
 
         setContentView(R.layout.game_screen);
 
+        //Hier werden die IP und der Modus über den Intent aus der MainActivityTest abgefragt
+
         hostAdress = getIntent().getStringExtra("adress");
         mode = getIntent().getStringExtra("mode");
+
+        //der NIOManager wird instanziert und die Parameter werden übergeben
+        //Der NIO kann daten schreiben und empfangen.
+        //Empfangen funktioniert automatisch über die dataChanged Mehtode..siehe unten
+        //Schreiben der Daten geht über writeGameAction()... kann alles belieben geändert/erweitert werden
 
         NIOmanager = new NetworkIOManager(this);
         NIOmanager.setMode(mode);
@@ -203,6 +216,13 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
 
     @Override
     public void dataChanged() {
+
+        //des is des wichtigste
+        //wenn etwas empfangen wird, dann wird diese Methode vom NIO gecallt (Übers ObserverINterface)
+
+        recievedGA = NIOmanager.getGameAction();
+
+        //von diesem Punkt weg, wisst ihr, dass neue Daten bereit sind und ihr die Änderungen zeichnen könnt
 
     }
 }
