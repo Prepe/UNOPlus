@@ -70,7 +70,7 @@ public class UnoPlusNetwork {
         //TODO : Check if it is my player id
 
         //if i am the player with that player id and am in game screen:
-        game.addCardToHand(card);
+       // game.addCardToHand(card);
     }
 
 

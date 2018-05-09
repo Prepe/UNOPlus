@@ -5,8 +5,9 @@ import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
 import com.example.marti.unoplus.R;
-import com.example.marti.unoplus.Screens.GameScreen;
+//import com.example.marti.unoplus.Screens.GameScreen;
 import com.example.marti.unoplus.cards.Card;
+import com.example.marti.unoplus.gameLogicImpl.GameViewProt;
 
 /**
  * Created by ekzhu on 30.04.2018.
@@ -17,7 +18,7 @@ public class HandCardView {
     public ImageView view;
 
 
-    public HandCardView(Context context, GameScreen screen, Card card) {
+    public HandCardView(Context context, GameViewProt screen, Card card) {
         this.card = card;
         this.view = new ImageView(context);
         this.view.setTag(this);

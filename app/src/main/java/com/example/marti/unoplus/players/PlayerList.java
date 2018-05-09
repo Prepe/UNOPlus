@@ -1,5 +1,6 @@
 package com.example.marti.unoplus.players;
 
+import com.example.marti.unoplus.gameLogicImpl.GameViewProt;
 import com.example.marti.unoplus.players.Player;
 
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ public class PlayerList {
 
     LinkedList<Player> players;
     private Player active_player;
+    GameViewProt gameViewProt;
 
 
     //String[] player1 = new String[players.size()];
@@ -28,7 +30,7 @@ public class PlayerList {
     public Player getNext(Player p){
         int i = players.indexOf(p);
 
-        if(getNext(p) == null){
+        if(i == players.indexOf(players.getLast())){
             return getFirst();
         }
 
@@ -39,7 +41,7 @@ public class PlayerList {
     public Player getPrevious(Player p){
         int i = players.indexOf(p);
 
-        if(getPrevious(p) == null){
+        if(i == players.indexOf(players.getFirst())){
             return players.getLast();
         }
 

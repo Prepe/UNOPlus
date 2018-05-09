@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.example.marti.unoplus.R;
 import com.example.marti.unoplus.gameLogicImpl.GameController;
+import com.example.marti.unoplus.gameLogicImpl.GameViewProt;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -187,7 +188,7 @@ public class MainActivityTest extends AppCompatActivity {
                 //GC wird gestartet, intent sollte jedem klar sein
                 //Weiter im GC
 
-                Intent i = new Intent(getBaseContext(),GameController.class);
+                Intent i = new Intent(getBaseContext(),GameViewProt.class);
                 i.putExtra("mode", "server");
                 i.putExtra("adress", groupOwnerAdress.getHostAddress());
                 startActivity(i);
@@ -205,7 +206,7 @@ public class MainActivityTest extends AppCompatActivity {
 
                 //GC wird gestartet, intent sollte jedem klar sein
                 //Weiter im GC
-                Intent i = new Intent(getBaseContext(),GameController.class);
+                Intent i = new Intent(getBaseContext(),GameViewProt.class);
 
                // Intent i = new Intent(getBaseContext(),Player.class);
                 i.putExtra("mode", "client");

@@ -106,6 +106,8 @@ public class NetworkIOManager {
 
     public void writeGameaction(GameActions gameAction) {
 
+
+
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setLenient();
         Gson gson = gsonBuilder.create();
@@ -115,6 +117,13 @@ public class NetworkIOManager {
         Log.d("GSON Senden", GameActionString);
 
         sendReceive.write(GameActionString.getBytes());
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+
+        }
     }
 
     public GameActions receiveGameaction(String gameActionString) {
@@ -127,6 +136,9 @@ public class NetworkIOManager {
         try {
 
              gameAction = gson.fromJson(gameActionString, GameActions.class);
+             Log.d("GAMEACTION",gameAction.action.toString());
+
+
         }catch (Exception e){
 
             Log.e("JSon error","error");
@@ -307,17 +319,16 @@ public class NetworkIOManager {
 
 
                 //Jz is alles bereit... des bedeutet GC kann auf NIO zugreifen.. deshalb INterface Callen
-                observerInterface.NIOReady();
+                //observerInterface.NIOReady();
 
 
-                byte[] buffer;
+                byte[] buffer = new byte[1024];
 
                 int bytes;
 
                 while (socket != null) {
 
                     try {
-                        buffer = new byte[8192];
                         bytes = inputStream.read(buffer);
                         if (bytes > 0) {
 

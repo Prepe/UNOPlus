@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.example.marti.unoplus.GameActions;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.gameLogicImpl.GameController;
+import com.example.marti.unoplus.gameLogicImpl.GameViewProt;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.List;
 import jop.hab.net.NetworkIOManager;
 import jop.hab.net.ObserverInterface;
 
-public class Player extends AppCompatActivity implements ObserverInterface {
+public class Player {
    NetworkIOManager networkIOManager;
     TextView textView;
     EditText editTextSend;
@@ -31,7 +32,7 @@ public class Player extends AppCompatActivity implements ObserverInterface {
     String hostAdress;
     String mode;
 
-
+/*
         @Override
         protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,12 +49,13 @@ public class Player extends AppCompatActivity implements ObserverInterface {
 
 
     }
-
+*/
 
     static String name;
     static int ID;
     public GameController gameController;
     public static boolean cheated = true;
+    GameViewProt gameViewProt;
 
     LinkedList<Card> cards; //Hand
 
@@ -69,8 +71,10 @@ public class Player extends AppCompatActivity implements ObserverInterface {
         return this.name;
     }
 
-    public Player(int ID){
-        this.ID = ID;
+    public Player(GameViewProt gv, int id){
+        gameViewProt = gv;
+        this.ID = id;
+        cards = new LinkedList<>();
     }
 
     public int getID(){
@@ -80,11 +84,9 @@ public class Player extends AppCompatActivity implements ObserverInterface {
     void drawCard(){
         GameActions action;
         action = new GameActions(GameActions.actions.DRAW_CARD, ID);
-        sendAction(action);
-
-
+        gameViewProt.updateAllPlayers(action);
     }
-
+/*
     void sendAction(GameActions actions){
         networkIOManager.writeGameaction(actions);
         try {
@@ -93,29 +95,24 @@ public class Player extends AppCompatActivity implements ObserverInterface {
             e.printStackTrace();
         }
     }
-
+*/
 
     void gotCard(int ID, List<Card> cards) {
-        if (checkID(ID)){
-            for(Card c : cards){
+        if (checkID(ID)) {
+            for (Card c : cards) {
                 this.cards.add(c);
             }
-    }
-
-
-
-
+        }
     }
 
     boolean checkID(int ID){
         return ID == this.ID;
-
     }
 
     void playCard(Card c){
         GameActions action;
         action = new GameActions(GameActions.actions.PLAY_CARD, ID, c);
-        sendAction(action);
+        gameViewProt.updateAllPlayers(action);
     }
 
     void dropCard(Card c){
@@ -130,11 +127,6 @@ public class Player extends AppCompatActivity implements ObserverInterface {
         cards.remove(c);
         c = gameController.tradeCard(p,c);
         cards.add(c);
-    }
-
-
-    public Player(String name){
-        this.name = name;
     }
 
     void cardPlayed(int ID, Card card){
@@ -152,17 +144,6 @@ public class Player extends AppCompatActivity implements ObserverInterface {
                 cardPlayed(action.playerID, action.card);
         }
     }
-
-    @Override
-    public void dataChanged() {
-
-    }
-
-    @Override
-    public void NIOReady() {
-
-    }
-
 
     /**
     @Override

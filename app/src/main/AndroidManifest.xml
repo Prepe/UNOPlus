@@ -32,48 +32,39 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="landscape"
-            android:theme="@style/FullscreenTheme">
-
-        </activity>
+            android:theme="@style/FullscreenTheme"></activity>
+        <activity
+            android:name=".gameLogicImpl.GameViewProt"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape"
+            android:theme="@style/FullscreenTheme"></activity>
         <activity
             android:name=".Screens.GameScreen"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="landscape"
-            android:theme="@style/FullscreenTheme">
-
-        </activity>
+            android:theme="@style/FullscreenTheme"></activity>
         <activity
             android:name=".Screens.LobbyScreen"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="landscape"
-            android:theme="@style/FullscreenTheme">
-
-        </activity>
+            android:theme="@style/FullscreenTheme"></activity>
         <activity
             android:name=".Screens.Settings"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="landscape"
-            android:theme="@style/FullscreenTheme">
-
-        </activity>
+            android:theme="@style/FullscreenTheme"></activity>
         <activity
             android:name="jop.hab.net.MainActivityTest"
-            android:theme="@style/FullscreenTheme">
+            android:theme="@style/FullscreenTheme"></activity>
 
-        </activity>
-        <activity
-            android:name=".gameLogicImpl.GameController"
-            android:label="@string/title_activity_game_view_dev_impl"
-            android:theme="@style/FullscreenTheme">
-
-        </activity>
         <activity
             android:name="jop.hab.net.GameView_devImpl"
             android:label="@string/title_activity_game_view_dev_impl"
-            android:theme="@style/FullscreenTheme"></activity>
+            android:theme="@style/FullscreenTheme" />
 
     </application>
 

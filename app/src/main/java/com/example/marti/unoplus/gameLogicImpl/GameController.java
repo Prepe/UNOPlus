@@ -10,7 +10,7 @@ import android.view.WindowManager;
 
 import com.example.marti.unoplus.GameActions;
 import com.example.marti.unoplus.R;
-import com.example.marti.unoplus.Screens.GameScreen;
+//import com.example.marti.unoplus.Screens.GameScreen;
 import com.example.marti.unoplus.Server.ServerLogic;
 import com.example.marti.unoplus.Server.TakeDeck;
 import com.example.marti.unoplus.cards.Card;
@@ -31,11 +31,10 @@ import jop.hab.net.ObserverInterface;
 
 //Der GC muss das ObserverInterface implementieren, wichtig für automatische Datenabrfrage (Observer Pattern)
 
-public class GameController extends AppCompatActivity implements ObserverInterface {
+public class GameController   {
     PlayerList players;//reference to all Players in the Game
     Deck deck;              //reference to the Deck that is used
     GameLogic logic;        //reference to the GameLogic
-    NetworkIOManager NIOmanager;
     int startingHand = 7;//Amount of Cards every Player gets at the start of the Game
     float turnTime;         //Turn Timer for the Game
     public GameActions gA;         //Object that gets send to all Players
@@ -45,96 +44,40 @@ public class GameController extends AppCompatActivity implements ObserverInterfa
     String hostAdress;
     String mode;
     GameActions recievedGA;
+    boolean isGameController =false;
+    GameViewProt gvp;
 
     //Lokale GameAction für empfangene Spielzüge
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    public GameController(GameViewProt gvp) {
 
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
+        this.gvp= gvp;
+        deck = new Deck();
 
-        setContentView(R.layout.game_screen);
-
-        //Hier werden die IP und der Modus über den Intent aus der MainActivityTest abgefragt
-
-        hostAdress = getIntent().getStringExtra("adress");
-        mode = getIntent().getStringExtra("mode");
-
-        //der NIOManager wird instanziert und die Parameter werden übergeben
-        //Der NIO kann daten schreiben und empfangen.
-        //Empfangen funktioniert automatisch über die dataChanged Mehtode..siehe unten
-        //Schreiben der Daten geht über writeGameAction()... kann alles belieben geändert/erweitert werden
-
-        NIOmanager = new NetworkIOManager(this);
-        NIOmanager.setMode(mode);
-        NIOmanager.setHostAdress(hostAdress);
-        NIOmanager.open();
-
-
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        //verschoben in NIOReady Call ;-)
-        setUpGame();
     }
 
-    /*public GameController(PlayerList playersList, Deck gameDeck, GameLogic gameLogic) {
-        players = playersList;
-        deck = gameDeck;
-        logic = gameLogic;
-
-        setUpGame();
-    }*/
-
-    //Method to Update all Players after GC and GL have finished
-    public void updateAllPlayers() {
-
-        if (gA.nextPlayerID != null) {
-            calledUNO[gA.nextPlayerID - 1] = false;
-            dropedCard[gA.nextPlayerID - 1] = false;
-            tradedCard[gA.nextPlayerID - 1] = false;
-        }
-
-        Log.d("Time", "updateAllPLayrs will schon was vom NIO");
-
-        gA.gcSend = true;
-
-        NIOmanager.writeGameaction(gA);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 
     //Give all Players cards and Play the first Card
-    private void setUpGame() {
-        players = new PlayerList();
-        ArrayList<Player> pl = new ArrayList<Player>();
-        Player player = new Player(1);
-        pl.add(player);
-        player = new Player(2);
-        pl.add(player);
-        players.setPlayers(pl);
+    public void setUpGame() {
+        //players = new PlayerList();
+       // ArrayList<Player> pl = new ArrayList<Player>();
+        //Player player = new Player(1);
+        //pl.add(player);
+        //player = new Player(2);
+        //pl.add(player);
+        //players.setPlayers(pl);
         //@TODO player müssen noch korrekt in die Playerlist eingefügt werden, momentan nur zu Probezwecken
-        deck = new Deck();
+        //deck = new Deck();
         logic = new GameLogic(players, deck,this);
 
         deck.shuffle();
         drawHandCardsForPlayers();
 
-        calledUNO = new boolean[players.playerCount()];
-        dropedCard = new boolean[players.playerCount()];
-        tradedCard = new boolean[players.playerCount()];
+        //calledUNO = new boolean[players.playerCount()];
+        //dropedCard = new boolean[players.playerCount()];
+        //tradedCard = new boolean[players.playerCount()];
 
         // gA = new GameActions(GameActions.actions.UPDATE,logic.playTopCard(),logic.activePlayer.getID());
         //updateAllPlayers();
@@ -151,7 +94,7 @@ public class GameController extends AppCompatActivity implements ObserverInterfa
 
             gA = new GameActions(GameActions.actions.DRAW_CARD, p.getID(), handcards);
 
-            updateAllPlayers();
+            update();
         }
     }
 
@@ -167,7 +110,7 @@ public class GameController extends AppCompatActivity implements ObserverInterfa
 
         gA = new GameActions(GameActions.actions.DRAW_CARD, playerID, cards);
 
-        updateAllPlayers();
+        update();
     }
 
     //Method for playing cards
@@ -177,7 +120,7 @@ public class GameController extends AppCompatActivity implements ObserverInterfa
         if (logic.checkCard(card, p)) {
             //Remove the played card from the players hand
             gA = new GameActions(GameActions.actions.PLAY_CARD, player, card);
-            updateAllPlayers();
+            update();
 
             //Run game logic for the card that was played
             logic.runLogic(p, card);
@@ -198,6 +141,7 @@ public class GameController extends AppCompatActivity implements ObserverInterfa
         logic.nextPlayer(p);
 
         gA = new GameActions(GameActions.actions.UPDATE, new Card(logic.lastCardColor, logic.lastCardValue), logic.getActivePlayer().getID());
+        update();
     }
 
 
@@ -206,6 +150,7 @@ public class GameController extends AppCompatActivity implements ObserverInterfa
         if (!dropedCard[player]) {
             dropedCard[player] = true;
             gA = new GameActions(GameActions.actions.DROP_CARD, player, true);
+            update();
         }
     }
 
@@ -239,57 +184,16 @@ public class GameController extends AppCompatActivity implements ObserverInterfa
         logic.playTopCard(topCard);
         gA = new GameActions(GameActions.actions.UPDATE,topCard,logic.getActivePlayer().getID());
 
-        updateAllPlayers();
+        update();
     }
 
-    @Override
-    public void dataChanged() {
-
-        //des is des wichtigste
-        //wenn etwas empfangen wird, dann wird diese Methode vom NIO gecallt (Übers ObserverINterface)
-
-        recievedGA = NIOmanager.getGameAction();
-
-        callGameController(recievedGA);
-
-        //von diesem Punkt weg, wisst ihr, dass neue Daten bereit sind und ihr die Änderungen zeichnen könnt
-
+    public void update() {
+        gA.gcSend = true;
+        gvp.updateAllPlayers(gA);
     }
 
-    @Override
-    public void NIOReady() {
+    public void setPlayerList(PlayerList pl) {
+        players=pl;
 
-
-        Log.d("NIO Status", "NIO READY -Call in GC");
-        //  setUpGame();
-
-    }
-
-    //distripiutung game actions
-    void callGameController(GameActions action) {
-
-        if (!action.gcSend){
-            switch (action.action) {
-                case DRAW_CARD:
-                    drawCard(action.playerID);
-                    break;
-                case DROP_CARD:
-                    dropCard(action.playerID);
-                    break;
-                case TRADE_CARD:
-                    //GC.tradeCard();
-                    break;
-                case PLAY_CARD:
-                    playCard(action.playerID, action.card);
-                    break;
-                case WISH_COLOR:
-                    colorWish(action.playerID, action.colorWish);
-                    break;
-            }
-        } else {
-            for (Player p : players.getPlayers()) {
-                p.callPlayer(action);
-            }
-        }
     }
 }

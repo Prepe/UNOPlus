@@ -1,3 +1,4 @@
+
 package com.example.marti.unoplus.Screens;
 
 import android.content.Context;
@@ -32,10 +33,12 @@ import com.example.marti.unoplus.sound.SoundManager;
 import java.util.ArrayList;
 
 public class GameScreen extends AppCompatActivity {
+
+
     public GameScreen() {
         super();
         this.handCards = new ArrayList<HandCardView>();
-        this.soundManager=soundManager;
+        this.soundManager = soundManager;
     }
 
     Button unoButton;
@@ -139,7 +142,6 @@ public class GameScreen extends AppCompatActivity {
         }
 
 
-
         final TextView myCounter = findViewById(R.id.countdown);
         timer = new CountDownTimer(20000, 1000) {
 
@@ -173,12 +175,11 @@ public class GameScreen extends AppCompatActivity {
         this.playedCardView.updateCard(new Card(Card.colors.RED, Card.values.EIGHT));
 
         soundManager.playSound(Sounds.DEALINGCARD);
-        for(int i = 0; i < 7; i++) {
+        for (int i = 0; i < 7; i++) {
             Card.colors rndcolor = GameStatics.randomEnum(Card.colors.class);
             Card.values rndvalue = GameStatics.randomEnum(Card.values.class);
             GameStatics.net.CLIENT_GetNewCardForHand('0', new Card(rndcolor, rndvalue));
         }
-
 
 
     }
@@ -226,32 +227,32 @@ public class GameScreen extends AppCompatActivity {
 
     private void setUpDevGame() {
         this.serverLogic = new ServerLogic();
-        this.player = new Player(0);
+        // this.player = new Player(0);
 
     }
-
+/*
     public void addCardToHand(Card card) {
         soundManager.playSound(Sounds.DRAWCARD);
         HandCardView cardview = new HandCardView(GameScreen.this, this, card);
         this.handCards.add(cardview);
 
 
-            int numCardshand = 0;
-            for(int i = 0; i < handCards.size(); i++){
+        int numCardshand = 0;
+        for (int i = 0; i < handCards.size(); i++) {
 
-                numCardshand++;
-            }
+            numCardshand++;
+        }
 
-            String s = Integer.toString(numCardshand);
-            System.out.println(numCardshand);
-            numCards.setText("( "+s+" )");
+        String s = Integer.toString(numCardshand);
+        System.out.println(numCardshand);
+        numCards.setText("( " + s + " )");
 
 
         LinearLayout handBox = findViewById(R.id.playerHandLayout);
         handBox.addView(cardview.view);
 
     }
-
+*/
     public void removeCardFromHand(Card card) {
         if (GameStatics.devMode) {
             Log.d("GameDebug", "Gamescreen tries to remove following card from hand :" + card.value.toString() + " " + card.color.toString());
@@ -267,15 +268,15 @@ public class GameScreen extends AppCompatActivity {
                 soundManager.playSound(Sounds.DROPCARD);
                 timer.start();
 
-                    int numCardshand = 0;
-                    for(int i = 0; i < handCards.size(); i++){
+                int numCardshand = 0;
+                for (int i = 0; i < handCards.size(); i++) {
 
-                        numCardshand++;
-                    }
+                    numCardshand++;
+                }
 
-                    String s = Integer.toString(numCardshand);
-                    System.out.println(numCardshand);
-                    numCards.setText("( "+s+" )");
+                String s = Integer.toString(numCardshand);
+                System.out.println(numCardshand);
+                numCards.setText("( " + s + " )");
 
                 return;
             }

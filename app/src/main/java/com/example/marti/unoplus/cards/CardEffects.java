@@ -46,7 +46,7 @@ public class CardEffects {
         }
 
         gameControler.gA = new GameActions(GameActions.actions.NEXT_PLAYER, gameLogic.getActivePlayer().getID());
-        gameControler.updateAllPlayers();
+        gameControler.update();
     }
 
     //TakeTwo Card effect method
