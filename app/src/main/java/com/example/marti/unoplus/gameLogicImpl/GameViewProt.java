@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,7 +20,9 @@ import com.example.marti.unoplus.Client.HandCardView;
 import com.example.marti.unoplus.Client.PlayedCardView;
 import com.example.marti.unoplus.GameActions;
 import com.example.marti.unoplus.GameStatics;
+import com.example.marti.unoplus.Net.UnoPlusNetwork;
 import com.example.marti.unoplus.R;
+import com.example.marti.unoplus.Server.ServerLogic;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.cards.CardView;
 import com.example.marti.unoplus.cards.Deck;
@@ -57,6 +60,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     PlayedCardView playedCardView = null;
     TextView numCards;
     CountDownTimer timer;
+    Button devButton;
 
 
     public GameViewProt (){
@@ -109,6 +113,26 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                         + String.valueOf(millisUntilFinished / 1000));
             }
         }.start();
+
+        View.OnClickListener handler = new View.OnClickListener() {
+            public void onClick(View v) {
+
+                switch (v.getId()) {
+
+                    case R.id.unounobutton:
+                        Toast.makeText(getApplicationContext(), "Uno!!", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case R.id.devGetCard:
+                        Card.colors rndcolor = GameStatics.randomEnum(Card.colors.class);
+                        Card.values rndvalue = GameStatics.randomEnum(Card.values.class);
+                        GameStatics.net.CLIENT_GetNewCardForHand('0', new Card(rndcolor, rndvalue));
+                        break;
+                }
+            }
+        };
+
+
 
 
 
@@ -167,6 +191,12 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         //NIOmanager.writeGameaction(g);
         //verschoben in NIOReady Call ;-)
         //setUpGame();
+
+        if (GameStatics.devMode) {
+            devButton = findViewById(R.id.devGetCard);
+            devButton.setOnClickListener(handler);
+            GameStatics.net = new UnoPlusNetwork(true);
+        }
 
     }
 
