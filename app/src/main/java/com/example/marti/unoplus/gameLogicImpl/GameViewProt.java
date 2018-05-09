@@ -1,6 +1,7 @@
 package com.example.marti.unoplus.gameLogicImpl;
 
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,6 +11,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.marti.unoplus.Client.HandCardView;
@@ -52,6 +55,8 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     HandCardView hcv;
     ArrayList<HandCardView> handCards = null;
     PlayedCardView playedCardView = null;
+    TextView numCards;
+    CountDownTimer timer;
 
 
     public GameViewProt (){
@@ -83,6 +88,27 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
         GameStatics.currentActivity = this;
         GameStatics.Initialize(true);
+
+        final TextView myCounter = findViewById(R.id.countdown);
+        timer = new CountDownTimer(20000, 1000) {
+
+            @Override
+            public void onFinish() {
+                Card.colors rndcolor = GameStatics.randomEnum(Card.colors.class);
+                Card.values rndvalue = GameStatics.randomEnum(Card.values.class);
+                GameStatics.net.CLIENT_GetNewCardForHand('0', new Card(rndcolor, rndvalue));
+
+                Toast.makeText(getApplicationContext(), "ZEIT VORBEI! Karte gezogen", Toast.LENGTH_LONG).show();
+                //timeUp(context);    eventuell so oder mit TOAST
+                this.start();
+            }
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+                myCounter.setText("Verbleibende Zeit: "
+                        + String.valueOf(millisUntilFinished / 1000));
+            }
+        }.start();
 
 
 
@@ -192,17 +218,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     }
 
     @Override
-    public void onFinish() {
-        Card.colors rndcolor = GameStatics.randomEnum(Card.colors.class);
-        Card.values rndvalue = GameStatics.randomEnum(Card.values.class);
-        GameStatics.net.CLIENT_GetNewCardForHand('0', new Card(rndcolor, rndvalue));
-
-        Toast.makeText(getApplicationContext(), "ZEIT VORBEI! Karte gezogen", Toast.LENGTH_LONG).show();
-        //timeUp(context);    eventuell so oder mit TOAST
-        this.start();
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
 
@@ -274,6 +289,39 @@ if(recievedGA.action.equals(GameActions.actions.TRADE_CARD)) {
 
     @Override
     public void NIOReady() {
+
+    }
+
+    public void removeCardFromHand(Card card) {
+        if (GameStatics.devMode) {
+            Log.d("GameDebug", "Gamescreen tries to remove following card from hand :" + card.value.toString() + " " + card.color.toString());
+        }
+
+        LinearLayout handBox = findViewById(R.id.playerHandLayout);
+        for (HandCardView c : this.handCards) {
+            if (c.card.hasSameCardValueAs(card)) {
+                Log.d("GameDebug", "Found it in players hand!");
+
+                handBox.removeView(c.view);
+                this.handCards.remove(c);
+                //soundManager.playSound(Sounds.DROPCARD);
+                timer.start();
+
+                int numCardshand = 0;
+                for (int i = 0; i < handCards.size(); i++) {
+
+                    numCardshand++;
+                }
+
+                String s = Integer.toString(numCardshand);
+                System.out.println(numCardshand);
+                numCards.setText("( " + s + " )");
+
+                return;
+            }
+        }
+        Log.d("GameDebug", "Didn't find it.... fix plz");
+
 
     }
 }

@@ -5,8 +5,8 @@ import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
 import com.example.marti.unoplus.R;
-import com.example.marti.unoplus.Screens.GameScreen;
 import com.example.marti.unoplus.cards.Card;
+import com.example.marti.unoplus.gameLogicImpl.GameViewProt;
 
 /**
  * Created by ekzhu on 30.04.2018.
@@ -23,7 +23,7 @@ public class PlayedCardView {
 
     }
 
-    public PlayedCardView(Context context, GameScreen screen) {
+    public PlayedCardView(Context context, GameViewProt screen) {
         this.view = (ImageView) screen.findViewById(R.id.viewPlayedCard);
         this.view.setTag(this);
         this.view.setOnDragListener(new HandCardDragListener());
