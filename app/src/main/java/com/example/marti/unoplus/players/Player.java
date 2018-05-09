@@ -18,7 +18,7 @@ import java.util.List;
 import jop.hab.net.NetworkIOManager;
 import jop.hab.net.ObserverInterface;
 
-public class Player extends AppCompatActivity {
+public class Player extends AppCompatActivity implements ObserverInterface {
    NetworkIOManager networkIOManager;
     TextView textView;
     EditText editTextSend;
@@ -36,7 +36,7 @@ public class Player extends AppCompatActivity {
         protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        /**
+
         hostAdress = getIntent().getStringExtra("adress");
         mode = getIntent().getStringExtra("mode");
 
@@ -46,7 +46,7 @@ public class Player extends AppCompatActivity {
         networkIOManager.setHostAdress(hostAdress);
         networkIOManager.open();
 
-        **/
+
     }
 
 
@@ -87,6 +87,11 @@ public class Player extends AppCompatActivity {
 
     void sendAction(GameActions actions){
         networkIOManager.writeGameaction(actions);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -146,6 +151,16 @@ public class Player extends AppCompatActivity {
             case PLAY_CARD:
                 cardPlayed(action.playerID, action.card);
         }
+    }
+
+    @Override
+    public void dataChanged() {
+
+    }
+
+    @Override
+    public void NIOReady() {
+
     }
 
 

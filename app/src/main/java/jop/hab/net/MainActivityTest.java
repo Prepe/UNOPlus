@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.example.marti.unoplus.R;
 import com.example.marti.unoplus.Screens.GameScreen;
 import com.example.marti.unoplus.gameLogicImpl.GameControler;
+import com.example.marti.unoplus.players.Player;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -216,6 +217,8 @@ public class MainActivityTest extends AppCompatActivity {
                 //GC wird gestartet, intent sollte jedem klar sein
                 //Weiter im GC
                 Intent i = new Intent(getBaseContext(),GameControler.class);
+
+               // Intent i = new Intent(getBaseContext(),Player.class);
                 i.putExtra("mode", "client");
                 i.putExtra("adress", groupOwnerAdress.getHostAddress());
                 startActivity(i);
