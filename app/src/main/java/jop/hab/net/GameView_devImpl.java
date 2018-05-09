@@ -1,13 +1,8 @@
 package jop.hab.net;
 
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -21,18 +16,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.marti.unoplus.Screens.GameScreen;
-import com.example.marti.unoplus.Screens.MainMenu;
-import com.example.marti.unoplus.Server.ServerLogic;
 import com.example.marti.unoplus.cards.Card;
-import com.example.marti.unoplus.cards.Deck;
-import com.example.marti.unoplus.gameLogicImpl.GameControler;
-import com.example.marti.unoplus.gameLogicImpl.GameLogic;
 import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.R;
-import com.example.marti.unoplus.players.PlayerList;
-
-import java.util.ArrayList;
 
 public class GameView_devImpl extends AppCompatActivity implements ObserverInterface {
 
@@ -74,7 +60,7 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
         //@TODO player müssen noch korrekt in die Playerlist eingefügt werden, momentan nur zu Probezwecken
         Deck deck = new Deck();
         GameLogic GL = new GameLogic(PL, deck);
-        GameControler GC = new GameControler();
+        GameController GC = new GameController();
         GC.setUpGame();*/
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();

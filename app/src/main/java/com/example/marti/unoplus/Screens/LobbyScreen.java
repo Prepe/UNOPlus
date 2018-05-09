@@ -70,7 +70,7 @@ public class LobbyScreen extends AppCompatActivity {
                 ArrayList<PlayerList> players = new ArrayList<>();
 
                 GameLogic GameLogic = new GameLogic(PlayerList, Deck);
-                GameControler GameControler = new GameControler(PlayerList, Deck, GameLogic);
+                GameController GameController = new GameController(PlayerList, Deck, GameLogic);
                 */
 
             }

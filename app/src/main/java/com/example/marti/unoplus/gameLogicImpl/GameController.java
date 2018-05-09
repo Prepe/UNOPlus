@@ -31,7 +31,7 @@ import jop.hab.net.ObserverInterface;
 
 //Der GC muss das ObserverInterface implementieren, wichtig für automatische Datenabrfrage (Observer Pattern)
 
-public class GameControler extends AppCompatActivity implements ObserverInterface {
+public class GameController extends AppCompatActivity implements ObserverInterface {
     PlayerList players;//reference to all Players in the Game
     Deck deck;              //reference to the Deck that is used
     GameLogic logic;        //reference to the GameLogic
@@ -87,7 +87,7 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
         setUpGame();
     }
 
-    /*public GameControler(PlayerList playersList, Deck gameDeck, GameLogic gameLogic) {
+    /*public GameController(PlayerList playersList, Deck gameDeck, GameLogic gameLogic) {
         players = playersList;
         deck = gameDeck;
         logic = gameLogic;
@@ -265,7 +265,7 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
 
     }
 
-
+    //distripiutung game actions
     void callGameController(GameActions action) {
 
         if (!action.gcSend){
