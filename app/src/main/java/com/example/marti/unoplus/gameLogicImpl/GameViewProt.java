@@ -109,8 +109,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
             @Override
             public void onTick(long millisUntilFinished) {
-                myCounter.setText("Verbleibende Zeit: "
-                        + String.valueOf(millisUntilFinished / 1000));
+                myCounter.setText("Verbleibende Zeit: " + String.valueOf(millisUntilFinished / 1000));
             }
         }.start();
 
