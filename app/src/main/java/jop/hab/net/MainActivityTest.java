@@ -216,7 +216,9 @@ public class MainActivityTest extends AppCompatActivity {
 
                 //GC wird gestartet, intent sollte jedem klar sein
                 //Weiter im GC
-                Intent i = new Intent(getBaseContext(),Player.class);
+                Intent i = new Intent(getBaseContext(),GameControler.class);
+
+               // Intent i = new Intent(getBaseContext(),Player.class);
                 i.putExtra("mode", "client");
                 i.putExtra("adress", groupOwnerAdress.getHostAddress());
                 startActivity(i);

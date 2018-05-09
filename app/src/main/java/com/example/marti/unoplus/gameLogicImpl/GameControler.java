@@ -240,7 +240,6 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
 
         recievedGA = NIOmanager.getGameAction();
 
-
         callGameController(recievedGA);
 
         //von diesem Punkt weg, wisst ihr, dass neue Daten bereit sind und ihr die Änderungen zeichnen könnt
