@@ -2,24 +2,16 @@ package jop.hab.net;
 
 import android.os.Handler;
 import android.os.Message;
-import android.util.JsonReader;
-import android.util.JsonWriter;
 import android.util.Log;
 
 import com.example.marti.unoplus.GameActions;
-import com.example.marti.unoplus.cards.Card;
+import com.example.marti.unoplus.gameLogicImpl.GameController;
 import com.google.gson.Gson;
-import com.example.marti.unoplus.gameLogicImpl.GameControler;
 import com.google.gson.GsonBuilder;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.Writer;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -35,7 +27,7 @@ import java.net.Socket;
 
 
 public class NetworkIOManager {
-   GameControler GC;
+   GameController GC;
 //wird nie instanziert und wird auch nicht benötigt
 
     ObserverInterface observerInterface;

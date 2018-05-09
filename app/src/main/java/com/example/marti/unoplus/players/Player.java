@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.example.marti.unoplus.GameActions;
 import com.example.marti.unoplus.cards.Card;
-import com.example.marti.unoplus.gameLogicImpl.GameControler;
+import com.example.marti.unoplus.gameLogicImpl.GameController;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -52,7 +52,7 @@ public class Player extends AppCompatActivity implements ObserverInterface {
 
     static String name;
     static int ID;
-    public GameControler gameController;
+    public GameController gameController;
     public static boolean cheated = true;
 
     LinkedList<Card> cards; //Hand

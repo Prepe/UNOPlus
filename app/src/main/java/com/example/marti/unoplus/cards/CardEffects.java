@@ -1,7 +1,7 @@
 package com.example.marti.unoplus.cards;
 
 import com.example.marti.unoplus.GameActions;
-import com.example.marti.unoplus.gameLogicImpl.GameControler;
+import com.example.marti.unoplus.gameLogicImpl.GameController;
 import com.example.marti.unoplus.gameLogicImpl.GameLogic;
 import com.example.marti.unoplus.players.Player;
 
@@ -11,9 +11,9 @@ import com.example.marti.unoplus.players.Player;
 
 public class CardEffects {
     GameLogic gameLogic;
-    GameControler gameControler;
+    GameController gameControler;
 
-    public CardEffects(GameLogic gL, GameControler gC) {
+    public CardEffects(GameLogic gL, GameController gC) {
         gameLogic = gL;
         gameControler = gC;
     }

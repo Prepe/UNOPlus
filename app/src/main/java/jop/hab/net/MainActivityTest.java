@@ -13,10 +13,7 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -28,17 +25,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.marti.unoplus.R;
-import com.example.marti.unoplus.Screens.GameScreen;
-import com.example.marti.unoplus.gameLogicImpl.GameControler;
-import com.example.marti.unoplus.players.Player;
+import com.example.marti.unoplus.gameLogicImpl.GameController;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -198,7 +187,7 @@ public class MainActivityTest extends AppCompatActivity {
                 //GC wird gestartet, intent sollte jedem klar sein
                 //Weiter im GC
 
-                Intent i = new Intent(getBaseContext(),GameControler.class);
+                Intent i = new Intent(getBaseContext(),GameController.class);
                 i.putExtra("mode", "server");
                 i.putExtra("adress", groupOwnerAdress.getHostAddress());
                 startActivity(i);
@@ -216,7 +205,7 @@ public class MainActivityTest extends AppCompatActivity {
 
                 //GC wird gestartet, intent sollte jedem klar sein
                 //Weiter im GC
-                Intent i = new Intent(getBaseContext(),GameControler.class);
+                Intent i = new Intent(getBaseContext(),GameController.class);
 
                // Intent i = new Intent(getBaseContext(),Player.class);
                 i.putExtra("mode", "client");
