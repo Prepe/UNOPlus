@@ -2,27 +2,27 @@ package com.example.marti.unoplus.players;
 
 import com.example.marti.unoplus.GameActions;
 import com.example.marti.unoplus.cards.Card;
-import com.example.marti.unoplus.gameLogicImpl.GameController;
 import com.example.marti.unoplus.gameLogicImpl.GameViewProt;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import jop.hab.net.NetworkIOManager;
-import jop.hab.net.ObserverInterface;
-
 public class Player {
-    static String name;
+    static String playerName;
     static int ID;
-    public GameController gameController;
-    public static boolean cheated = true;
     GameViewProt gameViewProt;
     Card lastCard;
+    LinkedList<Card> handcards; //Hand
 
-    LinkedList<Card> cards; //Hand
+
+    public Player(GameViewProt gv, int id){
+        gameViewProt = gv;
+        this.ID = id;
+        handcards = new LinkedList<>();
+    }
 
     public List<Card> getHand(){
-        return this.cards;
+        return this.handcards;
     }
 
     public int getHandSize() {
@@ -30,13 +30,7 @@ public class Player {
     }
 
     public String getName(){
-        return this.name;
-    }
-
-    public Player(GameViewProt gv, int id){
-        gameViewProt = gv;
-        this.ID = id;
-        cards = new LinkedList<>();
+        return this.playerName;
     }
 
     public int getID(){
@@ -44,12 +38,14 @@ public class Player {
     }
 
     //<---------- Player Actions ---------->
+    //Ask server for Cards
     public void drawCard(){
         GameActions action;
         action = new GameActions(GameActions.actions.DRAW_CARD, ID);
         gameViewProt.updateAllPlayers(action);
     }
 
+    //Tell Server what Card you want to play
     public void playCard(Card c){
         GameActions action;
         action = new GameActions(GameActions.actions.PLAY_CARD, ID, c);
@@ -82,25 +78,29 @@ public class Player {
         }
     }
 
+    //Check if the GA is for you
     boolean checkID(int ID){
         return ID == this.ID;
     }
 
+    //Update Game Screen (last played Card, etc.)
     void updateGame(Card lastCard) {
         this.lastCard = lastCard;
     }
 
+    //Add given Cards to your handcards
     void gotCard(int ID, List<Card> cards) {
         if (checkID(ID)) {
             for (Card c : cards) {
-                this.cards.add(c);
+                this.handcards.add(c);
             }
         }
     }
 
+    //Your intended Card was played so now you can remove it
     void cardPlayed(int ID, Card card){
         if (checkID(ID)) {
-            this.cards.remove(card);
+            this.handcards.remove(card);
         }
     }
 }
