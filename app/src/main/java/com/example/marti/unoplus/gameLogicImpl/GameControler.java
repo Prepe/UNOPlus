@@ -269,7 +269,7 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
 
     void callGameController(GameActions action) {
 
-        if (action.gcSend==false){
+        if (!action.gcSend){
             switch (action.action) {
                 case DRAW_CARD:
                     drawCard(action.playerID);
@@ -286,6 +286,10 @@ public class GameControler extends AppCompatActivity implements ObserverInterfac
                 case WISH_COLOR:
                     colorWish(action.playerID, action.colorWish);
                     break;
+            }
+        } else {
+            for (Player p : players.getPlayers()) {
+                p.callPlayer(action);
             }
         }
     }

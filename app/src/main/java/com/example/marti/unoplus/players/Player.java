@@ -138,6 +138,16 @@ public class Player extends AppCompatActivity {
         }
     }
 
+    public void callPlayer(GameActions action) {
+        switch(action.action){
+            case DRAW_CARD:
+                gotCard(action.playerID, action.cards);
+                break;
+            case PLAY_CARD:
+                cardPlayed(action.playerID, action.card);
+        }
+    }
+
 
     /**
     @Override
