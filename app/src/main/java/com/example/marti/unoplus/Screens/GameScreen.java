@@ -170,7 +170,7 @@ public class GameScreen extends AppCompatActivity {
     public void onStart() {
         super.onStart();
 
-        this.playedCardView = new PlayedCardView(this.getApplicationContext(), this);
+       // this.playedCardView = new PlayedCardView(this.getApplicationContext(), this);
 
         this.playedCardView.updateCard(new Card(Card.colors.RED, Card.values.EIGHT));
 
