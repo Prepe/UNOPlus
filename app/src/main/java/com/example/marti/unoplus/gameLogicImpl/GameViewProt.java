@@ -37,7 +37,7 @@ import java.util.List;
 import jop.hab.net.NetworkIOManager;
 import jop.hab.net.ObserverInterface;
 
-public class GameViewProt extends AppCompatActivity implements ObserverInterface{
+public class GameViewProt extends AppCompatActivity implements ObserverInterface {
 
     PlayerList players;//reference to all Players in the Game
     Deck deck;              //reference to the Deck that is used
@@ -52,7 +52,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     String hostAdress;
     String mode;
     GameActions recievedGA;
-    boolean isGameController =false;
+    boolean isGameController = false;
     GameController gameController;
     Player player;
     HandCardView hcv;
@@ -63,7 +63,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     Button devButton;
 
 
-    public GameViewProt (){
+    public GameViewProt() {
         super();
         this.handCards = new ArrayList<HandCardView>();
     }
@@ -92,7 +92,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
         GameStatics.currentActivity = this;
         GameStatics.Initialize(true);
-
+/*
         final TextView myCounter = findViewById(R.id.countdown);
         timer = new CountDownTimer(20000, 1000) {
 
@@ -132,17 +132,13 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         };
 
 
-
-
-
-
+*/
 
 
         //Hier werden die IP und der Modus über den Intent aus der MainActivityTest abgefragt
 
 
-
-        if(mode.equals("server")){
+        if (mode.equals("server")) {
 
             try {
                 Thread.sleep(7000);
@@ -150,26 +146,26 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 e.printStackTrace();
             }
 
-            isGameController =true;
-            gameController= new GameController(this);
+            isGameController = true;
+            gameController = new GameController(this);
 
             PlayerList pl = new PlayerList();
             ArrayList l = new ArrayList<Player>();
-            Player temp = new Player(this,0);
-            player=temp;
+            Player temp = new Player(this, 0);
+            player = temp;
             l.add(temp);
             temp = new Player(this, 1);
             l.add(temp);
 
-            Log.d("time","before ga");
-            NIOmanager.writeGameaction(new GameActions(GameActions.actions.TRADE_CARD,temp.getID(),true));
-            Log.d("time","after ga");
+            Log.d("time", "before ga");
+            NIOmanager.writeGameaction(new GameActions(GameActions.actions.TRADE_CARD, temp.getID(), true));
+            Log.d("time", "after ga");
             pl.setPlayers(l);
             gameController.setPlayerList(pl);
             gameController.setUpGame();
 
 
-        }else{
+        } else {
 
             try {
                 Thread.sleep(5000);
@@ -184,40 +180,40 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         //Schreiben der Daten geht über writeGameAction()... kann alles belieben geändert/erweitert werden
 
 
-
         //GameActions g = new GameActions(GameActions.actions.UPDATE,new Card(Card.colors.BLUE, Card.values.EIGHT),0);
 
         //NIOmanager.writeGameaction(g);
         //verschoben in NIOReady Call ;-)
         //setUpGame();
-
+/*
         if (GameStatics.devMode) {
             devButton = findViewById(R.id.devGetCard);
             devButton.setOnClickListener(handler);
             GameStatics.net = new UnoPlusNetwork(true);
         }
-
+*/
     }
 
+    /*
 
-    //Method to Update all Players after GC and GL have finished
-    public void updateAllPlayers(GameActions gA) {
+        //Method to Update all Players after GC and GL have finished
+        public void updateAllPlayers(GameActions gA) {
 
-        Log.d("Time", "updateAllPLayrs will schon was vom NIO");
+            Log.d("Time", "updateAllPLayrs will schon was vom NIO");
 
-        NIOmanager.writeGameaction(gA);
-
-
-
+            NIOmanager.writeGameaction(gA);
 
 
-    }
 
 
+
+        }
+
+    */
     //distripiutung game actions
     void callGameController(GameActions action) {
 
-        if (!action.gcSend&&isGameController){
+        if (!action.gcSend && isGameController) {
             switch (action.action) {
                 case DRAW_CARD:
                     gameController.drawCard(action.playerID);
@@ -236,83 +232,84 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                     break;
             }
         } else {
-            Log.d("player","callplayer");
-                player.callPlayer(action);
+            Log.d("player", "callplayer");
+            player.callPlayer(action);
 
 
-                drawUpdate();
-
-
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        this.playedCardView = new PlayedCardView(this.getApplicationContext(), this);
-
-        this.playedCardView.updateCard(new Card(Card.colors.RED, Card.values.EIGHT));
-
-        for (int i = 0; i < 7; i++) {
-            Card.colors rndcolor = GameStatics.randomEnum(Card.colors.class);
-            Card.values rndvalue = GameStatics.randomEnum(Card.values.class);
-            GameStatics.net.CLIENT_GetNewCardForHand('0', new Card(rndcolor, rndvalue));
-        }
-    }
-
-    public void UpdateCurrentPlayCard(Card card) {
-        this.playedCardView.updateCard(card);
-    }
-
-    private void drawUpdate() {
-        List <Card> hand= player.getHand();
-
-
-
-
-
-        for (Card c:hand) {
-
-            Log.d("HANDCARD",c.getValue().toString());
-
-
-
-
-
-
-
+            //drawUpdate();
 
 
         }
-
-
     }
 
+    /*
+        @Override
+        public void onStart() {
+            super.onStart();
+
+            this.playedCardView = new PlayedCardView(this.getApplicationContext(), this);
+
+            this.playedCardView.updateCard(new Card(Card.colors.RED, Card.values.EIGHT));
+
+            for (int i = 0; i < 7; i++) {
+                Card.colors rndcolor = GameStatics.randomEnum(Card.colors.class);
+                Card.values rndvalue = GameStatics.randomEnum(Card.values.class);
+                GameStatics.net.CLIENT_GetNewCardForHand('0', new Card(rndcolor, rndvalue));
+            }
+        }
+
+        public void UpdateCurrentPlayCard(Card card) {
+            this.playedCardView.updateCard(card);
+        }
+
+        private void drawUpdate() {
+            List <Card> hand= player.getHand();
+
+
+
+
+
+            for (Card c:hand) {
+
+                Log.d("HANDCARD",c.getValue().toString());
+
+
+
+
+
+
+
+
+
+            }
+
+
+        }
+    */
     @Override
     public void dataChanged() {
-  try {
+        try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
 
         }
 
-        recievedGA =NIOmanager.getGameAction();
-if(recievedGA.action.equals(GameActions.actions.TRADE_CARD)) {
+        recievedGA = NIOmanager.getGameAction();
+        if (recievedGA.action.equals(GameActions.actions.TRADE_CARD)) {
 
-    if (!isGameController && player == null) {
-
-
-        player = new Player(this, recievedGA.playerID);
+            if (!isGameController && player == null) {
 
 
-    }
+                player = new Player(this, recievedGA.playerID);
 
-}else {
 
-    callGameController(recievedGA);
-}
+            }
+
+        } else {
+
+            callGameController(recievedGA);
+        }
 
     }
 
@@ -320,7 +317,7 @@ if(recievedGA.action.equals(GameActions.actions.TRADE_CARD)) {
     public void NIOReady() {
 
     }
-
+/*
     public void removeCardFromHand(Card card) {
         if (GameStatics.devMode) {
             Log.d("GameDebug", "Gamescreen tries to remove following card from hand :" + card.value.toString() + " " + card.color.toString());
@@ -353,4 +350,5 @@ if(recievedGA.action.equals(GameActions.actions.TRADE_CARD)) {
 
 
     }
+    */
 }
