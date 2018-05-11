@@ -34,7 +34,7 @@ import java.util.List;
 
 public class ConnectionScreen extends AppCompatActivity {
 
-    Button btnOnOff, btnDiscover;
+    Button btnOnOff, btnDiscover, btnStart;
     ListView listView;
     TextView ConnectionStatus;
     WifiManager wifiManager;
@@ -170,10 +170,16 @@ public class ConnectionScreen extends AppCompatActivity {
                 //GC wird gestartet, intent sollte jedem klar sein
                 //Weiter im GC
 
-                Intent i = new Intent(getBaseContext(), GameViewProt.class);
-                i.putExtra("mode", "server");
-                i.putExtra("adress", groupOwnerAdress.getHostAddress());
-                startActivity(i);
+
+                btnStart.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(getBaseContext(), GameViewProt.class);
+                        i.putExtra("mode", "server");
+                        i.putExtra("adress", groupOwnerAdress.getHostAddress());
+                        startActivity(i);
+                    }
+                });
 
 
             } else if (info.groupFormed) {
@@ -187,16 +193,28 @@ public class ConnectionScreen extends AppCompatActivity {
 
                 //GC wird gestartet, intent sollte jedem klar sein
                 //Weiter im GC
-                Intent i = new Intent(getBaseContext(), GameViewProt.class);
+                //Intent i = new Intent(getBaseContext(), GameViewProt.class);
 
                 // Intent i = new Intent(getBaseContext(),Player.class);
-                i.putExtra("mode", "client");
-                i.putExtra("adress", groupOwnerAdress.getHostAddress());
-                startActivity(i);
+               // i.putExtra("mode", "client");
+                //i.putExtra("adress", groupOwnerAdress.getHostAddress());
+                //startActivity(i);
 
                 //da hamm de serveradresse
                 //Serveradresse is eigentlich das wichtige
                 //gemma weiter ins game
+
+                btnStart.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(getBaseContext(), GameViewProt.class);
+
+
+                        i.putExtra("mode", "client");
+                        i.putExtra("adress", groupOwnerAdress.getHostAddress());
+                        startActivity(i);
+                    }
+                });
 
 
             }
@@ -220,6 +238,8 @@ public class ConnectionScreen extends AppCompatActivity {
 
         btnOnOff = (Button) findViewById(R.id.onOff);
         btnDiscover = (Button) findViewById(R.id.discover);
+        btnStart = (Button) findViewById(R.id.start);
+
 
         listView = (ListView) findViewById(R.id.peerListView);
 

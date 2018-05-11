@@ -42,14 +42,14 @@ public class Player {
     public void drawCard(){
         GameActions action;
         action = new GameActions(GameActions.actions.DRAW_CARD, ID);
-        gameViewProt.updateAllPlayers(action);
+       // gameViewProt.updateAllPlayers(action);
     }
 
     //Tell Server what Card you want to play
     public void playCard(Card c){
         GameActions action;
         action = new GameActions(GameActions.actions.PLAY_CARD, ID, c);
-        gameViewProt.updateAllPlayers(action);
+        //gameViewProt.updateAllPlayers(action);
     }
 
     public void dropCard(Card c){

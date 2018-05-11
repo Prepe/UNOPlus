@@ -174,7 +174,7 @@ public class GameController   {
 
     public void update() {
         gA.gcSend = true;
-        gvp.updateAllPlayers(gA);
+       // gvp.updateAllPlayers(gA);
     }
 
     public void setPlayerList(PlayerList pl) {
