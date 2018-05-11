@@ -22,12 +22,11 @@ import java.net.Socket;
 
 
 //Erklärung des Network: einfach den Zahlen folgen!
-    //Start in der MainActivityTest (is eigentlich unser Lobby Screen... könnte mal unbenannt werden...
-
+//Start in der ConnectionScreen (is eigentlich unser Lobby Screen... könnte mal unbenannt werden...
 
 
 public class NetworkIOManager {
-   GameController GC;
+    GameController GC;
 //wird nie instanziert und wird auch nicht benötigt
 
     ObserverInterface observerInterface;
@@ -38,7 +37,6 @@ public class NetworkIOManager {
 
 
     String hostAdress;
-
 
 
     boolean MODE_IS_SERVER = false;
@@ -92,20 +90,8 @@ public class NetworkIOManager {
 
     }
 
-    public void writeMsg(String msg) {
-
-        sendReceive.write(msg.getBytes());
-    }
-
-   /* public void writeCard(Card c) {
-
-
-        sendReceive.write(toJSon(c).getBytes());
-
-    }*/
 
     public void writeGameaction(GameActions gameAction) {
-
 
 
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -135,19 +121,192 @@ public class NetworkIOManager {
 
         try {
 
-             gameAction = gson.fromJson(gameActionString, GameActions.class);
-             Log.d("GAMEACTION",gameAction.action.toString());
+            gameAction = gson.fromJson(gameActionString, GameActions.class);
+            Log.d("GAMEACTION", gameAction.action.toString());
 
 
-        }catch (Exception e){
+        } catch (Exception e) {
 
-            Log.e("JSon error","error");
+            Log.e("JSon error", "error");
         }
 
         return gameAction;
     }
 
-      /*  public String toJSon(Card c) {
+
+    Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+
+            switch (msg.what) {
+
+                case MESSAGE_READ:
+                    byte[] readBuffer = (byte[]) msg.obj;
+                    String tmpmsg = new String(readBuffer, 0, msg.arg1);
+
+
+                    Log.d("JSon Empfangen", tmpmsg);
+
+                    gameAction = receiveGameaction(tmpmsg);
+
+
+                    //versteh ich nicht:
+//                       callGameController(gameAction);
+
+
+                    //wenn Daten über den handler empfangen werden, wird Observer informiert.
+                    observerInterface.dataChanged();
+
+
+                    break;
+            }
+
+            return true;
+        }
+    });
+
+
+    public class ServerClass extends Thread {
+
+        Socket socket;
+        ServerSocket serverSocket;
+
+        @Override
+        public void run() {
+
+
+            Log.d("@serverclass", "Serverclass running");
+
+            try {
+//                    Log.d("socket",serverSocket.toString());
+                serverSocket = new ServerSocket(8888);
+                socket = serverSocket.accept();
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.d("@error", "sc catched");
+            }
+
+            sendReceive = new SendReceive(socket);
+
+            sendReceive.start();
+
+
+        }
+    }
+
+    private class SendReceive extends Thread {
+
+
+        private Socket socket;
+        private InputStream inputStream;
+        private OutputStream outputStream;
+
+
+        public SendReceive(Socket socket) {
+
+
+            this.socket = socket;
+
+            try {
+                Log.d("@sendreceive", "sr created2");
+
+                this.inputStream = socket.getInputStream();
+                this.outputStream = socket.getOutputStream();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+
+        @Override
+        public void run() {
+
+            Log.d("@sendreceive", "sr running2");
+
+            Log.d("Time", "SendRecieveist jetzt gestartet");
+
+
+            //Jz is alles bereit... des bedeutet GC kann auf NIO zugreifen.. deshalb INterface Callen
+            //observerInterface.NIOReady();
+
+
+            byte[] buffer = new byte[1024];
+
+            int bytes;
+
+            while (socket != null) {
+
+                try {
+                    bytes = inputStream.read(buffer);
+                    if (bytes > 0) {
+
+                        handler.obtainMessage(MESSAGE_READ, bytes, -1, buffer).sendToTarget();
+
+
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+
+        }
+
+
+        public void write(byte[] bytes) {
+
+            try {
+
+                Log.d("@write", bytes.toString());
+
+                outputStream.write(bytes);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    public class ClientClass extends Thread {
+
+        Socket socket;
+        String hostAdd;
+
+        public ClientClass(String hostAddress) {
+
+            Log.d("@clientclass", hostAddress);
+            hostAdd = hostAddress;
+            socket = new Socket();
+        }
+
+        @Override
+        public void run() {
+            super.run();
+            try {
+
+                Log.d("socket", socket.toString());
+                socket.connect(new InetSocketAddress(hostAdd, 8888), 500);
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            sendReceive = new SendReceive(socket);
+            sendReceive.start();
+        }
+    }
+
+
+}
+
+     /*  public String toJSon(Card c) {
 
             try {
 
@@ -192,204 +351,18 @@ public class NetworkIOManager {
 
 
             return null;
-        }*/
-
-
-
-        Handler handler = new Handler(new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg) {
-
-                switch (msg.what) {
-
-                    case MESSAGE_READ:
-                        byte[] readBuffer = (byte[]) msg.obj;
-                        String tmpmsg = new String(readBuffer, 0, msg.arg1);
-                        //String tmpcardString = new String(readBuffer, 0, msg.arg1);
-
-
-                       // testText = tmpmsg;
-                        Log.d("JSon Empfangen", tmpmsg);
-
-                       gameAction = receiveGameaction(tmpmsg);
-
-
-                       //versteh ich nicht:
-//                       callGameController(gameAction);
-
-
-                        //wenn Daten über den handler empfangen werden, wird Observer informiert.
-                        observerInterface.dataChanged();
-
-
-                        break;
-                }
-
-                return true;
-            }
-        });
-
-
-
-
-        public class ServerClass extends Thread {
-
-            Socket socket;
-            ServerSocket serverSocket;
-
-            @Override
-            public void run() {
-
-
-                Log.d("@serverclass", "Serverclass running");
-
-                try {
-//                    Log.d("socket",serverSocket.toString());
-                    serverSocket = new ServerSocket(8888);
-                    socket = serverSocket.accept();
-
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.d("@error", "sc catched");
-                }
-                // sendReceive = new SendReceive(socket,serverSocket);
-                sendReceive = new SendReceive(socket);
-
-                sendReceive.start();
-
-
-            }
-        }
-
-        private class SendReceive extends Thread {
-
-
-            private Socket socket;
-            private InputStream inputStream;
-            private OutputStream outputStream;
-
-            /* public SendReceive(Socket socket, ServerSocket serverSocket) {
-
-
-
-                 this.socket = socket;
-                 try {
-                     socket.connect(serverSocket.getLocalSocketAddress());
-                 } catch (IOException e) {
-                     e.printStackTrace();
-                 }
-
-
-                 try {
-                     Log.d("@sendreceive","sr created1");
-
-                     this.inputStream = socket.getInputStream();
-                     this.outputStream = socket.getOutputStream();
-
-                 } catch (IOException e) {
-                     e.printStackTrace();
-                 }
-
-             }*/
-            public SendReceive(Socket socket) {
-
-
-                this.socket = socket;
-
-                try {
-                    Log.d("@sendreceive", "sr created2");
-
-                    this.inputStream = socket.getInputStream();
-                    this.outputStream = socket.getOutputStream();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-
-            @Override
-            public void run() {
-
-                Log.d("@sendreceive", "sr running2");
-
-                Log.d("Time","SendRecieveist jetzt gestartet");
-
-
-                //Jz is alles bereit... des bedeutet GC kann auf NIO zugreifen.. deshalb INterface Callen
-                //observerInterface.NIOReady();
-
-
-                byte[] buffer = new byte[1024];
-
-                int bytes;
-
-                while (socket != null) {
-
-                    try {
-                        bytes = inputStream.read(buffer);
-                        if (bytes > 0) {
-
-                            handler.obtainMessage(MESSAGE_READ, bytes, -1, buffer).sendToTarget();
-
-
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-
-                }
-
-
-            }
-
-
-            public void write(byte[] bytes) {
-
-                try {
-
-                    Log.d("@write", bytes.toString());
-
-                    outputStream.write(bytes);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
 
 
-        public class ClientClass extends Thread {
+    public void writeMsg(String msg) {
 
-            Socket socket;
-            String hostAdd;
-
-            public ClientClass(String hostAddress) {
-
-                Log.d("@clientclass", hostAddress);
-                hostAdd = hostAddress;
-                socket = new Socket();
-            }
-
-            @Override
-            public void run() {
-                super.run();
-                try {
-
-                    Log.d("socket", socket.toString());
-                    socket.connect(new InetSocketAddress(hostAdd, 8888), 500);
-
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                sendReceive = new SendReceive(socket);
-                sendReceive.start();
-            }
-        }
-
-
+        sendReceive.write(msg.getBytes());
     }
+
+    public void writeCard(Card c) {
+
+
+        sendReceive.write(toJSon(c).getBytes());
+
+    }*/
+

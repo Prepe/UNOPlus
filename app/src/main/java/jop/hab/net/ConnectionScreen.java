@@ -32,12 +32,11 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivityTest extends AppCompatActivity {
+public class ConnectionScreen extends AppCompatActivity {
 
-    Button btnOnOff, btnDiscover, btnSend;
+    Button btnOnOff, btnDiscover;
     ListView listView;
-    TextView read_msg_box, ConnectionStatus;
-    EditText writeMsg;
+    TextView ConnectionStatus;
     WifiManager wifiManager;
 
     WifiP2pManager mManager;
@@ -67,23 +66,6 @@ public class MainActivityTest extends AppCompatActivity {
         exqListener();
 
     }
-
-    Handler handler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-
-            switch (msg.what) {
-
-                case MESSAGE_READ:
-                    byte[] readBuffer = (byte[]) msg.obj;
-                    String tmpmsg = new String(readBuffer, 0, msg.arg1);
-                    read_msg_box.setText(tmpmsg);
-                    break;
-            }
-
-            return true;
-        }
-    });
 
 
     private void exqListener() {
@@ -181,34 +163,33 @@ public class MainActivityTest extends AppCompatActivity {
             if (info.groupFormed && info.isGroupOwner) {
 
                 ConnectionStatus.setText("Host");
-              //  serverClass = new ServerClass();
+                //  serverClass = new ServerClass();
                 //serverClass.start();
 
                 //Wenn das Gerät ein Server ist, wird die eigene IP und der String "server" an den GC weiter gegeben
                 //GC wird gestartet, intent sollte jedem klar sein
                 //Weiter im GC
 
-                Intent i = new Intent(getBaseContext(),GameViewProt.class);
+                Intent i = new Intent(getBaseContext(), GameViewProt.class);
                 i.putExtra("mode", "server");
                 i.putExtra("adress", groupOwnerAdress.getHostAddress());
                 startActivity(i);
 
 
-
             } else if (info.groupFormed) {
 
                 ConnectionStatus.setText("Client");
-             //   clientClass = new ClientClass(groupOwnerAdress);
-               // clientClass.start();
+                //   clientClass = new ClientClass(groupOwnerAdress);
+                // clientClass.start();
 
 
                 //Wenn das Gerät ein Client ist, wird die Server IP und der String "client" an den GC weiter gegeben
 
                 //GC wird gestartet, intent sollte jedem klar sein
                 //Weiter im GC
-                Intent i = new Intent(getBaseContext(),GameViewProt.class);
+                Intent i = new Intent(getBaseContext(), GameViewProt.class);
 
-               // Intent i = new Intent(getBaseContext(),Player.class);
+                // Intent i = new Intent(getBaseContext(),Player.class);
                 i.putExtra("mode", "client");
                 i.putExtra("adress", groupOwnerAdress.getHostAddress());
                 startActivity(i);
@@ -216,7 +197,6 @@ public class MainActivityTest extends AppCompatActivity {
                 //da hamm de serveradresse
                 //Serveradresse is eigentlich das wichtige
                 //gemma weiter ins game
-
 
 
             }
@@ -294,118 +274,5 @@ public class MainActivityTest extends AppCompatActivity {
 
         }
     };
+}
 
-/*
-    public class ServerClass extends Thread {
-
-        Socket socket;
-        ServerSocket serverSocket;
-
-        @Override
-        public void run() {
-            Log.d("serverrun","1");
-
-
-            try {
-                serverSocket = new ServerSocket(8888);
-                socket = serverSocket.accept();
-
-                sendReceive = new SendReceive(socket);
-                sendReceive.start();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-        }
-    }
-
-    private class SendReceive extends Thread {
-
-
-        private Socket socket;
-        private InputStream inputStream;
-        private OutputStream outputStream;
-
-        public SendReceive(Socket socket) {
-
-
-            this.socket = socket;
-            try {
-                this.inputStream = socket.getInputStream();
-                this.outputStream = socket.getOutputStream();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        @Override
-        public void run() {
-            Log.d("sendrecrun","1");
-
-
-            byte[] buffer = new byte[1024];
-            int  bytes;
-
-            while(socket!=null){
-
-                try {
-                    bytes= inputStream.read(buffer);
-                    if(bytes>0){
-
-                        handler.obtainMessage(MESSAGE_READ,bytes,-1,buffer).sendToTarget();
-
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
-            }
-
-
-        }
-
-
-        public void write(byte[]bytes){
-
-            try {
-                outputStream.write(bytes);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-
-    public class ClientClass extends Thread {
-
-        Socket socket;
-        String hostAdd;
-
-        public ClientClass(InetAddress hostAddress) {
-
-            hostAdd = hostAddress.getHostAddress();
-            socket = new Socket();
-        }
-
-        @Override
-        public void run() {
-            super.run();
-            Log.d("clientrun","1");
-            try {
-                socket.connect(new InetSocketAddress(hostAdd, 8888), 500);
-                sendReceive = new SendReceive(socket);
-                sendReceive.start();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-
-*/}

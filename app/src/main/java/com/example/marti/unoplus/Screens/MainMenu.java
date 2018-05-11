@@ -13,7 +13,7 @@ import com.example.marti.unoplus.sound.Sounds;
 import com.example.marti.unoplus.sound.SoundManager;
 
 
-import jop.hab.net.MainActivityTest;
+import jop.hab.net.ConnectionScreen;
 
 public class MainMenu extends AppCompatActivity {
     public MainMenu() {
@@ -71,7 +71,7 @@ public class MainMenu extends AppCompatActivity {
 
                 case R.id.spielbeitreten:
                     soundManager.playSound(Sounds.THEMESTOP);
-                    startActivity(new Intent(MainMenu.this, MainActivityTest.class));
+                    startActivity(new Intent(MainMenu.this, ConnectionScreen.class));
                     break;
 
                 case R.id.einstellungen:

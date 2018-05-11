@@ -58,11 +58,11 @@
             android:screenOrientation="landscape"
             android:theme="@style/FullscreenTheme"></activity>
         <activity
-            android:name="jop.hab.net.MainActivityTest"
+            android:name="jop.hab.net.ConnectionScreen"
             android:theme="@style/FullscreenTheme"></activity>
 
         <activity
-            android:name="jop.hab.net.GameView_devImpl"
+            android:name="jop.hab.net.Redundant.GameView_devImpl"
             android:label="@string/title_activity_game_view_dev_impl"
             android:theme="@style/FullscreenTheme" />
 

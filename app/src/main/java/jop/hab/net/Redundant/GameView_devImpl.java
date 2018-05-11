@@ -1,4 +1,4 @@
-package jop.hab.net;
+package jop.hab.net.Redundant;
 
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -19,6 +19,9 @@ import android.widget.Toast;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.R;
+
+import jop.hab.net.NetworkIOManager;
+import jop.hab.net.ObserverInterface;
 
 public class GameView_devImpl extends AppCompatActivity implements ObserverInterface {
 
@@ -159,7 +162,7 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
                     case 0:
                         //Toast.makeText(getApplicationContext(), "Player 1", Toast.LENGTH_SHORT).show();
                         //TO DO
-                        if(Player.cheated == true){
+                        if(true){
                             //TODO
                         }
                         break;

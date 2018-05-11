@@ -122,7 +122,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 */
 
 
-        //Hier werden die IP und der Modus über den Intent aus der MainActivityTest abgefragt
+        //Hier werden die IP und der Modus über den Intent aus der ConnectionScreen abgefragt
 
 
         if (mode.equals("server")) {
