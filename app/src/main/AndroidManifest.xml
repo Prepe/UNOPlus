@@ -40,7 +40,7 @@
             android:screenOrientation="landscape"
             android:theme="@style/FullscreenTheme"></activity>
         <activity
-            android:name=".Screens.GameScreen"
+            android:name=".Screens.CardViewTest"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="landscape"

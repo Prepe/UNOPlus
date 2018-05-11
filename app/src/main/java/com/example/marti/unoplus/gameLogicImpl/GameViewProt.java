@@ -3,36 +3,23 @@ package com.example.marti.unoplus.gameLogicImpl;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.StrictMode;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.marti.unoplus.Client.HandCardView;
-import com.example.marti.unoplus.Client.PlayedCardView;
+import com.example.marti.unoplus.katiFixMe.Client.HandCardView;
+import com.example.marti.unoplus.katiFixMe.Client.PlayedCardView;
 import com.example.marti.unoplus.GameActions;
 import com.example.marti.unoplus.GameStatics;
-import com.example.marti.unoplus.Net.UnoPlusNetwork;
 import com.example.marti.unoplus.R;
-import com.example.marti.unoplus.Server.ServerLogic;
-import com.example.marti.unoplus.cards.Card;
-import com.example.marti.unoplus.cards.CardView;
 import com.example.marti.unoplus.cards.Deck;
 import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.players.PlayerList;
-import com.example.marti.unoplus.sound.Sounds;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 import jop.hab.net.NetworkIOManager;
 import jop.hab.net.ObserverInterface;
@@ -237,7 +224,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
 
             //drawUpdate();
-
+//hallo
 
         }
     }

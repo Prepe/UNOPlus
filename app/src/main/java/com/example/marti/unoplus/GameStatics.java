@@ -2,7 +2,7 @@ package com.example.marti.unoplus;
 
 import android.support.v7.app.AppCompatActivity;
 
-import com.example.marti.unoplus.Net.UnoPlusNetwork;
+import com.example.marti.unoplus.katiFixMe.Client.Net.UnoPlusNetwork;
 
 import java.util.Random;
 

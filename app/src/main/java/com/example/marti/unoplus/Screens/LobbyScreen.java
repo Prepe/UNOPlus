@@ -9,8 +9,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 import com.example.marti.unoplus.GameStatics;
-import com.example.marti.unoplus.cards.Deck;
-import com.example.marti.unoplus.players.PlayerList;
 import com.example.marti.unoplus.R;
 
 
@@ -39,7 +37,7 @@ public class LobbyScreen extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(LobbyScreen.this, GameScreen.class));
+                startActivity(new Intent(LobbyScreen.this, CardViewTest.class));
 
                 /*
                 boolean kt = false;

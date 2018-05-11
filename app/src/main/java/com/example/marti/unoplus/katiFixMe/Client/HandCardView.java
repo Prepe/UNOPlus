@@ -1,10 +1,11 @@
-package com.example.marti.unoplus.Client;
+package com.example.marti.unoplus.katiFixMe.Client;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
 import com.example.marti.unoplus.R;
+//import com.example.marti.unoplus.Screens.CardViewTest;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.gameLogicImpl.GameViewProt;
 
@@ -12,21 +13,20 @@ import com.example.marti.unoplus.gameLogicImpl.GameViewProt;
  * Created by ekzhu on 30.04.2018.
  */
 
-public class PlayedCardView {
+public class HandCardView {
+    public Card card = null;
+    public ImageView view;
 
-    Card card = null;
-    ImageView view;
 
-    public void updateCard(Card card) {
+    public HandCardView(Context context, GameViewProt screen, Card card) {
         this.card = card;
-        this.updateCardPicture();
-
-    }
-
-    public PlayedCardView(Context context, GameViewProt screen) {
-        this.view = (ImageView) screen.findViewById(R.id.viewPlayedCard);
+        this.view = new ImageView(context);
         this.view.setTag(this);
-        this.view.setOnDragListener(new HandCardDragListener());
+        this.updateCardPicture();
+        if (this.view != null) {
+            this.view.setOnTouchListener(new HandCardTouchListener());
+        }
+
     }
 
     public void updateCardPicture() {
@@ -244,6 +244,5 @@ public class PlayedCardView {
         }
         this.view.setBackground(pic);
     }
-
 
 }

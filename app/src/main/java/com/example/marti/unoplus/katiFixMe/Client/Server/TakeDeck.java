@@ -1,4 +1,4 @@
-package com.example.marti.unoplus.Server;
+package com.example.marti.unoplus.katiFixMe.Client.Server;
 
 import com.example.marti.unoplus.cards.Card;
 

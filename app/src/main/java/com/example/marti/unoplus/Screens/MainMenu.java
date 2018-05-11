@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.media.MediaPlayer;
 
 import com.example.marti.unoplus.GameStatics;
 import com.example.marti.unoplus.R;
@@ -14,7 +13,6 @@ import com.example.marti.unoplus.sound.Sounds;
 import com.example.marti.unoplus.sound.SoundManager;
 
 
-import jop.hab.net.FullscreenActivity;
 import jop.hab.net.MainActivityTest;
 
 public class MainMenu extends AppCompatActivity {
@@ -88,7 +86,7 @@ public class MainMenu extends AppCompatActivity {
                 case R.id.devModeButton:
                     soundManager.playSound(Sounds.THEMESTOP);
                     GameStatics.devMode = true;
-                    startActivity(new Intent(MainMenu.this, GameScreen.class));
+                    startActivity(new Intent(MainMenu.this, CardViewTest.class));
                     break;
             }
         }

@@ -19,12 +19,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.marti.unoplus.Client.HandCardView;
-import com.example.marti.unoplus.Client.PlayedCardView;
+import com.example.marti.unoplus.katiFixMe.Client.HandCardView;
+import com.example.marti.unoplus.katiFixMe.Client.PlayedCardView;
 import com.example.marti.unoplus.GameStatics;
-import com.example.marti.unoplus.Net.UnoPlusNetwork;
+import com.example.marti.unoplus.katiFixMe.Client.Net.UnoPlusNetwork;
 import com.example.marti.unoplus.R;
-import com.example.marti.unoplus.Server.ServerLogic;
+import com.example.marti.unoplus.katiFixMe.Client.Server.ServerLogic;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.sound.Sounds;
@@ -32,10 +32,10 @@ import com.example.marti.unoplus.sound.SoundManager;
 
 import java.util.ArrayList;
 
-public class GameScreen extends AppCompatActivity {
+public class CardViewTest extends AppCompatActivity {
 
 
-    public GameScreen() {
+    public CardViewTest() {
         super();
         this.handCards = new ArrayList<HandCardView>();
         this.soundManager = soundManager;
@@ -193,14 +193,14 @@ public class GameScreen extends AppCompatActivity {
     public void timeUp(Context context) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(
-                GameScreen.this);
+                CardViewTest.this);
         builder.setTitle("Zeit vorbei!")
                 .setMessage("Ziehe Karte")
                 .setCancelable(false)
                 .setNeutralButton(android.R.string.ok,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                GameScreen.this.getApplicationContext();
+                                CardViewTest.this.getApplicationContext();
                             }
                         });
         AlertDialog alert = builder.create();
@@ -233,7 +233,7 @@ public class GameScreen extends AppCompatActivity {
 /*
     public void addCardToHand(Card card) {
         soundManager.playSound(Sounds.DRAWCARD);
-        HandCardView cardview = new HandCardView(GameScreen.this, this, card);
+        HandCardView cardview = new HandCardView(CardViewTest.this, this, card);
         this.handCards.add(cardview);
 
 

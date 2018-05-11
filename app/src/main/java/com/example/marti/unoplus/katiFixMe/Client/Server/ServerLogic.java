@@ -1,4 +1,4 @@
-package com.example.marti.unoplus.Server;
+package com.example.marti.unoplus.katiFixMe.Client.Server;
 
 /**
  * Created by ekzhu on 30.04.2018.

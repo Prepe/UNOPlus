@@ -1,4 +1,4 @@
-package com.example.marti.unoplus.Net;
+package com.example.marti.unoplus.katiFixMe.Client.Net;
 
 /**
  * Created by ekzhu on 30.04.2018.
@@ -9,18 +9,18 @@ package com.example.marti.unoplus.Net;
 
 //add relevant functions that relay function calls to network member objects
 //For example, if player wants to play a card the call chain would be:
-//1) Client GameScreen drops a card on playdeck spot, calls GameScreen.playCard(card)
-//2) GameScreen.playCard(card) calls GameStatics.net.playCard(cardobject) (this class here)
+//1) Client CardViewTest drops a card on playdeck spot, calls CardViewTest.playCard(card)
+//2) CardViewTest.playCard(card) calls GameStatics.net.playCard(cardobject) (this class here)
 //3) This class here relays that play card request to the appropiate network member object,
 //for example this.NetworkWifiBroadcaster.sendToServerIWantToPlayCard(card) to send to the server what card
 //the client wants to play
 //In summary the call chain would be:
-//Client : GameScreen.playCard(card) -> GameStatics.net.playCard(cardobject) -> this.NetworkWifiBroadcaster.sendToServerIWantToPlayCard(card)
+//Client : CardViewTest.playCard(card) -> GameStatics.net.playCard(cardobject) -> this.NetworkWifiBroadcaster.sendToServerIWantToPlayCard(card)
 
 import android.util.Log;
 
 import com.example.marti.unoplus.GameStatics;
-import com.example.marti.unoplus.Screens.GameScreen;
+import com.example.marti.unoplus.Screens.CardViewTest;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.players.Player;
 
@@ -55,7 +55,7 @@ public class UnoPlusNetwork {
         // Get my player object and create card in hand
         // Update Gamescreen ui
 
-        GameScreen game = (GameScreen) GameStatics.currentActivity;
+        CardViewTest game = (CardViewTest) GameStatics.currentActivity;
         if(game == null)
         {
 
@@ -75,7 +75,7 @@ public class UnoPlusNetwork {
 
 
     //Called by Client
-    // called by GameScreen if client wants to play a card by dropping the card to the playdeck spot
+    // called by CardViewTest if client wants to play a card by dropping the card to the playdeck spot
     public void CLIENT_PlayCard(Card cardToPlay) {
         //TODO : call internal network objects to send send message to Server : int myplayerid, card whichcardtoplay
 
@@ -130,7 +130,7 @@ public class UnoPlusNetwork {
         // If not : ignore message
         // If yes : remove card from my hand, update hand cards ui
 
-        GameScreen game = (GameScreen) GameStatics.currentActivity;
+        CardViewTest game = (CardViewTest) GameStatics.currentActivity;
         if(game == null)
         {
             return;
@@ -143,7 +143,7 @@ public class UnoPlusNetwork {
     // Called by network objects when network objects recieve message to update the currently played card
     public void CLIENT_OnServerMessage_UpdatePlayedCard(Card newcard) {
 
-        GameScreen game = (GameScreen) GameStatics.currentActivity;
+        CardViewTest game = (CardViewTest) GameStatics.currentActivity;
         if(game == null)
         {
             return;
@@ -154,7 +154,7 @@ public class UnoPlusNetwork {
     }
 
     //Called by Client
-    // Called by GameScreen when a player wants to say Uno
+    // Called by CardViewTest when a player wants to say Uno
     public void CLIENT_SayUno() {
         //TODO :
         // Call network objects to s end message to server that player wants to say uno

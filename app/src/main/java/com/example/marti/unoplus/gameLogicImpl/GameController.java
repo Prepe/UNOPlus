@@ -1,29 +1,14 @@
 package com.example.marti.unoplus.gameLogicImpl;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.StrictMode;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.Window;
-import android.view.WindowManager;
-
 import com.example.marti.unoplus.GameActions;
-import com.example.marti.unoplus.R;
-//import com.example.marti.unoplus.Screens.GameScreen;
-import com.example.marti.unoplus.Server.ServerLogic;
-import com.example.marti.unoplus.Server.TakeDeck;
+//import com.example.marti.unoplus.Screens.CardViewTest;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.cards.Deck;
 import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.players.PlayerList;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
-import jop.hab.net.NetworkIOManager;
-import jop.hab.net.ObserverInterface;
 
 /**
  * Created by marti on 10.04.2018.
