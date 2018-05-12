@@ -259,6 +259,27 @@ public class ConnectionScreen extends AppCompatActivity {
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 
+        if (wifiManager.isWifiEnabled()) {
+
+            wifiManager.setWifiEnabled(false);
+            wifiManager.setWifiEnabled(true);
+
+            Log.d("WIFI", "WIFI reset");
+            Toast.makeText(getApplicationContext(), "Wifi enabled", Toast.LENGTH_SHORT).show();
+
+
+        } else {
+            wifiManager.setWifiEnabled(true);
+            wifiManager.setWifiEnabled(false);
+            wifiManager.setWifiEnabled(true);
+
+            Log.d("WIFI", "WIFI reset");
+            Toast.makeText(getApplicationContext(), "Wifi enabled", Toast.LENGTH_SHORT).show();
+
+
+
+        }
+
 
     }
 
