@@ -107,8 +107,21 @@ public class GameController   {
             gA = new GameActions(GameActions.actions.PLAY_CARD, player, card);
             update();
 
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+
+            }
             //Run game logic for the card that was played
             logic.runLogic(p, card);
+            for (Player pl : this.players.getPlayers())
+            {
+                gA = new GameActions(GameActions.actions.UPDATE, pl.getID(), card);
+                update();
+            }
+            this.gvp.updateCurrentPlayCard(card);
+
         }
     }
 
@@ -174,7 +187,13 @@ public class GameController   {
 
     public void update() {
         gA.gcSend = true;
-       // gvp.updateAllPlayers(gA);
+        //gvp.updateAllPlayers(gA);
+        gvp.writeNetMessage(gA); // for testing
+        // ATTENTION : It might be the case that the message is not sent to the server itself bu onlz the clients
+        // the server not only has to send messages to all clients but also update its local client game state
+        // TODO : add code for local game state update
+
+
     }
 
     public void setPlayerList(PlayerList pl) {

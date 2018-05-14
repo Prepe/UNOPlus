@@ -1,4 +1,4 @@
-package com.example.marti.unoplus.katiFixMe.Client;
+package com.example.marti.unoplus.cards;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -6,7 +6,6 @@ import android.widget.ImageView;
 
 import com.example.marti.unoplus.R;
 //import com.example.marti.unoplus.Screens.CardViewTest;
-import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.gameLogicImpl.GameViewProt;
 
 /**

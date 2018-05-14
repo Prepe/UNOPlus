@@ -50,7 +50,7 @@ public class MainMenu extends AppCompatActivity {
         findViewById(R.id.spielbeitreten).setOnClickListener(handler);
         findViewById(R.id.einstellungen).setOnClickListener(handler);
         findViewById(R.id.exitbutton).setOnClickListener(handler);
-        findViewById(R.id.devModeButton).setOnClickListener(handler);
+
 
         soundManager = new SoundManager(this);
         soundManager.playSound(Sounds.THEMESTART);
@@ -83,11 +83,6 @@ public class MainMenu extends AppCompatActivity {
                     System.exit(0);
                     break;
 
-                case R.id.devModeButton:
-                    soundManager.playSound(Sounds.THEMESTOP);
-                    GameStatics.devMode = true;
-                    startActivity(new Intent(MainMenu.this, CardViewTest.class));
-                    break;
             }
         }
     };

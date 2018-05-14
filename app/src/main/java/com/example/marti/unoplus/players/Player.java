@@ -1,9 +1,16 @@
 package com.example.marti.unoplus.players;
 
+import android.util.Log;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.marti.unoplus.GameActions;
+import com.example.marti.unoplus.GameStatics;
+import com.example.marti.unoplus.R;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.gameLogicImpl.GameViewProt;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -50,6 +57,8 @@ public class Player {
         GameActions action;
         action = new GameActions(GameActions.actions.PLAY_CARD, ID, c);
         //gameViewProt.updateAllPlayers(action);
+        Log.d("GameDebug", "Player playCard :" + c.value.toString() + " " + c.color.toString());
+        this.gameViewProt.writeNetMessage(action);
     }
 
     public void dropCard(Card c){
@@ -86,6 +95,7 @@ public class Player {
     //Update Game Screen (last played Card, etc.)
     void updateGame(Card lastCard) {
         this.lastCard = lastCard;
+        this.gameViewProt.updateCurrentPlayCard(lastCard);
     }
 
     //Add given Cards to your handcards
@@ -93,14 +103,30 @@ public class Player {
         if (checkID(ID)) {
             for (Card c : cards) {
                 this.handcards.add(c);
+                this.gameViewProt.addCardToHand(c);
             }
         }
+
     }
 
     //Your intended Card was played so now you can remove it
     void cardPlayed(int ID, Card card){
         if (checkID(ID)) {
             this.handcards.remove(card);
+            this.gameViewProt.removeCardFromHand(card);
         }
+    }
+
+    public void createDummyCards()
+    {
+        List<Card> list = new ArrayList<Card>();
+        for (int i = 0; i < 7; i++)
+        {
+            Card.colors rndcolor = GameStatics.randomEnum(Card.colors.class);
+            Card.values rndvalue = GameStatics.randomEnum(Card.values.class);
+            Card card = new Card(rndcolor, rndvalue);
+            list.add(card);
+        }
+        this.gotCard(this.getID(), list);
     }
 }

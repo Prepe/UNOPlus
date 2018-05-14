@@ -19,12 +19,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.marti.unoplus.katiFixMe.Client.HandCardView;
-import com.example.marti.unoplus.katiFixMe.Client.PlayedCardView;
+import com.example.marti.unoplus.cards.HandCardView;
+import com.example.marti.unoplus.cards.PlayedCardView;
 import com.example.marti.unoplus.GameStatics;
-import com.example.marti.unoplus.katiFixMe.Client.Net.UnoPlusNetwork;
 import com.example.marti.unoplus.R;
-import com.example.marti.unoplus.katiFixMe.Client.Server.ServerLogic;
+
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.sound.Sounds;
@@ -48,7 +47,7 @@ public class CardViewTest extends AppCompatActivity {
     SoundManager soundManager;
 
     private Context context;
-    public ServerLogic serverLogic = null;
+
     Player player = null;
 
     Card currentPlayCard;
@@ -136,9 +135,9 @@ public class CardViewTest extends AppCompatActivity {
         unoButton.setOnClickListener(handler);
 
         if (GameStatics.devMode) {
-            devButton = findViewById(R.id.devGetCard);
+
             devButton.setOnClickListener(handler);
-            GameStatics.net = new UnoPlusNetwork(true);
+
         }
 
 
@@ -149,7 +148,7 @@ public class CardViewTest extends AppCompatActivity {
             public void onFinish() {
                 Card.colors rndcolor = GameStatics.randomEnum(Card.colors.class);
                 Card.values rndvalue = GameStatics.randomEnum(Card.values.class);
-                GameStatics.net.CLIENT_GetNewCardForHand('0', new Card(rndcolor, rndvalue));
+
 
                 Toast.makeText(getApplicationContext(), "ZEIT VORBEI! Karte gezogen", Toast.LENGTH_LONG).show();
                 //timeUp(context);    eventuell so oder mit TOAST
@@ -178,7 +177,7 @@ public class CardViewTest extends AppCompatActivity {
         for (int i = 0; i < 7; i++) {
             Card.colors rndcolor = GameStatics.randomEnum(Card.colors.class);
             Card.values rndvalue = GameStatics.randomEnum(Card.values.class);
-            GameStatics.net.CLIENT_GetNewCardForHand('0', new Card(rndcolor, rndvalue));
+
         }
 
 
@@ -216,20 +215,11 @@ public class CardViewTest extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Uno!!", Toast.LENGTH_SHORT).show();
                     break;
 
-                case R.id.devGetCard:
-                    Card.colors rndcolor = GameStatics.randomEnum(Card.colors.class);
-                    Card.values rndvalue = GameStatics.randomEnum(Card.values.class);
-                    GameStatics.net.CLIENT_GetNewCardForHand('0', new Card(rndcolor, rndvalue));
-                    break;
             }
         }
     };
 
-    private void setUpDevGame() {
-        this.serverLogic = new ServerLogic();
-        // this.player = new Player(0);
 
-    }
 /*
     public void addCardToHand(Card card) {
         soundManager.playSound(Sounds.DRAWCARD);

@@ -1,4 +1,4 @@
-package com.example.marti.unoplus.katiFixMe.Client;
+package com.example.marti.unoplus.cards;
 
 import android.content.ClipData;
 import android.view.MotionEvent;

@@ -8,10 +8,12 @@ import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.marti.unoplus.katiFixMe.Client.HandCardView;
-import com.example.marti.unoplus.katiFixMe.Client.PlayedCardView;
+import com.example.marti.unoplus.cards.Card;
+import com.example.marti.unoplus.cards.HandCardView;
+import com.example.marti.unoplus.cards.PlayedCardView;
 import com.example.marti.unoplus.GameActions;
 import com.example.marti.unoplus.GameStatics;
 import com.example.marti.unoplus.R;
@@ -41,7 +43,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     GameActions recievedGA;
     boolean isGameController = false;
     GameController gameController;
-    Player player;
+    public Player player;
     HandCardView hcv;
     ArrayList<HandCardView> handCards = null;
     PlayedCardView playedCardView = null;
@@ -53,6 +55,11 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     public GameViewProt() {
         super();
         this.handCards = new ArrayList<HandCardView>();
+    }
+
+    public void writeNetMessage(GameActions action)
+    {
+        this.NIOmanager.writeGameaction(action);
     }
 
 
@@ -145,7 +152,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             l.add(temp);
 
             Log.d("time", "before ga");
-            NIOmanager.writeGameaction(new GameActions(GameActions.actions.TRADE_CARD, temp.getID(), true));
+            this.writeNetMessage(new GameActions(GameActions.actions.TRADE_CARD, temp.getID(), true));
             Log.d("time", "after ga");
             pl.setPlayers(l);
             gameController.setPlayerList(pl);
@@ -153,13 +160,14 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
 
         } else {
-
+            //this.player = new Player(this, 0);
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+
 
         //der NIOManager wird instanziert und die Parameter werden übergeben
         //Der NIO kann daten schreiben und empfangen.
@@ -197,6 +205,17 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         }
 
     */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mode.equals("server")) {
+           // this.player.createDummyCards();
+        }
+        this.playedCardView = new PlayedCardView(this.getApplicationContext(), this);
+        this.playedCardView.updateCard(null);
+    }
+
     //distripiutung game actions
     void callGameController(GameActions action) {
 
@@ -218,7 +237,8 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                     gameController.colorWish(action.playerID, action.colorWish);
                     break;
             }
-        } else {
+        }
+        else {
             Log.d("player", "callplayer");
             player.callPlayer(action);
 
@@ -275,14 +295,20 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     */
     @Override
     public void dataChanged() {
+        /*
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
 
         }
+        */
 
         recievedGA = NIOmanager.getGameAction();
+
+        TextView myAwesomeTextView = (TextView)this.findViewById(R.id.netmessage);
+        myAwesomeTextView.setText(recievedGA.action.toString());
+
         if (recievedGA.action.equals(GameActions.actions.TRADE_CARD)) {
 
             if (!isGameController && player == null) {
@@ -304,7 +330,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     public void NIOReady() {
 
     }
-/*
+
     public void removeCardFromHand(Card card) {
         if (GameStatics.devMode) {
             Log.d("GameDebug", "Gamescreen tries to remove following card from hand :" + card.value.toString() + " " + card.color.toString());
@@ -318,7 +344,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 handBox.removeView(c.view);
                 this.handCards.remove(c);
                 //soundManager.playSound(Sounds.DROPCARD);
-                timer.start();
+                //timer.start();
 
                 int numCardshand = 0;
                 for (int i = 0; i < handCards.size(); i++) {
@@ -328,7 +354,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
                 String s = Integer.toString(numCardshand);
                 System.out.println(numCardshand);
-                numCards.setText("( " + s + " )");
+                //numCards.setText("( " + s + " )");
 
                 return;
             }
@@ -337,5 +363,32 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
 
     }
-    */
+
+
+    public void addCardToHand(Card card) {
+        //soundManager.playSound(Sounds.DRAWCARD);
+        HandCardView cardview = new HandCardView(GameViewProt.this, this, card);
+        this.handCards.add(cardview);
+
+
+        int numCardshand = 0;
+        for (int i = 0; i < handCards.size(); i++) {
+
+            numCardshand++;
+        }
+
+        String s = Integer.toString(numCardshand);
+        System.out.println(numCardshand);
+        //numCards.setText("( " + s + " )");
+
+
+        LinearLayout handBox = findViewById(R.id.playerHandLayout);
+        handBox.addView(cardview.view);
+
+    }
+
+    public void updateCurrentPlayCard(Card card)
+    {
+        this.playedCardView.updateCard(card);
+    }
 }
