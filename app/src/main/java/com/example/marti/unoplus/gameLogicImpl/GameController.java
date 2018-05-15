@@ -16,60 +16,52 @@ import java.util.List;
 
 //Der GC muss das ObserverInterface implementieren, wichtig für automatische Datenabrfrage (Observer Pattern)
 
-public class GameController   {
-    PlayerList players;//reference to all Players in the Game
+public class GameController {
+    GameViewProt gvp;
+    PlayerList players;     //reference to all Players in the Game
     Deck deck;              //reference to the Deck that is used
     GameLogic logic;        //reference to the GameLogic
-    int startingHand = 7;//Amount of Cards every Player gets at the start of the Game
+    int startingHand = 7;   //Amount of Cards every Player gets at the start of the Game
     float turnTime;         //Turn Timer for the Game
-    public GameActions gA;         //Object that gets send to all Players
+    public GameActions gA;  //Object that gets send to all Players
     boolean[] calledUNO;    //
     boolean[] dropedCard;   //
     boolean[] tradedCard;   //
-    String hostAdress;
-    String mode;
-    GameActions recievedGA;
-    boolean isGameController =false;
-    GameViewProt gvp;
 
-    //Lokale GameAction für empfangene Spielzüge
-
-
-
+    //<---------- Method for setting up the Game ---------->
     public GameController(GameViewProt gvp) {
-
-        this.gvp= gvp;
+        this.gvp = gvp;
         deck = new Deck();
+    }
+
+    public void setPlayerList(PlayerList pl) {
+        players = pl;
 
     }
 
-
-    //Give all Players cards and Play the first Card
+    /*
+     * Take all actions to set up game:
+     * setting up the GameLogic (GameRules)
+     * generation of the Deck that will be used
+     * giving all players their handcards
+     * playing the first card of the game
+     */
     public void setUpGame() {
-        //players = new PlayerList();
-       // ArrayList<Player> pl = new ArrayList<Player>();
-        //Player player = new Player(1);
-        //pl.add(player);
-        //player = new Player(2);
-        //pl.add(player);
-        //players.setPlayers(pl);
-        //@TODO player müssen noch korrekt in die Playerlist eingefügt werden, momentan nur zu Probezwecken
-        //deck = new Deck();
-        logic = new GameLogic(players, deck,this);
+        logic = new GameLogic(players, deck, this);
 
         deck.shuffle();
         drawHandCardsForPlayers();
 
-        //calledUNO = new boolean[players.playerCount()];
-        //dropedCard = new boolean[players.playerCount()];
-        //tradedCard = new boolean[players.playerCount()];
-
-        // gA = new GameActions(GameActions.actions.UPDATE,logic.playTopCard(),logic.activePlayer.getID());
-        //updateAllPlayers();
+        if (players != null) {
+            //calledUNO = new boolean[players.playerCount()];
+            dropedCard = new boolean[players.playerCount()];
+            //tradedCard = new boolean[players.playerCount()];
+        }
 
         playTopCard();
     }
 
+    //Drawing handcards for all players
     private void drawHandCardsForPlayers() {
         for (Player p : players.getPlayers()) {
             List<Card> handcards = new LinkedList<>();
@@ -83,8 +75,36 @@ public class GameController   {
         }
     }
 
+    //<---------- Method for handling player actions ---------->
+    //Method to decide what action has been taken
+    public void callGameController(GameActions action) {
+        switch (action.action) {
+            case DRAW_CARD:
+                drawCard(action.playerID);
+                break;
+            case DROP_CARD:
+                dropCard(action.playerID);
+                break;
+            case TRADE_CARD:
+                //GC.tradeCard();
+                break;
+            case PLAY_CARD:
+                playCard(action.playerID, action.card);
+                break;
+            case WISH_COLOR:
+                colorWish(action.playerID, action.colorWish);
+                break;
+        }
+    }
+
+    //Method that updates all players
+    public void update() {
+        gA.gcSend = true;
+        gvp.updateAllPlayers(gA);
+    }
+
     //Method for all Players to call to draw Cards form the Deck
-    public void drawCard(int playerID) {
+    void drawCard(int playerID) {
         List<Card> cards = new LinkedList<>();
         if (deck.isEmptyDeck()) {
             deck.replaceTakeDeck();
@@ -99,7 +119,7 @@ public class GameController   {
     }
 
     //Method for playing cards
-    public void playCard(int player, Card card) {
+    void playCard(int player, Card card) {
         Player p = players.getPlayer(player);
         //Check if player is allowed to play the card
         if (logic.checkCard(card, p)) {
@@ -107,33 +127,13 @@ public class GameController   {
             gA = new GameActions(GameActions.actions.PLAY_CARD, player, card);
             update();
 
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-
-            }
             //Run game logic for the card that was played
             logic.runLogic(p, card);
-            for (Player pl : this.players.getPlayers())
-            {
-                gA = new GameActions(GameActions.actions.UPDATE, pl.getID(), card);
-                update();
-            }
-            this.gvp.updateCurrentPlayCard(card);
-
         }
     }
 
-    /*
-    * Method that times each Turn for Players
-    * When at 0 draws a Card for the active Player
-    * */
-    private void runTimer() {
-        //TODO implement
-    }
-
-    public void colorWish(int player, Card.colors color) {
+    //Method to change the color that has to be played next
+    void colorWish(int player, Card.colors color) {
         logic.wishColor(color);
         Player p = players.getPlayer(player);
         logic.nextPlayer(p);
@@ -144,7 +144,7 @@ public class GameController   {
 
 
     //Method to cheat and drop a Card
-    public void dropCard(int player) {
+    void dropCard(int player) {
         if (!dropedCard[player]) {
             dropedCard[player] = true;
             gA = new GameActions(GameActions.actions.DROP_CARD, player, true);
@@ -153,12 +153,14 @@ public class GameController   {
     }
 
     //Method to cheat and trade a Card with a Player
-    public Card tradeCard(Player player, Card card) {
+    Card tradeCard(Player player, Card card) {
         //TODO implement
 
         return card;
     }
 
+    //<---------- Method for other actions called from GameLogic, CardEffects, etc ---------->
+    //Check if a player has won the game by playing his last card
     public Player getWinningPlayer() {
         for (Player p : players.getPlayers()) {
             if (p.getHandSize() == 0) {
@@ -168,36 +170,20 @@ public class GameController   {
         return null;
     }
 
-    public boolean won() {
-        for (Player p : players.getPlayers()) {
-            if (p.getHandSize() == 0) {
-                return true;
-            }
-        }
-        return false;
-    }
-
+    //Playing the top card of the deck without GameLogic
     public void playTopCard() {
         Card topCard = deck.draw();
         logic.playTopCard(topCard);
-        gA = new GameActions(GameActions.actions.UPDATE,topCard,logic.getActivePlayer().getID());
+        gA = new GameActions(GameActions.actions.UPDATE, topCard, logic.getActivePlayer().getID());
 
         update();
     }
 
-    public void update() {
-        gA.gcSend = true;
-        //gvp.updateAllPlayers(gA);
-        gvp.writeNetMessage(gA); // for testing
-        // ATTENTION : It might be the case that the message is not sent to the server itself bu onlz the clients
-        // the server not only has to send messages to all clients but also update its local client game state
-        // TODO : add code for local game state update
-
-
-    }
-
-    public void setPlayerList(PlayerList pl) {
-        players=pl;
-
+    /*
+     * Method that times each Turn for Players
+     * When at 0 draws a Card for the active Player
+     * */
+    private void runTimer() {
+        //TODO implement
     }
 }
