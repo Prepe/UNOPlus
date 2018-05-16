@@ -63,13 +63,13 @@ public class GameController {
 
     //Drawing handcards for all players
     private void drawHandCardsForPlayers() {
-        for (Player p : players.getPlayers()) {
+        for (int j = 0; j < players.playerCount(); j++) {
             List<Card> handcards = new LinkedList<>();
             for (int i = 0; i < startingHand; i++) {
                 handcards.add(deck.draw());
             }
 
-            gA = new GameActions(GameActions.actions.DRAW_CARD, p.getID(), handcards);
+            gA = new GameActions(GameActions.actions.DRAW_CARD, j, handcards);
 
             update();
         }

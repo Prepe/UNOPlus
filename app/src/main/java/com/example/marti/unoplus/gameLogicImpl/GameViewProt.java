@@ -28,7 +28,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     String mode;
     boolean isGameController = false;
     GameController gameController;
-    Player player;
+    public Player player;
     GameActions recievedGA;
     ArrayList<HandCardView> handCards;
     PlayedCardView playedCardView;
@@ -176,7 +176,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     //Update the view to show the last played card
     public void updateCurrentPlayCard(Card card)
     {
-        this.playedCardView.updateCard(card);
+            this.playedCardView.updateCard(card);
     }
 
     //Visualy add Cards to player hand
