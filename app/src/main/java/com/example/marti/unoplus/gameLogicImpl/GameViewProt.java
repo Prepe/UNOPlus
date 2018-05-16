@@ -64,7 +64,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         GameStatics.Initialize(true);
 
 
-        if (mode.equals("server")) {
+  /*      if (mode.equals("server")) {
 
             try {
                 Thread.sleep(7000);
@@ -100,7 +100,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 e.printStackTrace();
             }
         }
-
+*/
         //der NIOManager wird instanziert und die Parameter werden übergeben
         //Der NIO kann daten schreiben und empfangen.
         //Empfangen funktioniert automatisch über die dataChanged Mehtode..siehe unten
@@ -154,6 +154,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         }
     }
 
+
     @Override
     public void onStart() {
         super.onStart();
@@ -162,6 +163,46 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         }
         this.playedCardView = new PlayedCardView(this.getApplicationContext(), this);
         this.playedCardView.updateCard(null);
+
+
+        if (mode.equals("server")) {
+
+            try {
+                Thread.sleep(7000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            isGameController = true;
+            gameController = new GameController(this);
+
+            PlayerList pl = new PlayerList();
+            ArrayList l = new ArrayList<Player>();
+            Player temp = new Player(this, 0);
+            player = temp;
+            l.add(temp);
+            temp = new Player(this, 1);
+            l.add(temp);
+
+            Log.d("time", "before ga");
+            NIOmanager.writeGameaction(new GameActions(GameActions.actions.TRADE_CARD, temp.getID(), true));
+            Log.d("time", "after ga");
+
+            pl.setPlayers(l);
+            gameController.setPlayerList(pl);
+            gameController.setUpGame();
+
+
+        } else {
+
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+
     }
 
     //<--------- View Updates --------->
@@ -176,6 +217,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     //Update the view to show the last played card
     public void updateCurrentPlayCard(Card card)
     {
+        Log.d("PVG", card.getColor().toString());
             this.playedCardView.updateCard(card);
     }
 
