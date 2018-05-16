@@ -153,6 +153,16 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mode.equals("server")) {
+            // this.player.createDummyCards();
+        }
+        this.playedCardView = new PlayedCardView(this.getApplicationContext(), this);
+        this.playedCardView.updateCard(null);
+    }
+
     //<--------- View Updates --------->
     //Player sends an action
     public void writeNetMessage(GameActions action)
