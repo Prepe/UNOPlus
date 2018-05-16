@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import com.example.marti.unoplus.GameActions;
 import com.example.marti.unoplus.GameStatics;
 import com.example.marti.unoplus.R;
+import com.example.marti.unoplus.cards.HandCardView;
 import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.players.PlayerList;
 
@@ -26,6 +27,12 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     GameController gameController;
     Player player;
     GameActions recievedGA;
+    ArrayList<HandCardView> handCards;
+
+    public GameViewProt() {
+        super();
+        this.handCards = new ArrayList<HandCardView>();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,7 +135,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         Log.d("Time", "updateAllPLayrs will schon was vom NIO");
 
         NIOmanager.writeGameaction(gA);
-        player.callPlayer(gA);
+        handleUpdate(gA);
     }
 
     //distripiutung game actions
@@ -136,7 +143,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
         if (!action.gcSend && isGameController) {
             gameController.callGameController(action);
-        } else {
+        } else if (action.gcSend){
             Log.d("player", "callplayer");
             player.callPlayer(action);
         }
