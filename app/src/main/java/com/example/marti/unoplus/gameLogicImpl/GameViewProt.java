@@ -38,6 +38,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         this.handCards = new ArrayList<>();
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -169,6 +170,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     {
         Log.d("player","playeraction");
         this.NIOmanager.writeGameaction(action);
+        handleUpdate(action);
     }
 
     //Update the view to show the last played card

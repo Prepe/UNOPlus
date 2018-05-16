@@ -129,6 +129,12 @@ public class GameController {
 
             //Run game logic for the card that was played
             logic.runLogic(p, card);
+            for (Player pl : this.players.getPlayers())
+            {
+                gA = new GameActions(GameActions.actions.UPDATE, pl.getID(), card);
+                update();
+            }
+            this.gvp.updateCurrentPlayCard(card);
         }
     }
 
