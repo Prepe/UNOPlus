@@ -129,13 +129,13 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
 
         if (mode.equals("server")) {
-/*
+
             try {
                 Thread.sleep(7000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-*/
+
             isGameController = true;
             gameController = new GameController(this);
 
@@ -160,13 +160,13 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         } else {
             player = new Player(null);
             player.setGV(this);
-            /*
+
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            */
+
         }
     }
 
