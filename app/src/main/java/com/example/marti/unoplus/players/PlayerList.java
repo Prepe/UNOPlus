@@ -14,8 +14,8 @@ public class PlayerList {
 
 
     //String[] player1 = new String[players.size()];
-    public void setPlayers(ArrayList<Player> players){
-        this.players = new LinkedList<>(players);
+    public void setPlayers(LinkedList<Player> players){
+        this.players = players;
     }
 
     public void removePlayer(String name){

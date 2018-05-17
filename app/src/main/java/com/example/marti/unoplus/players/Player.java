@@ -15,17 +15,24 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Player {
-    static String playerName;
-    static int ID;
+    String playerName;
+    Integer ID;
     GameViewProt gameViewProt;
     Card lastCard;
     LinkedList<Card> handcards; //Hand
 
 
-    public Player(GameViewProt gv, int id){
-        gameViewProt = gv;
-        this.ID = id;
+    public Player(Integer id){
+        ID = id;
         handcards = new LinkedList<>();
+    }
+
+    public void setGV(GameViewProt gv) {
+        gameViewProt = gv;
+    }
+
+    public void setID(int id) {
+        ID = id;
     }
 
     public List<Card> getHand(){
@@ -40,7 +47,7 @@ public class Player {
         return this.playerName;
     }
 
-    public int getID(){
+    public Integer getID(){
         return ID;
     }
 
@@ -49,14 +56,14 @@ public class Player {
     public void drawCard(){
         GameActions action;
         action = new GameActions(GameActions.actions.DRAW_CARD, ID);
-       // gameViewProt.updateAllPlayers(action);
+       // gameViewProt.updateAllConnected(action);
     }
 
     //Tell Server what Card you want to play
     public void playCard(Card c){
         GameActions action;
         action = new GameActions(GameActions.actions.PLAY_CARD, ID, c);
-        //gameViewProt.updateAllPlayers(action);
+        //gameViewProt.updateAllConnected(action);
         Log.d("GameDebug", "Player playCard :" + c.value.toString() + " " + c.color.toString());
         this.gameViewProt.writeNetMessage(action);
     }
@@ -95,7 +102,7 @@ public class Player {
     //Update Game Screen (last played Card, etc.)
     void updateGame(Card lastCard) {
         this.lastCard = lastCard;
-        this.gameViewProt.updateCurrentPlayCard(lastCard);
+        this.gameViewProt.updateCurrentPlayCard(this.lastCard);
     }
 
     //Add given Cards to your handcards
@@ -117,6 +124,7 @@ public class Player {
         }
     }
 
+    //<---------- Misc ---------->
     public void createDummyCards()
     {
         List<Card> list = new ArrayList<Card>();

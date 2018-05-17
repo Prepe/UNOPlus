@@ -100,22 +100,24 @@ public class GameController {
     //Method that updates all players
     public void update() {
         gA.gcSend = true;
-        gvp.updateAllPlayers(gA);
+        gvp.updateAllConnected(gA);
     }
 
     //Method for all Players to call to draw Cards form the Deck
     void drawCard(int playerID) {
-        List<Card> cards = new LinkedList<>();
-        if (deck.isEmptyDeck()) {
-            deck.replaceTakeDeck();
-        }
-        for (int i = 0; i < logic.getCardDrawCount(); i++) {
-            cards.add(deck.draw());
-        }
+        if (playerID == logic.activePlayer.getID()) {
+            List<Card> cards = new LinkedList<>();
+            if (deck.isEmptyDeck()) {
+                deck.replaceTakeDeck();
+            }
+            for (int i = 0; i < logic.getCardDrawCount(); i++) {
+                cards.add(deck.draw());
+            }
 
-        gA = new GameActions(GameActions.actions.DRAW_CARD, playerID, cards);
+            gA = new GameActions(GameActions.actions.DRAW_CARD, playerID, cards);
 
-        update();
+            update();
+        }
     }
 
     //Method for playing cards

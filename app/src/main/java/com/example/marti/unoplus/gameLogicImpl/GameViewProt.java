@@ -18,6 +18,7 @@ import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.players.PlayerList;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import jop.hab.net.NetworkIOManager;
 import jop.hab.net.ObserverInterface;
@@ -63,44 +64,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         GameStatics.currentActivity = this;
         GameStatics.Initialize(true);
 
-
-  /*      if (mode.equals("server")) {
-
-            try {
-                Thread.sleep(7000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            isGameController = true;
-            gameController = new GameController(this);
-
-            PlayerList pl = new PlayerList();
-            ArrayList l = new ArrayList<Player>();
-            Player temp = new Player(this, 0);
-            player = temp;
-            l.add(temp);
-            temp = new Player(this, 1);
-            l.add(temp);
-
-            Log.d("time", "before ga");
-            NIOmanager.writeGameaction(new GameActions(GameActions.actions.TRADE_CARD, temp.getID(), true));
-            Log.d("time", "after ga");
-
-            pl.setPlayers(l);
-            gameController.setPlayerList(pl);
-            gameController.setUpGame();
-
-
-        } else {
-
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-*/
         //der NIOManager wird instanziert und die Parameter werden übergeben
         //Der NIO kann daten schreiben und empfangen.
         //Empfangen funktioniert automatisch über die dataChanged Mehtode..siehe unten
@@ -110,7 +73,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     @Override
     public void dataChanged() {
         try {
-            Thread.sleep(1000);
+            Thread.sleep(10);
         } catch (InterruptedException e) {
             e.printStackTrace();
 
@@ -120,8 +83,8 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
         //TODO change placeholder player ID
         if (recievedGA.action.equals(GameActions.actions.TRADE_CARD)) {
-            if (!isGameController && player == null) {
-                player = new Player(this, recievedGA.playerID);
+            if (!isGameController && player.getID() == null) {
+                player.setID(recievedGA.playerID);
             }
         } else {
             handleUpdate(recievedGA);
@@ -135,7 +98,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     }
 
     //Method to Update all Players after GC and GL have finished
-    public void updateAllPlayers(GameActions gA) {
+    public void updateAllConnected(GameActions gA) {
 
         Log.d("Time", "updateAllPLayrs will schon was vom NIO");
 
@@ -166,43 +129,45 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
 
         if (mode.equals("server")) {
-
+/*
             try {
                 Thread.sleep(7000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
+*/
             isGameController = true;
             gameController = new GameController(this);
 
             PlayerList pl = new PlayerList();
-            ArrayList l = new ArrayList<Player>();
-            Player temp = new Player(this, 0);
-            player = temp;
-            l.add(temp);
-            temp = new Player(this, 1);
-            l.add(temp);
+            LinkedList<Player> l = new LinkedList<>();
+            player = new Player(0);
+            player.setGV(this);
+            l.add(player);
 
+            Player temp = new Player(1);
+            l.add(temp);
             Log.d("time", "before ga");
             NIOmanager.writeGameaction(new GameActions(GameActions.actions.TRADE_CARD, temp.getID(), true));
             Log.d("time", "after ga");
 
+            Log.d("GC Playerlist", "onStart: ");
             pl.setPlayers(l);
             gameController.setPlayerList(pl);
             gameController.setUpGame();
 
 
         } else {
-
+            player = new Player(null);
+            player.setGV(this);
+            /*
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            */
         }
-
-
     }
 
     //<--------- View Updates --------->
