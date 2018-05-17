@@ -37,11 +37,11 @@ public class CardEffects {
                 gameLogic.nextPlayer(player);
                 break;
             case CHOOSE_COLOR:
-                changeColor(player);
+                askForColorWish(player);
                 break;
             case PLUS_FOUR:
                 takeFour();
-                changeColor(player);
+                askForColorWish(player);
                 break;
         }
 
@@ -55,9 +55,10 @@ public class CardEffects {
     }
 
     //ChangeColour Card effect method
-    private void changeColor(Player player) {
+    private void askForColorWish(Player player) {
         if (player != null) {
             gameControler.gA = new GameActions(GameActions.actions.WISH_COLOR,player.getID(),true);
+            gameControler.update();
         }
     }
 

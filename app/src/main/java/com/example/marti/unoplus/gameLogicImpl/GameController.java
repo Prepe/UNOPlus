@@ -101,6 +101,7 @@ public class GameController {
     public void update() {
         gA.gcSend = true;
         gvp.updateAllConnected(gA);
+
     }
 
     //Method for all Players to call to draw Cards form the Deck
@@ -129,13 +130,13 @@ public class GameController {
             gA = new GameActions(GameActions.actions.PLAY_CARD, player, card);
             update();
 
-            //Run game logic for the card that was played
-            logic.runLogic(p, card);
             for (Player pl : this.players.getPlayers())
             {
                 gA = new GameActions(GameActions.actions.UPDATE, pl.getID(), card);
                 update();
             }
+            //Run game logic for the card that was played
+            logic.runLogic(p, card);
             this.gvp.updateCurrentPlayCard(card);
         }
     }

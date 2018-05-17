@@ -185,5 +185,6 @@ public class GameLogic {
     //Sets the color requirement for next card
     public void wishColor(Card.colors colorWish) {
         lastCardColor = colorWish;
+        lastCardValue = Card.values.CHOOSE_COLOR;
     }
 }

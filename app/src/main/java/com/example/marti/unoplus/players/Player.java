@@ -92,7 +92,9 @@ public class Player {
                 //TODO ipml
                 break;
             case WISH_COLOR:
-                this.gameViewProt.chooseColor();
+                if(action.playerID == this.ID) {
+                    this.gameViewProt.chooseColor();
+                }
                 break;
         }
     }
