@@ -91,6 +91,9 @@ public class Player {
             case NEXT_PLAYER:
                 //TODO ipml
                 break;
+            case WISH_COLOR:
+                this.gameViewProt.chooseColor();
+                break;
         }
     }
 

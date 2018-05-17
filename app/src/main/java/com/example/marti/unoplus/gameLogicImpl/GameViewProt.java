@@ -1,11 +1,15 @@
 package com.example.marti.unoplus.gameLogicImpl;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.example.marti.unoplus.GameActions;
@@ -121,6 +125,15 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     @Override
     public void onStart() {
         super.onStart();
+
+        //Let the screen be always on.
+        //No sleep mode during gameplay.
+        ImageView screenOn = this.findViewById(R.id.unostack);
+       if(screenOn != null) {
+           screenOn.setKeepScreenOn(true);
+       }
+
+
         if (mode.equals("server")) {
             // this.player.createDummyCards();
         }
@@ -238,6 +251,35 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             }
         }
         Log.d("GameDebug", "Didn't find it.... fix plz");
+    }
+
+    //Method to choose color when special card is played
+    public void chooseColor() {
+
+        Dialog d = new AlertDialog.Builder(this,AlertDialog.THEME_HOLO_LIGHT)
+                .setTitle("Such eine Farbe aus!")
+                .setItems(new String[]{"Rot", "Blau", "Gelb", "Grün"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dlg, int position) {
+                        if (position == 0) {
+                            writeNetMessage(new GameActions(GameActions.actions.WISH_COLOR, player.getID(), Card.colors.RED));
+                            dlg.cancel();
+                        } else if (position == 1) {
+                            writeNetMessage(new GameActions(GameActions.actions.WISH_COLOR, player.getID(), Card.colors.BLUE));
+                            dlg.cancel();
+                        } else if (position == 2) {
+                            writeNetMessage(new GameActions(GameActions.actions.WISH_COLOR, player.getID(), Card.colors.YELLOW));
+                            dlg.cancel();
+                        } else if (position == 3) {
+                            writeNetMessage(new GameActions(GameActions.actions.WISH_COLOR, player.getID(), Card.colors.GREEN));
+                            dlg.cancel();
+                        }
+                    }
+                })
+                .create();
+        d.setCanceledOnTouchOutside(false);
+        d.show();
+
     }
 
 }
