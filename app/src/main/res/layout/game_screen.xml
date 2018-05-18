@@ -132,4 +132,16 @@
         android:layout_toRightOf="@+id/list"
         android:text="(7)"
         android:textAppearance="@style/TextAppearance.AppCompat.Inverse" />
+
+    <Button
+        android:id="@+id/buttongetcard"
+        android:layout_width="72dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="92dp"
+        android:layout_marginRight="92dp"
+        android:text="ziehe Karte" />
+
 </RelativeLayout>

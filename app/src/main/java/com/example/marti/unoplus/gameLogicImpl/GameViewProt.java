@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -16,6 +18,7 @@ import com.example.marti.unoplus.GameActions;
 import com.example.marti.unoplus.GameStatics;
 import com.example.marti.unoplus.R;
 import com.example.marti.unoplus.cards.Card;
+import com.example.marti.unoplus.cards.Deck;
 import com.example.marti.unoplus.cards.HandCardView;
 import com.example.marti.unoplus.cards.PlayedCardView;
 import com.example.marti.unoplus.players.Player;
@@ -23,9 +26,13 @@ import com.example.marti.unoplus.players.PlayerList;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import jop.hab.net.NetworkIOManager;
 import jop.hab.net.ObserverInterface;
+
+import static com.example.marti.unoplus.GameActions.actions.DRAW_CARD;
+import static com.example.marti.unoplus.GameActions.actions.DROP_CARD;
 
 public class GameViewProt extends AppCompatActivity implements ObserverInterface {
     NetworkIOManager NIOmanager;
@@ -37,6 +44,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     GameActions recievedGA;
     ArrayList<HandCardView> handCards;
     PlayedCardView playedCardView;
+    Button buttongetcard;
 
     public GameViewProt() {
         super();
@@ -72,6 +80,8 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         //Der NIO kann daten schreiben und empfangen.
         //Empfangen funktioniert automatisch über die dataChanged Mehtode..siehe unten
         //Schreiben der Daten geht über writeGameAction()... kann alles belieben geändert/erweitert werden
+
+        findViewById(R.id.buttongetcard).setOnClickListener(handler);
     }
 
     @Override
@@ -182,6 +192,18 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
         }
     }
+
+    View.OnClickListener handler = new View.OnClickListener() {
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.buttongetcard:
+                    List<Card> card = new LinkedList<>();
+                    GameActions gA = new GameActions(GameActions.actions.DRAW_CARD, player.getID(), card);
+                    handleUpdate(gA);
+                    break;
+            }
+        }
+    };
 
     //<--------- View Updates --------->
     //Player sends an action
