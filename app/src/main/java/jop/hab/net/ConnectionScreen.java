@@ -47,6 +47,7 @@ public class ConnectionScreen extends AppCompatActivity {
     List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();
     String[] deviceNameArray;
     WifiP2pDevice[] deviceArray;
+    public  ArrayList<String> connectedDevices = new ArrayList<>();
 
 
     static final int MESSAGE_READ = 1;
@@ -123,11 +124,12 @@ public class ConnectionScreen extends AppCompatActivity {
                 config.deviceAddress = device.deviceAddress;
 
 
+
                 mManager.connect(mChannel, config, new WifiP2pManager.ActionListener() {
                     @Override
                     public void onSuccess() {
                         Toast.makeText(getApplicationContext(), "Connected to " + device.deviceName, Toast.LENGTH_SHORT).show();
-                        ;
+                        connectedDevices.add(device.deviceName);
 
                     }
 
@@ -210,8 +212,10 @@ public class ConnectionScreen extends AppCompatActivity {
                         Intent i = new Intent(getBaseContext(), GameViewProt.class);
 
 
+
                         i.putExtra("mode", "client");
                         i.putExtra("adress", groupOwnerAdress.getHostAddress());
+                        i.putExtra("numofclients",getNUMConnectedDevices());
                         startActivity(i);
                     }
                 });
@@ -315,5 +319,12 @@ public class ConnectionScreen extends AppCompatActivity {
 
         }
     };
+
+    public ArrayList<String> getConnectedDevices (){
+        return connectedDevices;
+    }
+    public int  getNUMConnectedDevices (){
+        return connectedDevices.size();
+    }
 }
 
