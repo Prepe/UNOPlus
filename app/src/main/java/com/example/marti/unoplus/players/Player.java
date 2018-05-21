@@ -20,6 +20,7 @@ public class Player {
     GameViewProt gameViewProt;
     Card lastCard;
     LinkedList<Card> handcards; //Hand
+    int [] handcardcounter;
 
 
     public Player(Integer id){
@@ -49,6 +50,14 @@ public class Player {
 
     public Integer getID(){
         return ID;
+    }
+
+    public void initialsiedHandCardCounters(int size){
+        handcardcounter = new int[size];
+
+    }
+    public int[] getHandcardcounter(){
+        return handcardcounter;
     }
 
     //<---------- Player Actions ---------->
@@ -96,6 +105,9 @@ public class Player {
                     this.gameViewProt.chooseColor();
                 }
                 break;
+            case INIT_GAME:
+                initialsiedHandCardCounters(action.nextPlayerID);
+                break;
         }
     }
 
@@ -117,6 +129,9 @@ public class Player {
                 this.handcards.add(c);
                 this.gameViewProt.addCardToHand(c);
             }
+            updateHandCardCounter(cards.size(), ID);
+        } else {
+            updateHandCardCounter(cards.size(), ID);
         }
 
     }
@@ -125,7 +140,11 @@ public class Player {
     void cardPlayed(int ID, Card card){
         if (checkID(ID)) {
             this.handcards.remove(card);
+            updateHandCardCounter(-1, ID);
             this.gameViewProt.removeCardFromHand(card);
+
+        } else {
+            updateHandCardCounter(-1, ID);
         }
     }
 
@@ -141,5 +160,10 @@ public class Player {
             list.add(card);
         }
         this.gotCard(this.getID(), list);
+    }
+
+    void updateHandCardCounter(int count, int ID ){
+        handcardcounter[ID] += count;
+        gameViewProt.updateCountersInView();
     }
 }

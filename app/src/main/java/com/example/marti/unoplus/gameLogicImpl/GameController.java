@@ -53,6 +53,7 @@ public class GameController {
         drawHandCardsForPlayers();
 
         if (players != null) {
+            players.playerCount();
             //calledUNO = new boolean[players.playerCount()];
             dropedCard = new boolean[players.playerCount()];
             //tradedCard = new boolean[players.playerCount()];
@@ -80,7 +81,7 @@ public class GameController {
     public void callGameController(GameActions action) {
         switch (action.action) {
             case DRAW_CARD:
-                drawCard(action.playerID);
+                drawCard(action.nextPlayerID);
                 break;
             case DROP_CARD:
                 dropCard(action.playerID);
@@ -111,13 +112,16 @@ public class GameController {
             if (deck.isEmptyDeck()) {
                 deck.replaceTakeDeck();
             }
-            for (int i = 0; i < logic.getCardDrawCount(); i++) {
+            int count = logic.getCardDrawCount();
+            for (int i = 0; i < count; i++) {
                 cards.add(deck.draw());
             }
 
             gA = new GameActions(GameActions.actions.DRAW_CARD, playerID, cards);
 
             update();
+
+
         }
     }
 

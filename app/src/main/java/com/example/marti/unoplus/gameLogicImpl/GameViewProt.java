@@ -2,17 +2,24 @@ package com.example.marti.unoplus.gameLogicImpl;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.marti.unoplus.GameActions;
 import com.example.marti.unoplus.GameStatics;
@@ -23,6 +30,8 @@ import com.example.marti.unoplus.cards.HandCardView;
 import com.example.marti.unoplus.cards.PlayedCardView;
 import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.players.PlayerList;
+import com.example.marti.unoplus.sound.SoundManager;
+import com.example.marti.unoplus.sound.Sounds;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -45,6 +54,14 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     ArrayList<HandCardView> handCards;
     PlayedCardView playedCardView;
     Button buttongetcard;
+    TextView numCards;
+    TextView numCards2;
+    SoundManager soundManager;
+    CountDownTimer timer;
+    List<Card> card = new LinkedList<>();
+    Button unoButton;
+    public PlayerList playerList;
+
 
     public GameViewProt() {
         super();
@@ -64,6 +81,9 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
         setContentView(R.layout.game_screen);
 
+        numCards = (TextView) findViewById(R.id.numCards1);
+        numCards2 = (TextView) findViewById(R.id.numCards2);
+
         //Hier werden die IP und der Modus über den Intent aus der ConnectionScreen abgefragt
         hostAdress = getIntent().getStringExtra("adress");
         mode = getIntent().getStringExtra("mode");
@@ -82,6 +102,53 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         //Schreiben der Daten geht über writeGameAction()... kann alles belieben geändert/erweitert werden
 
         findViewById(R.id.buttongetcard).setOnClickListener(handler);
+
+        unoButton = findViewById(R.id.unounobutton);
+        unoButton.setOnClickListener(handler);
+        ArrayList<String> playersSS = new ArrayList<>();
+
+        //int playerSize = playerList.playerCount();
+        int plsize = 0;
+        plsize = playerCountTest(plsize);
+        for(int i = 1; i <= 2; i++ ){
+            playersSS.add("Player "+i);
+
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, playersSS);
+
+        ListView lv = findViewById(R.id.list);
+        lv.setAdapter(adapter);
+
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                final TextView mTextView = (TextView) view;
+                switch (position) {
+                    case 0:
+                        Toast.makeText(getApplicationContext(), "Player 1", Toast.LENGTH_SHORT).show();
+                        //TO DO
+
+                        break;
+                    case 1:
+                        Toast.makeText(getApplicationContext(), "Player 2", Toast.LENGTH_SHORT).show();
+                        //TO DO
+                        break;
+                    case 2:
+                        Toast.makeText(getApplicationContext(), "Player 3", Toast.LENGTH_SHORT).show();
+                        //TO DO
+                        break;
+                    case 3:
+                        Toast.makeText(getApplicationContext(), "Plöayer 4", Toast.LENGTH_SHORT).show();
+                        //TO DO
+                        break;
+                    default:
+                        // Nothing do!
+                }
+
+            }
+        });
     }
 
     @Override
@@ -177,8 +244,13 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             Log.d("GC Playerlist", "onStart: ");
             pl.setPlayers(l);
             gameController.setPlayerList(pl);
-            gameController.setUpGame();
+            GameActions temp1 = new GameActions(GameActions.actions.INIT_GAME, pl.playerCount() );
+            temp1.gcSend = true;
+            NIOmanager.writeGameaction(temp1);
+            handleUpdate(temp1);
 
+            gameController.setUpGame();
+            int sizePL = l.size();
 
         } else {
             player = new Player(null);
@@ -191,15 +263,26 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             }
 
         }
+
+
+    }
+
+    public int playerCountTest (int sizePL) {
+        return sizePL;
     }
 
     View.OnClickListener handler = new View.OnClickListener() {
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.buttongetcard:
-                    List<Card> card = new LinkedList<>();
-                    GameActions gA = new GameActions(GameActions.actions.DRAW_CARD, player.getID(), card);
+                    //List<Card> card = new LinkedList<>();
+                    GameActions gA = new GameActions(GameActions.actions.DRAW_CARD, player.getID());
+                    NIOmanager.writeGameaction(gA);
                     handleUpdate(gA);
+                    break;
+
+                case R.id.unounobutton:
+                    Toast.makeText(getApplicationContext(), "Uno!!", Toast.LENGTH_SHORT).show();
                     break;
             }
         }
@@ -221,23 +304,18 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             this.playedCardView.updateCard(card);
     }
 
+    public void updateCountersInView(){
+        int[] hcc = player.getHandcardcounter();
+
+        numCards.setText(hcc[0]+"");
+        numCards2.setText(hcc[1]+"");
+    }
+
     //Visualy add Cards to player hand
     public void addCardToHand(Card card) {
         //soundManager.playSound(Sounds.DRAWCARD);
         HandCardView cardview = new HandCardView(GameViewProt.this, this, card);
         this.handCards.add(cardview);
-
-
-        int numCardshand = 0;
-        for (int i = 0; i < handCards.size(); i++) {
-
-            numCardshand++;
-        }
-
-        String s = Integer.toString(numCardshand);
-        System.out.println(numCardshand);
-        //numCards.setText("( " + s + " )");
-
 
         LinearLayout handBox = findViewById(R.id.playerHandLayout);
         handBox.addView(cardview.view);
@@ -258,16 +336,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 this.handCards.remove(c);
                 //soundManager.playSound(Sounds.DROPCARD);
                 //timer.start();
-
-                int numCardshand = 0;
-                for (int i = 0; i < handCards.size(); i++) {
-
-                    numCardshand++;
-                }
-
-                String s = Integer.toString(numCardshand);
-                System.out.println(numCardshand);
-                //numCards.setText("( " + s + " )");
 
                 return;
             }

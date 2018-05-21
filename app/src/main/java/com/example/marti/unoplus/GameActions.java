@@ -16,7 +16,8 @@ public class GameActions {
         WISH_COLOR (3),
         DROP_CARD (4),
         TRADE_CARD (5),
-        NEXT_PLAYER (6);
+        NEXT_PLAYER (6),
+        INIT_GAME(7);
 
         private int value;
         actions(int value){this.value = value;}
@@ -25,6 +26,7 @@ public class GameActions {
     public actions action;
     public Integer playerID;
     public Integer nextPlayerID;
+    public String countCards;
     public Card card;
     public List<Card> cards;
     public Boolean check;
@@ -43,6 +45,13 @@ public class GameActions {
         this.action = action;
         nextPlayerID = nextPID;
     }
+
+    public GameActions(actions action, int nextPID, String countC) {
+        this.action = action;
+        nextPlayerID = nextPID;
+        countCards = countC;
+    }
+
 
     //Used to tell GC that player wants to play a card and same method gets returned to player if card can be played
     public GameActions(actions action, int pID, Card card) {
