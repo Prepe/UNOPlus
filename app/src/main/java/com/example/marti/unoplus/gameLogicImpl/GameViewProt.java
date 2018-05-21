@@ -47,6 +47,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     NetworkIOManager NIOmanager;
     String hostAdress;
     String mode;
+    int numClients;
     boolean isGameController = false;
     GameController gameController;
     public Player player;
@@ -87,10 +88,12 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         //Hier werden die IP und der Modus über den Intent aus der ConnectionScreen abgefragt
         hostAdress = getIntent().getStringExtra("adress");
         mode = getIntent().getStringExtra("mode");
+        numClients = getIntent().getIntExtra("numofclients",1);
 
         NIOmanager = new NetworkIOManager(this);
         NIOmanager.setMode(mode);
         NIOmanager.setHostAdress(hostAdress);
+        NIOmanager.setNumclients(numClients);
         NIOmanager.open();
 
         GameStatics.currentActivity = this;

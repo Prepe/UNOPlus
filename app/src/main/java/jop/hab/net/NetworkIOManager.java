@@ -44,6 +44,9 @@ public class NetworkIOManager {
 
     String testText;
     GameActions gameAction;
+    int countready = 0;
+    int numclients;
+
 
     public NetworkIOManager(ObserverInterface observerInterface) {
         this.observerInterface = observerInterface;
@@ -64,6 +67,7 @@ public class NetworkIOManager {
     public void setHostAdress(String hostAdress) {
         this.hostAdress = hostAdress;
     }
+    public void setNumclients(int numclients){this.numclients = numclients;}
 
     public String getTestText() {
         return testText;
@@ -132,11 +136,31 @@ public class NetworkIOManager {
 
         return gameAction;
     }
+    public void writeReady (){
+
+        String ready = "ready";
+        sendReceive.write(ready.getBytes());
+
+    }
+
+    public boolean waitforClientsreadyingup (){
+        while (countready!= numclients){
+            try {
+                Thread.sleep(20);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return true;
+    }
 
 
     Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
+
+
 
             switch (msg.what) {
 
@@ -144,6 +168,7 @@ public class NetworkIOManager {
                     byte[] readBuffer = (byte[]) msg.obj;
                     String tmpmsg = new String(readBuffer, 0, msg.arg1);
 
+                    if (!tmpmsg.equals("ready")){
 
                     Log.d("JSon Empfangen", tmpmsg);
 
@@ -155,7 +180,13 @@ public class NetworkIOManager {
 
 
                     //wenn Daten über den handler empfangen werden, wird Observer informiert.
-                    observerInterface.dataChanged();
+                    observerInterface.dataChanged();}
+
+                    else{
+                        countready++;
+
+
+                    }
 
 
                     break;
@@ -191,6 +222,8 @@ public class NetworkIOManager {
             sendReceive = new SendReceive(socket);
 
             sendReceive.start();
+
+
 
 
         }
@@ -300,69 +333,10 @@ public class NetworkIOManager {
 
             sendReceive = new SendReceive(socket);
             sendReceive.start();
+
+            writeReady();
         }
     }
 
 
 }
-
-     /*  public String toJSon(Card c) {
-
-            try {
-
-                // convert Java Object to JSON
-                //Object gets into a special formatted String
-
-                JSONObject jsonObj = new JSONObject();
-
-                jsonObj.put("value", c.getValue());
-
-                jsonObj.put("color", c.getColor());
-
-
-                return jsonObj.toString();
-
-
-            } catch (JSONException ex) {
-                ex.printStackTrace();
-
-            }
-
-
-            return null;
-
-        }
-
-        public Card fromJsonString (String cardString){
-            try {
-                JSONObject jObj = new JSONObject(cardString);
-                String color = jObj.getString("color");
-                String value = jObj.getString("value");
-
-
-
-               Card fromStringconvertCard = new Card(color,value);
-
-               return fromStringconvertCard;
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-
-            return null;
-        }
-
-
-    public void writeMsg(String msg) {
-
-        sendReceive.write(msg.getBytes());
-    }
-
-    public void writeCard(Card c) {
-
-
-        sendReceive.write(toJSon(c).getBytes());
-
-    }*/
-
