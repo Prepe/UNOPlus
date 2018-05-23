@@ -7,17 +7,11 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.TextView;
 
-import com.example.marti.unoplus.cards.Deck;
-import com.example.marti.unoplus.players.PlayerList;
+import com.example.marti.unoplus.GameStatics;
 import com.example.marti.unoplus.R;
+import com.example.marti.unoplus.gameLogicImpl.GameViewProt;
 
-import com.example.marti.unoplus.gameLogicImpl.GameControler;
-import com.example.marti.unoplus.gameLogicImpl.GameLogic;
-
-import java.util.ArrayList;
 
 public class LobbyScreen extends AppCompatActivity {
 
@@ -29,6 +23,11 @@ public class LobbyScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        GameStatics.currentActivity = this;
+
+        //Initialize network components
+        GameStatics.Initialize(false); //TODO : Determine how server does it.
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -39,16 +38,12 @@ public class LobbyScreen extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(LobbyScreen.this, GameScreen.class));
+                startActivity(new Intent(LobbyScreen.this, GameViewProt.class));
 
                 /*
                 boolean kt = false;
                 boolean kw = false;
                 boolean tt = false;
-                TextView p1 = (TextView) findViewById(R.id.player1);
-                TextView p2 = (TextView) findViewById(R.id.player2);
-                TextView p3 = (TextView) findViewById(R.id.player3);
-                TextView p4 = (TextView) findViewById(R.id.player4);
                 CheckBox kartentauschen = (CheckBox) findViewById(R.id.kartentauschen);
                 CheckBox kartenwegwerfen = (CheckBox) findViewById(R.id.kartenwegwerfen);
                 CheckBox tischteufel = (CheckBox) findViewById(R.id.tischteufel);
@@ -74,7 +69,7 @@ public class LobbyScreen extends AppCompatActivity {
                 ArrayList<PlayerList> players = new ArrayList<>();
 
                 GameLogic GameLogic = new GameLogic(PlayerList, Deck);
-                GameControler GameControler = new GameControler(PlayerList, Deck, GameLogic);
+                GameController GameController = new GameController(PlayerList, Deck, GameLogic);
                 */
 
             }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="jop.hab.net.GameView_devImpl">
+    tools:context="jop.hab.net.Redundant.GameView_devImpl">
 
     <include layout="@layout/content_game_view_dev_impl" />
 

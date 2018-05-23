@@ -1,6 +1,7 @@
 package com.example.marti.unoplus.cards;
 
-import com.example.marti.unoplus.gameLogicImpl.GameControler;
+import com.example.marti.unoplus.GameActions;
+import com.example.marti.unoplus.gameLogicImpl.GameController;
 import com.example.marti.unoplus.gameLogicImpl.GameLogic;
 import com.example.marti.unoplus.players.Player;
 
@@ -10,9 +11,9 @@ import com.example.marti.unoplus.players.Player;
 
 public class CardEffects {
     GameLogic gameLogic;
-    GameControler gameControler;
+    GameController gameControler;
 
-    public CardEffects(GameLogic gL, GameControler gC) {
+    public CardEffects(GameLogic gL, GameController gC) {
         gameLogic = gL;
         gameControler = gC;
     }
@@ -21,25 +22,31 @@ public class CardEffects {
     public void cardEffect(Player player, Card cardValue) {
         switch (cardValue.getValue()) {
             default:
-                //No Card effect!!
+                gameLogic.nextPlayer(player);
                 break;
             case SKIP:
                 skip();
+                gameLogic.nextPlayer(player);
                 break;
             case TURN:
                 reverse();
+                gameLogic.nextPlayer(player);
                 break;
             case PLUS_TWO:
                 takeTwo();
+                gameLogic.nextPlayer(player);
                 break;
             case CHOOSE_COLOR:
-                changeColor(player);
+                askForColorWish(player);
                 break;
             case PLUS_FOUR:
                 takeFour();
-                changeColor(player);
+                askForColorWish(player);
                 break;
         }
+
+        gameControler.gA = new GameActions(GameActions.actions.NEXT_PLAYER, gameLogic.getActivePlayer().getID());
+        gameControler.update();
     }
 
     //TakeTwo Card effect method
@@ -48,17 +55,17 @@ public class CardEffects {
     }
 
     //ChangeColour Card effect method
-    private void changeColor(Player player) {
-        Card.colors colorWish = Card.colors.WILD;
+    private void askForColorWish(Player player) {
         if (player != null) {
-            //colorWish = player.wishForColor();
+            gameControler.gA = new GameActions(GameActions.actions.WISH_COLOR,player.getID(),true);
+            gameControler.update();
         }
-        gameLogic.wishColor(colorWish);
     }
 
     //TakeFourChangeColour Card effect method
     private void takeFour() {
         gameLogic.changeCardDrawCount(4);
+
     }
 
     //Reverse Card effect method

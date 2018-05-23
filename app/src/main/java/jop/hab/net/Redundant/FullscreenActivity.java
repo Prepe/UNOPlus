@@ -1,4 +1,4 @@
-package jop.hab.net;
+package jop.hab.net.Redundant;
 
 import android.annotation.SuppressLint;
 import android.support.v7.app.ActionBar;

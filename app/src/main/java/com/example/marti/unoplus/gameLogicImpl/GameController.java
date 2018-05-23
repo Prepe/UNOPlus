@@ -1,0 +1,202 @@
+package com.example.marti.unoplus.gameLogicImpl;
+
+import com.example.marti.unoplus.GameActions;
+//import com.example.marti.unoplus.Screens.CardViewTest;
+import com.example.marti.unoplus.cards.Card;
+import com.example.marti.unoplus.cards.Deck;
+import com.example.marti.unoplus.players.Player;
+import com.example.marti.unoplus.players.PlayerList;
+
+import java.util.LinkedList;
+import java.util.List;
+
+/**
+ * Created by marti on 10.04.2018.
+ */
+
+//Der GC muss das ObserverInterface implementieren, wichtig für automatische Datenabrfrage (Observer Pattern)
+
+public class GameController {
+    GameViewProt gvp;
+    PlayerList players;     //reference to all Players in the Game
+    Deck deck;              //reference to the Deck that is used
+    GameLogic logic;        //reference to the GameLogic
+    int startingHand = 7;   //Amount of Cards every Player gets at the start of the Game
+    float turnTime;         //Turn Timer for the Game
+    public GameActions gA;  //Object that gets send to all Players
+    boolean[] calledUNO;    //
+    boolean[] dropedCard;   //
+    boolean[] tradedCard;   //
+
+    //<---------- Method for setting up the Game ---------->
+    public GameController(GameViewProt gvp) {
+        this.gvp = gvp;
+        deck = new Deck();
+    }
+
+    public void setPlayerList(PlayerList pl) {
+        players = pl;
+
+    }
+
+    /*
+     * Take all actions to set up game:
+     * setting up the GameLogic (GameRules)
+     * generation of the Deck that will be used
+     * giving all players their handcards
+     * playing the first card of the game
+     */
+    public void setUpGame() {
+        logic = new GameLogic(players, deck, this);
+
+        deck.shuffle();
+        drawHandCardsForPlayers();
+
+        if (players != null) {
+            players.playerCount();
+            //calledUNO = new boolean[players.playerCount()];
+            dropedCard = new boolean[players.playerCount()];
+            //tradedCard = new boolean[players.playerCount()];
+        }
+
+        playTopCard();
+    }
+
+    //Drawing handcards for all players
+    private void drawHandCardsForPlayers() {
+        for (int j = 0; j < players.playerCount(); j++) {
+            List<Card> handcards = new LinkedList<>();
+            for (int i = 0; i < startingHand; i++) {
+                handcards.add(deck.draw());
+            }
+
+            gA = new GameActions(GameActions.actions.DRAW_CARD, j, handcards);
+
+            update();
+        }
+    }
+
+    //<---------- Method for handling player actions ---------->
+    //Method to decide what action has been taken
+    public void callGameController(GameActions action) {
+        switch (action.action) {
+            case DRAW_CARD:
+                drawCard(action.nextPlayerID);
+                break;
+            case DROP_CARD:
+                dropCard(action.playerID);
+                break;
+            case TRADE_CARD:
+                //GC.tradeCard();
+                break;
+            case PLAY_CARD:
+                playCard(action.playerID, action.card);
+                break;
+            case WISH_COLOR:
+                colorWish(action.playerID, action.colorWish);
+                break;
+        }
+    }
+
+    //Method that updates all players
+    public void update() {
+        gA.gcSend = true;
+        gvp.updateAllConnected(gA);
+
+    }
+
+    //Method for all Players to call to draw Cards form the Deck
+    void drawCard(int playerID) {
+        if (playerID == logic.activePlayer.getID()) {
+            List<Card> cards = new LinkedList<>();
+            if (deck.isEmptyDeck()) {
+                deck.replaceTakeDeck();
+            }
+            int count = logic.getCardDrawCount();
+            for (int i = 0; i < count; i++) {
+                cards.add(deck.draw());
+            }
+
+            gA = new GameActions(GameActions.actions.DRAW_CARD, playerID, cards);
+
+            update();
+
+
+        }
+    }
+
+    //Method for playing cards
+    void playCard(int player, Card card) {
+        Player p = players.getPlayer(player);
+        //Check if player is allowed to play the card
+        if (logic.checkCard(card, p)) {
+            //Remove the played card from the players hand
+            gA = new GameActions(GameActions.actions.PLAY_CARD, player, card);
+            update();
+
+            for (Player pl : this.players.getPlayers())
+            {
+                gA = new GameActions(GameActions.actions.UPDATE, pl.getID(), card);
+                update();
+            }
+            //Run game logic for the card that was played
+            logic.runLogic(p, card);
+            this.gvp.updateCurrentPlayCard(card);
+        }
+    }
+
+    //Method to change the color that has to be played next
+    void colorWish(int player, Card.colors color) {
+        logic.wishColor(color);
+        Player p = players.getPlayer(player);
+        logic.nextPlayer(p);
+
+        gA = new GameActions(GameActions.actions.UPDATE, new Card(logic.lastCardColor, logic.lastCardValue), logic.getActivePlayer().getID());
+        update();
+    }
+
+
+    //Method to cheat and drop a Card
+    void dropCard(int player) {
+        if (!dropedCard[player]) {
+            dropedCard[player] = true;
+            gA = new GameActions(GameActions.actions.DROP_CARD, player, true);
+            update();
+        }
+    }
+
+    //Method to cheat and trade a Card with a Player
+    Card tradeCard(Player player, Card card) {
+        //TODO implement
+
+        return card;
+    }
+
+    //<---------- Method for other actions called from GameLogic, CardEffects, etc ---------->
+    //Check if a player has won the game by playing his last card
+    public Player getWinningPlayer() {
+        for (Player p : players.getPlayers()) {
+            if (p.getHandSize() == 0) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    //Playing the top card of the deck without GameLogic
+    public void playTopCard() {
+        Card topCard = deck.draw();
+        logic.playTopCard(topCard);
+        gA = new GameActions(GameActions.actions.UPDATE, topCard, logic.getActivePlayer().getID());
+
+        update();
+    }
+
+    /*
+     * Method that times each Turn for Players
+     * When at 0 draws a Card for the active Player
+     * */
+    private void runTimer() {
+        //TODO implement
+    }
+}
