@@ -4,52 +4,59 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="jop.hab.net.MainActivityTest">
+    tools:context="jop.hab.net.ConnectionScreen">
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
+
+
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    </android.support.design.widget.AppBarLayout>
-
-    <include layout="@layout/content_main_activity_test" />
-
-
-
-
-    <!-- Created by Sarthi Technology-->
-    <!-- www.youtube.com/SarthiTechnology-->
-    <!-- www.facebook.com/SarthiTechnology-->
-
-    <!-- My Dear Friends, Thanks for your kind support for my youtube channel.-->
-
-    <!-- Please make sure that you are using Relative Layout for below codes-->
-
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_x="0dp"
+        android:layout_y="0dp"
+        android:contentDescription="@string/dummy_content"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/gamebg"
+        tools:layout_editor_absoluteX="206dp"
+        tools:layout_editor_absoluteY="159dp" />
 
     <Button
         android:id="@+id/onOff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="55dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/connectionStatus"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="14dp"
         android:text="Wifi On" />
 
     <Button
         android:id="@+id/discover"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/onOff"
-        android:layout_alignBottom="@+id/onOff"
-        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/peerListView"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="14dp"
+        android:layout_marginRight="14dp"
         android:text="discover" />
+
+    <Button
+        android:id="@+id/start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/connectionStatus"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="Start" />
+
 
     <ListView
         android:id="@+id/peerListView"
@@ -57,34 +64,7 @@
         android:layout_height="200dp"
         android:layout_below="@+id/onOff"
         android:layout_marginTop="25dp"
-        android:background="@android:color/holo_orange_light" />
-
-    <TextView
-        android:id="@+id/readMsg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:layout_below="@+id/peerListView"
-        android:layout_marginTop="31dp"
-        android:text="Message"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:textStyle="italic" />
-
-    <EditText
-        android:id="@+id/writeMsg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:ems="10"
-        android:inputType="textPersonName"/>
-
-    <Button
-        android:id="@+id/sendButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:text="Send" />
+        />
 
     <TextView
         android:id="@+id/connectionStatus"
@@ -92,7 +72,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/readMsg"
         android:layout_marginTop="39dp"
         android:text="Connection Status"
         android:textAlignment="center"

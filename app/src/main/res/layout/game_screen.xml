@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gamebg"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:id="@+id/game_screen">
 
 
 
@@ -17,22 +18,9 @@
         android:layout_marginTop="52dp"
         app:srcCompat="@drawable/unostack" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="63dp"
-        android:text="TextView"
-        android:textAppearance="@style/TextAppearance.AppCompat.Inverse" />
-
     <ListView
         android:id="@+id/list"
-        android:layout_width="150dp"
+        android:layout_width="118dp"
         android:layout_height="231dp"
         android:scrollbars="none"
         android:visibility="visible"
@@ -52,38 +40,16 @@
         android:background="@drawable/unounobutton" />
 
 
-    <Button
-        android:id="@+id/btnSend"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/list"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginEnd="164dp"
-        android:layout_marginRight="164dp"
-        android:text="Send" />
-
-    <EditText
-        android:id="@+id/txtSend"
-        android:layout_width="156dp"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/list"
-        android:layout_toLeftOf="@+id/btnSend"
-        android:layout_toStartOf="@+id/btnSend"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="stuff"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
-        android:textColor="@android:color/white" />
 
     <ImageView
-        android:id="@+id/img_playCard"
+        android:id="@+id/viewPlayedCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="102dp"
-        app:srcCompat="@drawable/card_back" />
+        android:layout_marginTop="102dp"/>
+        <!--app:srcCompat="@drawable/card_back"/-->
+
 
     <HorizontalScrollView
         android:id="@+id/scrollViewGame"
@@ -102,26 +68,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/btn_b"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/blue_3" />
-
-            <ImageButton
-                android:id="@+id/btn_r"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/red_8" />
-
-            <ImageButton
-                android:id="@+id/btn_g"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/green_7" />
-
         </LinearLayout>
+
     </HorizontalScrollView>
 
     <TextView
@@ -131,4 +79,69 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse" />
+
+    <TextView
+        android:id="@+id/numCards1"
+        android:layout_width="39dp"
+        android:layout_height="18dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="16dp"
+        android:layout_toEndOf="@+id/list"
+        android:layout_toRightOf="@+id/list"
+        android:text="(7)"
+        android:textAppearance="@style/TextAppearance.AppCompat.Inverse" />
+
+    <TextView
+        android:id="@+id/numCards2"
+        android:layout_width="38dp"
+        android:layout_height="22dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="76dp"
+        android:layout_toEndOf="@+id/list"
+        android:layout_toRightOf="@+id/list"
+        android:text="(7)"
+        android:textAppearance="@style/TextAppearance.AppCompat.Inverse" />
+
+    <TextView
+        android:id="@+id/netmessage"
+        android:layout_width="200dp"
+        android:layout_height="22dp"
+        android:layout_alignBottom="@+id/countdown"
+        android:layout_centerHorizontal="true"
+        android:text="no message recieved"
+        android:textAppearance="@style/TextAppearance.AppCompat.Inverse" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="37dp"
+        android:layout_height="25dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="136dp"
+        android:layout_toEndOf="@+id/list"
+        android:layout_toRightOf="@+id/list"
+        android:text="(7)"
+        android:textAppearance="@style/TextAppearance.AppCompat.Inverse" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="34dp"
+        android:layout_height="25dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="141dp"
+        android:layout_toEndOf="@+id/list"
+        android:layout_toRightOf="@+id/list"
+        android:text="(7)"
+        android:textAppearance="@style/TextAppearance.AppCompat.Inverse" />
+
+    <Button
+        android:id="@+id/buttongetcard"
+        android:layout_width="72dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="92dp"
+        android:layout_marginRight="92dp"
+        android:text="ziehe Karte" />
+
 </RelativeLayout>

@@ -1,12 +1,8 @@
-package jop.hab.net;
+package jop.hab.net.Redundant;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -24,12 +20,16 @@ import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.R;
 
+import jop.hab.net.NetworkIOManager;
+import jop.hab.net.ObserverInterface;
+
 public class GameView_devImpl extends AppCompatActivity implements ObserverInterface {
 
 
     TextView textView;
     EditText editTextSend;
     Button btnSend;
+    Button btnUnoUno;
     ImageButton btnr8;
     ImageButton btng7;
     ImageButton btnb3;
@@ -53,6 +53,19 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
 
         //Nicht optimal...todo!!!
 
+        /*PlayerList PL = new PlayerList();
+        ArrayList<Player> pl = new ArrayList<Player>();
+        Player player = new Player(1);
+        pl.add(player);
+        player = new Player(2);
+        pl.add(player);
+        PL.setPlayers(pl);
+        //@TODO player müssen noch korrekt in die Playerlist eingefügt werden, momentan nur zu Probezwecken
+        Deck deck = new Deck();
+        GameLogic GL = new GameLogic(PL, deck);
+        GameController GC = new GameController();
+        GC.setUpGame();*/
+
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
@@ -64,15 +77,13 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
         ListView lv = (ListView)findViewById(R.id.list);
         lv.setAdapter(adapter);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
 
         textView = (TextView) findViewById(R.id.textView);
         editTextSend = (EditText) findViewById(R.id.txtSend);
 
         btnSend = (Button) findViewById(R.id.btnSend);
-        btnb3 = (ImageButton) findViewById(R.id.btn_b);
+        btnUnoUno = (Button) findViewById(R.id.unounobutton);
+        btnb3 =
         btng7 = (ImageButton) findViewById(R.id.btn_g);
         btnr8 = (ImageButton) findViewById(R.id.btn_r);
         playCard = (ImageView) findViewById(R.id.img_playCard);
@@ -87,20 +98,29 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
         networkIOManager.open();
 
 
-        btnSend.setOnClickListener(new View.OnClickListener() {
+        /*btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
 
-                networkIOManager.writeMsg(editTextSend.getText().toString());
+                //networkIOManager.writeMsg(editTextSend.getText().toString());
 
                 //networkIOManager.writeCard(card);
 
 
             }
+        });*/
+
+        btnUnoUno.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //networkIOManager.writeMsg("unouno");
+
+            }
         });
 
-        btnr8.setOnClickListener(new View.OnClickListener() {
+       /* btnr8.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -133,7 +153,7 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
             }
         });
 
-
+        */
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
@@ -142,7 +162,7 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
                     case 0:
                         //Toast.makeText(getApplicationContext(), "Player 1", Toast.LENGTH_SHORT).show();
                         //TO DO
-                        if(Player.cheated == true){
+                        if(true){
                             //TODO
                         }
                         break;
@@ -155,7 +175,7 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
                         //TO DO
                         break;
                     case 3:
-                        Toast.makeText(getApplicationContext(), "Plöayer 4", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Player 4", Toast.LENGTH_SHORT).show();
                         //TO DO
                         break;
                     default:
@@ -172,11 +192,23 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
 
         textView.setText(networkIOManager.getTestText());
         setCard(networkIOManager.getTestText());
+        sayUno(networkIOManager.getTestText());
 
         //todo Card holen
         //card = networkIOManager.getCard();
 
 
+    }
+
+    @Override
+    public void NIOReady() {
+
+    }
+
+    public void sayUno(String unoUno) {
+        if (unoUno.equals("unouno")) {
+            Toast.makeText(getApplicationContext(), "UNOOO", Toast.LENGTH_SHORT).show();
+        }
     }
 
     // nur für Demo Zwecke

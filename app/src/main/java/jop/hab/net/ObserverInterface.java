@@ -10,6 +10,7 @@ public interface ObserverInterface {
     public void dataChanged();
 
 
+    public void NIOReady();
 
 
 }
