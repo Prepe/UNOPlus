@@ -2,17 +2,22 @@ package com.example.marti.unoplus.cards;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.widget.ImageView;
 
 import com.example.marti.unoplus.R;
 //import com.example.marti.unoplus.Screens.CardViewTest;
 import com.example.marti.unoplus.gameLogicImpl.GameViewProt;
 
+import java.util.Objects;
+
 /**
  * Created by ekzhu on 30.04.2018.
  */
 
-public class HandCardView {
+public class HandCardView implements Comparable<HandCardView> {
     public Card card = null;
     public ImageView view;
 
@@ -26,6 +31,36 @@ public class HandCardView {
             this.view.setOnTouchListener(new HandCardTouchListener());
         }
 
+    }
+
+    @Override
+    public int compareTo(@NonNull HandCardView handCards) {
+        if(this == handCards){
+            return 0;
+        }
+
+        int cardColors = this.card.color.compareTo(handCards.card.color);
+
+        if(cardColors != 0) {
+            return cardColors;
+        }
+        return this.card.value.compareTo(handCards.card.value);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public boolean equals(Object handCards) {
+        if (this == handCards) {
+            return true;
+        }
+
+        if (handCards.getClass() != getClass()) {
+            return false;
+        }
+
+        HandCardView handCardView = (HandCardView) handCards;
+
+        return Objects.equals(card.color, this.card.color);
     }
 
     public void updateCardPicture() {

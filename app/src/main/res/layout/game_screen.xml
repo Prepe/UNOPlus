@@ -112,25 +112,23 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Inverse" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/numCards3"
         android:layout_width="37dp"
         android:layout_height="25dp"
         android:layout_alignParentTop="true"
         android:layout_marginTop="136dp"
         android:layout_toEndOf="@+id/list"
         android:layout_toRightOf="@+id/list"
-        android:text="(7)"
         android:textAppearance="@style/TextAppearance.AppCompat.Inverse" />
 
     <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/numCards4"
         android:layout_width="34dp"
         android:layout_height="25dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="141dp"
         android:layout_toEndOf="@+id/list"
         android:layout_toRightOf="@+id/list"
-        android:text="(7)"
         android:textAppearance="@style/TextAppearance.AppCompat.Inverse" />
 
     <Button

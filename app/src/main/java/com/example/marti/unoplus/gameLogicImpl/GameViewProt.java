@@ -34,6 +34,8 @@ import com.example.marti.unoplus.sound.SoundManager;
 import com.example.marti.unoplus.sound.Sounds;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -307,6 +309,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             this.playedCardView.updateCard(card);
     }
 
+    //Update View to show current handCard counters
     public void updateCountersInView(){
         int[] hcc = player.getHandcardcounter();
 
@@ -322,6 +325,29 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
         LinearLayout handBox = findViewById(R.id.playerHandLayout);
         handBox.addView(cardview.view);
+
+        // gets the handCardViews
+        int cardViewsCount = handBox.getChildCount();
+        View[] cardViews = new View[cardViewsCount];
+
+        for(int i = 0; i < cardViewsCount; i++)
+            cardViews[i] = handBox.getChildAt(i);
+
+        //sorts the cardViews array
+        Arrays.sort(cardViews, new Comparator<View>() {
+            @Override
+            public int compare(View card1, View card2) {
+                HandCardView Card1 = (HandCardView) card1.getTag();
+                HandCardView Card2 = (HandCardView) card2.getTag();
+                return Card1.compareTo(Card2);
+            }
+        });
+
+        //after sorting remove all handCards and add sorted handCardViews
+        handBox.removeAllViews();
+
+        for(int  i = 0; i < cardViewsCount; i++)
+            handBox.addView(cardViews[i]);
     }
 
     //Visualy remove Cards to player hand
