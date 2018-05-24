@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.marti.unoplus.R;
+import com.example.marti.unoplus.Screens.NameScreen;
 import com.example.marti.unoplus.gameLogicImpl.GameController;
 import com.example.marti.unoplus.gameLogicImpl.GameViewProt;
 
@@ -48,7 +49,6 @@ public class ConnectionScreen extends AppCompatActivity {
     String[] deviceNameArray;
     WifiP2pDevice[] deviceArray;
     public  ArrayList<String> connectedDevices = new ArrayList<>();
-
 
     static final int MESSAGE_READ = 1;
 

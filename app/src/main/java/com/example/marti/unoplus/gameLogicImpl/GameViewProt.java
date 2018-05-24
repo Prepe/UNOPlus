@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -184,7 +185,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     //Method to Update all Players after GC and GL have finished
     public void updateAllConnected(GameActions gA) {
 
-        Log.d("Time", "updateAllPLayrs will schon was vom NIO");
+        Log.d("Time", "updateAllPLayers will schon was vom NIO");
 
         NIOmanager.writeGameaction(gA);
         handleUpdate(gA);

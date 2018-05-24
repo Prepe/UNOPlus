@@ -20,4 +20,8 @@
     <string name="connection_status">Connection Status</string>
     <string name="discover">discover</string>
     <string name="title_activity_game_view_prot">GameViewProt</string>
+    <string name="eingabe_spielername">Gib hier deinen Spielernamen ein:</string>
+    <string name="name">Name</string>
+    <string name="zurück">Zurück</string>
+    <string name="weiter">Weiter</string>
 </resources>

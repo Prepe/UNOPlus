@@ -44,6 +44,8 @@ public class Player {
         return getHand().size();
     }
 
+    public void setName(String name){playerName = name;}
+
     public String getName(){
         return this.playerName;
     }
