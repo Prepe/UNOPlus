@@ -186,9 +186,6 @@ public class GameController {
     public void playTopCard() {
         Card topCard = deck.draw();
         logic.playTopCard(topCard);
-        gA = new GameActions(GameActions.actions.UPDATE, topCard, logic.getActivePlayer().getID());
-
-        update();
     }
 
     /*
