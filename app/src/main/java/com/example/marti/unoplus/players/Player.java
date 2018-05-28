@@ -1,12 +1,9 @@
 package com.example.marti.unoplus.players;
 
 import android.util.Log;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.marti.unoplus.GameActions;
 import com.example.marti.unoplus.GameStatics;
-import com.example.marti.unoplus.R;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.gameLogicImpl.GameViewProt;
 
@@ -122,7 +119,7 @@ public class Player {
     void updateGame(int nextPID, Card card) {
         updateLastCard(card);
         if (ID == nextPID) {
-            gameViewProt.yourTurnToast();
+            gameViewProt.toastYourTurn();
         }
     }
 
@@ -151,6 +148,9 @@ public class Player {
             this.handcards.remove(card);
             updateHandCardCounter(-1, pID);
             this.gameViewProt.removeCardFromHand(card);
+            if (this.handcards.size() == 0) {
+                winGame();
+            }
         } else {
             updateHandCardCounter(-1, pID);
         }
@@ -161,7 +161,7 @@ public class Player {
     //Your intended Card couldn't be played
     void wrongCard(int pID) {
         if (checkID(pID)) {
-            gameViewProt.wrongCardToast();
+            gameViewProt.toastWrongCard();
         }
     }
 
@@ -182,5 +182,11 @@ public class Player {
     void updateHandCardCounter(int count, int ID ){
         handcardcounter[ID] += count;
         gameViewProt.updateCountersInView();
+    }
+
+    void winGame() {
+        GameActions win = new GameActions(GameActions.actions.GAME_FINISH,ID,true);
+        gameViewProt.writeNetMessage(win);
+        gameViewProt.toastGameFinsihed(ID);
     }
 }

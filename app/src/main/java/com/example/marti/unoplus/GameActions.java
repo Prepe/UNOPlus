@@ -17,7 +17,8 @@ public class GameActions {
         DROP_CARD (4),
         TRADE_CARD (5),
         NEXT_PLAYER (6),
-        INIT_GAME(7);
+        INIT_GAME (7),
+        GAME_FINISH (8);
 
         private int value;
         actions(int value){this.value = value;}
