@@ -94,7 +94,7 @@ public class Player {
                 }
                 break;
             case UPDATE:
-                updateGame(action.nextPlayerID, action.card);
+                updateGame(action.playerID, action.card);
                 break;
             case NEXT_PLAYER:
                 //TODO ipml
