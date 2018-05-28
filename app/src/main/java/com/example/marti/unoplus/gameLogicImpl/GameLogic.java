@@ -1,5 +1,6 @@
 package com.example.marti.unoplus.gameLogicImpl;
 
+import com.example.marti.unoplus.GameActions;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.cards.CardEffects;
 import com.example.marti.unoplus.cards.Deck;
@@ -18,7 +19,7 @@ public class GameLogic {
     Card.colors lastCardColor;  //The color of the card that is on top of the discard pile
     GameController controller;
 
-    public GameLogic (PlayerList pL, Deck gameDeck, GameController gc) {
+    public GameLogic(PlayerList pL, Deck gameDeck, GameController gc) {
         controller = gc;
         effects = new CardEffects(this, gc);
         playerList = pL;
@@ -29,17 +30,13 @@ public class GameLogic {
     }
 
     //Basic GameLogic should only be called when the card is good to play or player has to draw a card (card == null)
-    public void runLogic (Player player, Card card) {
-        if (card == null) {
-            //player.drawCard();
-        } else {
-            playCard(card);
-            effects.cardEffect(player, card);
-        }
+    public void runLogic(Player player, Card card) {
+        playCard(card);
+        effects.cardEffect(player, card);
     }
 
     //Return the amount of Cards the Player has to draw and set next draw to 1
-    public int getCardDrawCount () {
+    public int getCardDrawCount() {
         int amount = cardDrawCount;
         cardDrawCount = 1;
         return amount;
@@ -71,7 +68,7 @@ public class GameLogic {
     /*
     * Return the next Player after checking the direction of the game
     * */
-    public Player nextPlayer (Player player) {
+    public Player nextPlayer(Player player) {
         if (reverse) {
             if (skip) {
                 skip = false;
@@ -88,25 +85,32 @@ public class GameLogic {
             }
         }
 
+        controller.gA = new GameActions(GameActions.actions.UPDATE,activePlayer.getID(),new Card(lastCardColor,lastCardValue));
+        controller.update();
+
         return activePlayer;
     }
 
     /*
-    * Checks if the Card the Player wants to play can be played
+    * Checks what Player wants to play a card and if he is allowed to play it
     * */
-    public boolean checkCard (Card card, Player player) {
-        // Check if last card was a +2 and the card Effect is still active
+    public boolean checkCard(Card card, Player player) {
+        //Check if the player is the active player
         if (player.equals(activePlayer)) {
-            if (lastCardValue == Card.values.PLUS_TWO && cardDrawCount > 1) {
-                if (checkValue(card) || card.value == Card.values.PLUS_FOUR) {
+            //Check for active +2/4 effect
+            if (cardDrawCount > 1) {
+                //Check if played card is a +4
+                if (card.value == Card.values.PLUS_FOUR) {
                     return true;
                 }
-                // Check if last card was a +4 and the card Effect is still active
-            } else if (lastCardValue == Card.values.PLUS_FOUR && cardDrawCount > 1) {
-                if (checkValue(card) || card.color == lastCardColor) {
+                //Check for played card is +2 and last card was +2
+                if (checkValue(card)) {
                     return true;
                 }
-                // When no +2 or +4 Effect is active make normal Card Check
+                //Check for played card is +2 and last card was +4
+                if (card.value == Card.values.PLUS_TWO && checkColor(card)) {
+                    return true;
+                }
             } else {
                 //Check card for right Value
                 if (checkValue(card)) {
@@ -117,7 +121,8 @@ public class GameLogic {
                     return true;
                 }
             }
-        } else if (checkValue(card) && checkColor(card)){
+        } else if (checkValue(card) && checkColor(card)) {
+            activePlayer = player;
             return true;
         }
 

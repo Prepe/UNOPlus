@@ -61,18 +61,16 @@ public class Player {
     }
 
     //<---------- Player Actions ---------->
-    //Ask server for Cards
+    //Ask for Cards
     public void drawCard(){
         GameActions action;
         action = new GameActions(GameActions.actions.DRAW_CARD, ID);
-       // gameViewProt.updateAllConnected(action);
     }
 
-    //Tell Server what Card you want to play
+    //Tell what Card you want to play
     public void playCard(Card c){
         GameActions action;
         action = new GameActions(GameActions.actions.PLAY_CARD, ID, c);
-        //gameViewProt.updateAllConnected(action);
         Log.d("GameDebug", "Player playCard :" + c.value.toString() + " " + c.color.toString());
         this.gameViewProt.writeNetMessage(action);
     }
@@ -92,10 +90,14 @@ public class Player {
                 gotCard(action.playerID, action.cards);
                 break;
             case PLAY_CARD:
-                cardPlayed(action.playerID, action.card);
+                if (action.check) {
+                    wrongCard(action.playerID);
+                } else {
+                    cardPlayed(action.playerID, action.card);
+                }
                 break;
             case UPDATE:
-                updateGame(action.card);
+                updateGame(action.nextPlayerID, action.card);
                 break;
             case NEXT_PLAYER:
                 //TODO ipml
@@ -112,39 +114,54 @@ public class Player {
     }
 
     //Check if the GA is for you
-    boolean checkID(int ID){
-        return ID == this.ID;
+    boolean checkID(int pID){
+        return pID == this.ID;
     }
 
     //Update Game Screen (last played Card, etc.)
-    void updateGame(Card lastCard) {
+    void updateGame(int nextPID, Card card) {
+        updateLastCard(card);
+        if (ID == nextPID) {
+            gameViewProt.yourTurnToast();
+        }
+    }
+
+    void updateLastCard(Card lastCard) {
         this.lastCard = lastCard;
         this.gameViewProt.updateCurrentPlayCard(this.lastCard);
     }
 
     //Add given Cards to your handcards
-    void gotCard(int ID, List<Card> cards) {
-        if (checkID(ID)) {
+    void gotCard(int pID, List<Card> cards) {
+        if (checkID(pID)) {
             for (Card c : cards) {
                 this.handcards.add(c);
                 this.gameViewProt.addCardToHand(c);
             }
-            updateHandCardCounter(cards.size(), ID);
+            updateHandCardCounter(cards.size(), pID);
         } else {
-            updateHandCardCounter(cards.size(), ID);
+            updateHandCardCounter(cards.size(), pID);
         }
 
     }
 
-    //Your intended Card was played so now you can remove it
-    void cardPlayed(int ID, Card card){
-        if (checkID(ID)) {
+    //A Card was played so now you can remove it and/or update Screen
+    void cardPlayed(int pID, Card card){
+        if (checkID(pID)) {
             this.handcards.remove(card);
-            updateHandCardCounter(-1, ID);
+            updateHandCardCounter(-1, pID);
             this.gameViewProt.removeCardFromHand(card);
-
         } else {
-            updateHandCardCounter(-1, ID);
+            updateHandCardCounter(-1, pID);
+        }
+
+        updateLastCard(card);
+    }
+
+    //Your intended Card couldn't be played
+    void wrongCard(int pID) {
+        if (checkID(pID)) {
+            gameViewProt.wrongCardToast();
         }
     }
 

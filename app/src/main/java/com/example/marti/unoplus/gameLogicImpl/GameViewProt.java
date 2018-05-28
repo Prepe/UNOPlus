@@ -123,7 +123,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         ListView lv = findViewById(R.id.list);
         lv.setAdapter(adapter);
 
-
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
@@ -375,4 +374,12 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
     }
 
+    //<---------- Toasts ---------->
+    public void yourTurnToast() {
+        Toast.makeText(getApplicationContext(), "Du bist am Zug", Toast.LENGTH_SHORT).show();
+    }
+
+    public void wrongCardToast() {
+        Toast.makeText(getApplicationContext(), "Konnte Karte nicht spielen!", Toast.LENGTH_SHORT).show();
+    }
 }
