@@ -149,7 +149,7 @@ public class GameController {
         if (p.equals(logic.activePlayer)) {
             logic.nextPlayer(p);
 
-            gA = new GameActions(GameActions.actions.UPDATE, new Card(logic.lastCardColor, logic.lastCardValue), logic.getActivePlayer().getID());
+            gA = new GameActions(GameActions.actions.UPDATE, logic.getActivePlayer().getID(), new Card(logic.lastCardColor, logic.lastCardValue));
             update();
         }
     }
