@@ -131,13 +131,13 @@ public class GameController {
         //Check if player is allowed to play the card
         if (logic.checkCard(card, p)) {
             //Remove the played card from the players hand and update Players
-            gA = new GameActions(GameActions.actions.PLAY_CARD, player, card);
+            gA = new GameActions(GameActions.actions.PLAY_CARD, player, card, true);
             update();
 
             //Run game logic for the card that was played
             logic.runLogic(p, card);
         } else {
-            gA = new GameActions(GameActions.actions.PLAY_CARD,player,true);
+            gA = new GameActions(GameActions.actions.PLAY_CARD,player,false);
             update();
         }
     }

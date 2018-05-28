@@ -61,6 +61,13 @@ public class GameActions {
         this.card = card;
     }
 
+    public GameActions(actions action, int pID, Card card, boolean check) {
+        this.action = action;
+        playerID = pID;
+        this.card = card;
+        this.check = check;
+    }
+
     //Used to give 1 player a number of card from the deck
     public GameActions(actions action, int pID, List<Card> drawnCards) {
         this.action = action;

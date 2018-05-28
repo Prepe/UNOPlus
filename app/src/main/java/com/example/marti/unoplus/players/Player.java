@@ -88,9 +88,9 @@ public class Player {
                 break;
             case PLAY_CARD:
                 if (action.check) {
-                    wrongCard(action.playerID);
-                } else {
                     cardPlayed(action.playerID, action.card);
+                } else {
+                    wrongCard(action.playerID);
                 }
                 break;
             case UPDATE:
