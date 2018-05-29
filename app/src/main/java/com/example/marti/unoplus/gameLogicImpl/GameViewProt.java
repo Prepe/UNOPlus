@@ -385,6 +385,10 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
     }
 
+    void endGame() {
+        startActivity(new Intent(this, MainMenu.class));
+    }
+
     //<---------- Toasts ---------->
     public void toastYourTurn() {
         Toast.makeText(getApplicationContext(), "Du bist am Zug", Toast.LENGTH_SHORT).show();
@@ -396,18 +400,30 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
     public void toastGameFinished(int pID) {
         Log.d ("GAME_END","Sieger ist Spieler " + (pID+1) + " mit der ID: " + pID);
+
+        String text;
+
         if (player.getID() == pID) {
-            Toast.makeText(getApplicationContext(), "Du hast gewonnen! ^(°.°)^", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "Du hast gewonnen! °(^.^)°", Toast.LENGTH_SHORT).show();
+            text = "Du hast gewonnen! °(^.^)°";
         } else {
-            Toast.makeText(getApplicationContext(), "Nicht Aufgeben :)", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "Nicht Aufgeben ;-)", Toast.LENGTH_SHORT).show();
+            text = "Vieleicht nächstes Mal ;-)";
         }
 
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        startActivity(new Intent(this, MainMenu.class));
+        Dialog d = new AlertDialog.Builder(this,AlertDialog.THEME_HOLO_LIGHT)
+                .setTitle(text)
+                .setItems(new String[]{"Ende"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dlg, int position) {
+                        if (position == 0) {
+                            endGame();
+                            dlg.cancel();
+                        }
+                    }
+                })
+                .create();
+        d.setCanceledOnTouchOutside(false);
+        d.show();
     }
 }
