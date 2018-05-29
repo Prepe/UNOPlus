@@ -31,7 +31,6 @@ import com.example.marti.unoplus.cards.PlayedCardView;
 import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.players.PlayerList;
 import com.example.marti.unoplus.sound.SoundManager;
-import com.example.marti.unoplus.sound.Sounds;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -180,7 +179,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         }
 
         if (action.action.equals(GameActions.actions.GAME_FINISH)) {
-            toastGameFinsihed(action.playerID);
+            toastGameFinished(action.playerID);
 
             return true;
         }
@@ -395,7 +394,8 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         Toast.makeText(getApplicationContext(), "Konnte Karte nicht spielen!", Toast.LENGTH_SHORT).show();
     }
 
-    public void toastGameFinsihed(int pID) {
+    public void toastGameFinished(int pID) {
+        Log.d ("GAME_END","Sieger ist Spieler " + (pID+1) + " mit der ID: " + pID);
         if (player.getID() == pID) {
             Toast.makeText(getApplicationContext(), "Du hast gewonnen! ^(°.°)^", Toast.LENGTH_SHORT).show();
         } else {

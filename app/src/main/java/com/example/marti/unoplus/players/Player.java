@@ -187,6 +187,6 @@ public class Player {
     void winGame() {
         GameActions win = new GameActions(GameActions.actions.GAME_FINISH,ID,true);
         gameViewProt.writeNetMessage(win);
-        gameViewProt.toastGameFinsihed(ID);
+        gameViewProt.toastGameFinished(ID);
     }
 }
