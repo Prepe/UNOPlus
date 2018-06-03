@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 
 import com.example.marti.unoplus.GameStatics;
 import com.example.marti.unoplus.R;
@@ -22,12 +23,6 @@ public class LobbyScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        GameStatics.currentActivity = this;
-
-        //Initialize network components
-        GameStatics.Initialize(false); //TODO : Determine how server does it.
-
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -40,19 +35,14 @@ public class LobbyScreen extends AppCompatActivity {
             public void onClick(View view) {
                 startActivity(new Intent(LobbyScreen.this, GameViewProt.class));
 
-                /*
                 boolean kt = false;
                 boolean kw = false;
                 boolean tt = false;
                 CheckBox kartentauschen = (CheckBox) findViewById(R.id.kartentauschen);
                 CheckBox kartenwegwerfen = (CheckBox) findViewById(R.id.kartenwegwerfen);
                 CheckBox tischteufel = (CheckBox) findViewById(R.id.tischteufel);
-                */
 
-                /*
-                TODO: Die eingestellten Spieloptionen/Schummelfunktionen müssen noch im GC implementiert/beachtet und diesem übergeben werden.
-                 */
-                /*
+                //@TODO boolean-Werte müssen noch an GameController übergeben werden
                 if(kartentauschen.isChecked()){
                     kt = true;
                 }
@@ -62,15 +52,6 @@ public class LobbyScreen extends AppCompatActivity {
                 if(tischteufel.isChecked()){
                     tt = true;
                 }
-
-                Deck Deck = new Deck();
-
-                PlayerList PlayerList = new PlayerList();
-                ArrayList<PlayerList> players = new ArrayList<>();
-
-                GameLogic GameLogic = new GameLogic(PlayerList, Deck);
-                GameController GameController = new GameController(PlayerList, Deck, GameLogic);
-                */
 
             }
         });

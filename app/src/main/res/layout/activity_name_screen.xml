@@ -28,6 +28,7 @@ tools:context=".Screens.NameScreen">
         android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp"
         android:text="@string/eingabe_spielername"
+        android:textColor="@android:color/white"
         android:textSize="24sp"
         android:visibility="visible" />
 
@@ -40,7 +41,8 @@ tools:context=".Screens.NameScreen">
         android:layout_marginTop="143dp"
         android:ems="10"
         android:hint="@string/name"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        android:textColor="@android:color/white" />
 
     <Button
         android:id="@+id/weiterButton"

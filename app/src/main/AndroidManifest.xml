@@ -64,7 +64,8 @@
             android:name="jop.hab.net.Redundant.GameView_devImpl"
             android:label="@string/title_activity_game_view_dev_impl"
             android:theme="@style/FullscreenTheme" />
-        <activity android:name=".Screens.NameScreen"></activity>
+        <activity android:name=".Screens.NameScreen" />
+        <activity android:name=".Screens.WaitingScreen"></activity>
     </application>
 
 </manifest>

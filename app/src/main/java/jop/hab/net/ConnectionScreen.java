@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.marti.unoplus.R;
+import com.example.marti.unoplus.Screens.LobbyScreen;
 import com.example.marti.unoplus.Screens.NameScreen;
 import com.example.marti.unoplus.gameLogicImpl.GameController;
 import com.example.marti.unoplus.gameLogicImpl.GameViewProt;
@@ -175,7 +176,7 @@ public class ConnectionScreen extends AppCompatActivity {
                 btnStart.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i = new Intent(getBaseContext(), GameViewProt.class);
+                        Intent i = new Intent(getBaseContext(), LobbyScreen.class);
                         i.putExtra("mode", "server");
                         i.putExtra("adress", groupOwnerAdress.getHostAddress());
                         startActivity(i);
