@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.example.marti.unoplus.GameActions;
 import com.example.marti.unoplus.GameStatics;
 import com.example.marti.unoplus.R;
+import com.example.marti.unoplus.Screens.NameScreen;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.cards.Deck;
 import com.example.marti.unoplus.cards.HandCardView;
@@ -63,6 +64,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     List<Card> card = new LinkedList<>();
     Button unoButton;
     public PlayerList playerList;
+    String playerName;
 
 
     public GameViewProt() {
@@ -115,8 +117,9 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         int plsize = 0;
         plsize = playerCountTest(plsize);
         for(int i = 1; i <= 2; i++ ){
-            playersSS.add("Player "+i);
-
+            playerName = getIntent().getExtras().getString(NameScreen.PLAYER_NAME, "");
+            playersSS.add(playerName);
+            //playersSS.add("Player "+i);
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, playersSS);
@@ -144,7 +147,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                         //TO DO
                         break;
                     case 3:
-                        Toast.makeText(getApplicationContext(), "Plöayer 4", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Player 4", Toast.LENGTH_SHORT).show();
                         //TO DO
                         break;
                     default:
@@ -235,11 +238,13 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
             PlayerList pl = new PlayerList();
             LinkedList<Player> l = new LinkedList<>();
-            player = new Player(0);
+            playerName = getIntent().getExtras().getString(NameScreen.PLAYER_NAME, "");
+            player = new Player(0, playerName);
             player.setGV(this);
             l.add(player);
 
-            Player temp = new Player(1);
+            playerName = getIntent().getExtras().getString(NameScreen.PLAYER_NAME, "");
+            Player temp = new Player(1, playerName);
             l.add(temp);
             Log.d("time", "before ga");
             NIOmanager.writeGameaction(new GameActions(GameActions.actions.TRADE_CARD, temp.getID(), true));
@@ -257,7 +262,8 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             int sizePL = l.size();
 
         } else {
-            player = new Player(null);
+            playerName = getIntent().getExtras().getString(NameScreen.PLAYER_NAME, "");
+            player = new Player(null, playerName);
             player.setGV(this);
 
             try {

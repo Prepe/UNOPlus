@@ -9,11 +9,12 @@ import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.example.marti.unoplus.R;
-import com.example.marti.unoplus.players.Player;
 
 import jop.hab.net.ConnectionScreen;
 
 public class NameScreen extends AppCompatActivity {
+    EditText playerName;
+    public static final String PLAYER_NAME = "Spielername";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,13 +25,16 @@ public class NameScreen extends AppCompatActivity {
 
         findViewById(R.id.weiterButton).setOnClickListener(handler);
         findViewById(R.id.zurückButton).setOnClickListener(handler);
+        playerName = findViewById(R.id.playerName);
     }
 
     View.OnClickListener handler = new View.OnClickListener() {
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.weiterButton:
-                    startActivity(new Intent(NameScreen.this, ConnectionScreen.class));
+                    Intent i = new Intent(NameScreen.this, ConnectionScreen.class);
+                    i.putExtra(PLAYER_NAME, getPlayerName());
+                    startActivity(i);
                     break;
                 case R.id.zurückButton:
                     startActivity(new Intent(NameScreen.this, MainMenu.class));
@@ -38,5 +42,9 @@ public class NameScreen extends AppCompatActivity {
             }
         }
     };
+
+    private String getPlayerName() {
+        return (playerName).getText().toString();
+    }
 
 }

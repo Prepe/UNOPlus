@@ -68,7 +68,6 @@ public class ConnectionScreen extends AppCompatActivity {
 
     }
 
-
     private void exqListener() {
 
         btnOnOff.setOnClickListener(new View.OnClickListener() {

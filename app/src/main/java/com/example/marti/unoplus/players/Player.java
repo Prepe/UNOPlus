@@ -23,8 +23,9 @@ public class Player {
     int [] handcardcounter;
 
 
-    public Player(Integer id){
+    public Player(Integer id, String playerName){
         ID = id;
+        this.playerName = playerName;
         handcards = new LinkedList<>();
     }
 
@@ -44,7 +45,7 @@ public class Player {
         return getHand().size();
     }
 
-    public void setName(String name){playerName = name;}
+    public void setName(String name){this.playerName = name;}
 
     public String getName(){
         return this.playerName;
