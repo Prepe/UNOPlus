@@ -1,7 +1,10 @@
 package com.example.marti.unoplus.gameLogicImpl;
 
+import android.util.Log;
+
 import com.example.marti.unoplus.GameActions;
 //import com.example.marti.unoplus.Screens.CardViewTest;
+import com.example.marti.unoplus.Screens.GameViewProt;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.cards.Deck;
 import com.example.marti.unoplus.players.Player;
@@ -95,7 +98,35 @@ public class GameController {
             case WISH_COLOR:
                 colorWish(action.playerID, action.colorWish);
                 break;
+            case THROW_CARD:
+                this.throwAwayCard(action.playerID, action.card);
+                break;
         }
+    }
+
+    private void throwAwayCard(int playerID, Card card) {
+        Log.d("GameDebug", "Player trying to throw away card :" + card.value.toString() + " " + card.color.toString());
+        Player p = players.getPlayer(playerID);
+        if(p == null) {
+            Log.d("GameDebug", "Player was null");
+            return;
+        }
+        if(!p.hasCard(card)) {
+            Log.d("GameDebug", "Player does not have that card");
+            return;
+        }
+        if(!logic.canThrowAwayCard(card, p))
+        {
+            Log.d("GameDebug", "Player can not throw away card because reasons");
+            return;
+        }
+
+        gA = new GameActions(GameActions.actions.THROW_CARD_CONFIRM, playerID, card);
+
+        update();
+
+        Log.d("GameDebug", "Updated");
+
     }
 
     //Method that updates all players

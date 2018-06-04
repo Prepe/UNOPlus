@@ -1,4 +1,4 @@
-package com.example.marti.unoplus.gameLogicImpl;
+package com.example.marti.unoplus.Screens;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -24,10 +24,11 @@ import android.widget.Toast;
 import com.example.marti.unoplus.GameActions;
 import com.example.marti.unoplus.GameStatics;
 import com.example.marti.unoplus.R;
-import com.example.marti.unoplus.Screens.MainMenu;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.cards.HandCardView;
 import com.example.marti.unoplus.cards.PlayedCardView;
+import com.example.marti.unoplus.cards.ThrowAwayView;
+import com.example.marti.unoplus.gameLogicImpl.GameController;
 import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.players.PlayerList;
 import com.example.marti.unoplus.sound.SoundManager;
@@ -52,6 +53,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     GameActions recievedGA;
     ArrayList<HandCardView> handCards;
     PlayedCardView playedCardView;
+    ThrowAwayView throwAwayView;
     Button buttongetcard;
     TextView numCards;
     TextView numCards2;
@@ -162,6 +164,9 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
         recievedGA = NIOmanager.getGameAction();
 
+        TextView tv = (TextView) findViewById(R.id.netmessage);
+        tv.setText(recievedGA.action.toString());
+        Log.d("GCP_Action", recievedGA.action.toString());
         //TODO change placeholder player ID
         if (specialUpdate(recievedGA)) {
             Log.d("GCP_Action", recievedGA.action.toString());
@@ -232,6 +237,8 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         }
         this.playedCardView = new PlayedCardView(this.getApplicationContext(), this);
         this.playedCardView.updateCard(null);
+
+        this.throwAwayView = new ThrowAwayView(this.getApplicationContext(), this);
 
 
         if (mode.equals("server")) {

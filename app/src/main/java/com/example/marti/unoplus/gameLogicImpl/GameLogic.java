@@ -91,6 +91,10 @@ public class GameLogic {
         return activePlayer;
     }
 
+    public boolean canThrowAwayCard(Card card, Player player){
+        return player.equals(activePlayer);
+    }
+
     /*
     * Checks what Player wants to play a card and if he is allowed to play it
     * */

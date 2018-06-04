@@ -34,7 +34,7 @@
             android:screenOrientation="landscape"
             android:theme="@style/FullscreenTheme"></activity>
         <activity
-            android:name=".gameLogicImpl.GameViewProt"
+            android:name=".Screens.GameViewProt"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="landscape"

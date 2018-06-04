@@ -9,7 +9,7 @@ import android.widget.ImageView;
 
 import com.example.marti.unoplus.R;
 //import com.example.marti.unoplus.Screens.CardViewTest;
-import com.example.marti.unoplus.gameLogicImpl.GameViewProt;
+import com.example.marti.unoplus.Screens.GameViewProt;
 
 import java.util.Objects;
 

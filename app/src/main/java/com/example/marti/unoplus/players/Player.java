@@ -5,7 +5,7 @@ import android.util.Log;
 import com.example.marti.unoplus.GameActions;
 import com.example.marti.unoplus.GameStatics;
 import com.example.marti.unoplus.cards.Card;
-import com.example.marti.unoplus.gameLogicImpl.GameViewProt;
+import com.example.marti.unoplus.Screens.GameViewProt;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -83,6 +83,9 @@ public class Player {
     //<---------- Player Reactions ---------->
     public void callPlayer(GameActions action) {
         switch(action.action){
+            case THROW_CARD_CONFIRM:
+                this.throwAwayCardConfirmed(action.playerID, action.card);
+                break;
             case DRAW_CARD:
                 gotCard(action.playerID, action.cards);
                 break;
@@ -109,6 +112,8 @@ public class Player {
                 break;
         }
     }
+
+
 
     //Check if the GA is for you
     boolean checkID(int pID){
@@ -165,6 +170,11 @@ public class Player {
         }
     }
 
+    public boolean hasCard(Card card)
+    {
+        return this.handcards.contains(card);
+    }
+
     //<---------- Misc ---------->
     public void createDummyCards()
     {
@@ -188,5 +198,20 @@ public class Player {
         GameActions win = new GameActions(GameActions.actions.GAME_FINISH,ID,true);
         gameViewProt.writeNetMessage(win);
         gameViewProt.toastGameFinished(ID);
+    }
+
+    public void throwAwayCard(Card card){
+        Log.d("GameDebug", "Player threw Card away :" + card.value.toString() + " " + card.color.toString());
+        GameActions tam = new GameActions(GameActions.actions.THROW_CARD, ID,card);
+        gameViewProt.writeNetMessage(tam);
+
+    }
+
+    void throwAwayCardConfirmed(int playerID, Card card){
+        if(playerID != this.getID()){
+            return;
+        }
+        this.handcards.remove(card);
+        gameViewProt.removeCardFromHand(card);
     }
 }
