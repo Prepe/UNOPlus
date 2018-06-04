@@ -17,7 +17,9 @@ import java.util.Objects;
  * Created by ekzhu on 30.04.2018.
  */
 
-public class HandCardView implements Comparable<HandCardView> {
+public class HandCardView
+        //implements Comparable<HandCardView>
+{
     public Card card = null;
     public ImageView view;
 
@@ -33,6 +35,7 @@ public class HandCardView implements Comparable<HandCardView> {
 
     }
 
+        /*
     @Override
     public int compareTo(@NonNull HandCardView handCards) {
         if(this == handCards){
@@ -61,7 +64,9 @@ public class HandCardView implements Comparable<HandCardView> {
         HandCardView handCardView = (HandCardView) handCards;
 
         return Objects.equals(card.color, this.card.color);
+
     }
+    */
 
     public void updateCardPicture() {
         if (this.card == null) {

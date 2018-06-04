@@ -208,10 +208,12 @@ public class Player {
     }
 
     void throwAwayCardConfirmed(int playerID, Card card){
+        updateHandCardCounter(-1, playerID);
         if(playerID != this.getID()){
             return;
         }
         this.handcards.remove(card);
         gameViewProt.removeCardFromHand(card);
+
     }
 }

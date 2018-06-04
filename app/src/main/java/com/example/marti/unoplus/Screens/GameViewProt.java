@@ -343,7 +343,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         LinearLayout handBox = findViewById(R.id.playerHandLayout);
         handBox.addView(cardview.view);
 
-        // gets the handCardViews
+        /*// gets the handCardViews
         int cardViewsCount = handBox.getChildCount();
         View[] cardViews = new View[cardViewsCount];
 
@@ -365,7 +365,9 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
         for(int  i = 0; i < cardViewsCount; i++)
             handBox.addView(cardViews[i]);
+            */
     }
+
 
     //Visualy remove Cards to player hand
     public void removeCardFromHand(Card card) {
