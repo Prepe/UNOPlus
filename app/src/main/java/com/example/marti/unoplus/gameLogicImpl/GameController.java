@@ -130,29 +130,28 @@ public class GameController {
         Player p = players.getPlayer(player);
         //Check if player is allowed to play the card
         if (logic.checkCard(card, p)) {
-            //Remove the played card from the players hand
-            gA = new GameActions(GameActions.actions.PLAY_CARD, player, card);
+            //Remove the played card from the players hand and update Players
+            gA = new GameActions(GameActions.actions.PLAY_CARD, player, card, true);
             update();
 
-            for (Player pl : this.players.getPlayers())
-            {
-                gA = new GameActions(GameActions.actions.UPDATE, pl.getID(), card);
-                update();
-            }
             //Run game logic for the card that was played
             logic.runLogic(p, card);
-            this.gvp.updateCurrentPlayCard(card);
+        } else {
+            gA = new GameActions(GameActions.actions.PLAY_CARD,player,false);
+            update();
         }
     }
 
     //Method to change the color that has to be played next
-    void colorWish(int player, Card.colors color) {
+    void colorWish(int ID, Card.colors color) {
         logic.wishColor(color);
-        Player p = players.getPlayer(player);
-        logic.nextPlayer(p);
+        Player p = players.getPlayer(ID);
+        if (p.equals(logic.activePlayer)) {
+            logic.nextPlayer(p);
 
-        gA = new GameActions(GameActions.actions.UPDATE, new Card(logic.lastCardColor, logic.lastCardValue), logic.getActivePlayer().getID());
-        update();
+            gA = new GameActions(GameActions.actions.UPDATE, logic.getActivePlayer().getID(), new Card(logic.lastCardColor, logic.lastCardValue));
+            update();
+        }
     }
 
 
@@ -187,9 +186,6 @@ public class GameController {
     public void playTopCard() {
         Card topCard = deck.draw();
         logic.playTopCard(topCard);
-        gA = new GameActions(GameActions.actions.UPDATE, topCard, logic.getActivePlayer().getID());
-
-        update();
     }
 
     /*

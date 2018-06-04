@@ -2,8 +2,8 @@ package com.example.marti.unoplus.gameLogicImpl;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.StrictMode;
@@ -24,14 +24,13 @@ import android.widget.Toast;
 import com.example.marti.unoplus.GameActions;
 import com.example.marti.unoplus.GameStatics;
 import com.example.marti.unoplus.R;
+import com.example.marti.unoplus.Screens.MainMenu;
 import com.example.marti.unoplus.cards.Card;
-import com.example.marti.unoplus.cards.Deck;
 import com.example.marti.unoplus.cards.HandCardView;
 import com.example.marti.unoplus.cards.PlayedCardView;
 import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.players.PlayerList;
 import com.example.marti.unoplus.sound.SoundManager;
-import com.example.marti.unoplus.sound.Sounds;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,9 +40,6 @@ import java.util.List;
 
 import jop.hab.net.NetworkIOManager;
 import jop.hab.net.ObserverInterface;
-
-import static com.example.marti.unoplus.GameActions.actions.DRAW_CARD;
-import static com.example.marti.unoplus.GameActions.actions.DROP_CARD;
 
 public class GameViewProt extends AppCompatActivity implements ObserverInterface {
     NetworkIOManager NIOmanager;
@@ -125,7 +121,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         ListView lv = findViewById(R.id.list);
         lv.setAdapter(adapter);
 
-
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
@@ -168,14 +163,30 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         recievedGA = NIOmanager.getGameAction();
 
         //TODO change placeholder player ID
-        if (recievedGA.action.equals(GameActions.actions.TRADE_CARD)) {
-            if (!isGameController && player.getID() == null) {
-                player.setID(recievedGA.playerID);
-            }
+        if (specialUpdate(recievedGA)) {
+            Log.d("GCP_Action", recievedGA.action.toString());
         } else {
             handleUpdate(recievedGA);
         }
 
+    }
+
+    boolean specialUpdate(GameActions action) {
+        if (action.action.equals(GameActions.actions.TRADE_CARD)) {
+            if (!isGameController && player.getID() == null) {
+                player.setID(recievedGA.playerID);
+            }
+
+            return true;
+        }
+
+        if (action.action.equals(GameActions.actions.GAME_FINISH)) {
+            toastGameFinished(action.playerID);
+
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -275,7 +286,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     public int playerCountTest (int sizePL) {
         return sizePL;
     }
-
     View.OnClickListener handler = new View.OnClickListener() {
         public void onClick(View v) {
             switch (v.getId()){
@@ -401,4 +411,45 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
     }
 
+    void endGame() {
+        startActivity(new Intent(this, MainMenu.class));
+    }
+
+    //<---------- Toasts ---------->
+    public void toastYourTurn() {
+        Toast.makeText(getApplicationContext(), "Du bist am Zug", Toast.LENGTH_SHORT).show();
+    }
+
+    public void toastWrongCard() {
+        Toast.makeText(getApplicationContext(), "Konnte Karte nicht spielen!", Toast.LENGTH_SHORT).show();
+    }
+
+    public void toastGameFinished(int pID) {
+        Log.d ("GAME_END","Sieger ist Spieler " + (pID+1) + " mit der ID: " + pID);
+
+        String text;
+
+        if (player.getID() == pID) {
+            //Toast.makeText(getApplicationContext(), "Du hast gewonnen! °(^.^)°", Toast.LENGTH_SHORT).show();
+            text = "Du hast gewonnen! °(^.^)°";
+        } else {
+            //Toast.makeText(getApplicationContext(), "Nicht Aufgeben ;-)", Toast.LENGTH_SHORT).show();
+            text = "Vieleicht nächstes Mal ;-)";
+        }
+
+        Dialog d = new AlertDialog.Builder(this,AlertDialog.THEME_HOLO_LIGHT)
+                .setTitle(text)
+                .setItems(new String[]{"Ende"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dlg, int position) {
+                        if (position == 0) {
+                            endGame();
+                            dlg.cancel();
+                        }
+                    }
+                })
+                .create();
+        d.setCanceledOnTouchOutside(false);
+        d.show();
+    }
 }
