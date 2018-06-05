@@ -7,16 +7,13 @@ import android.widget.ImageView;
 import com.example.marti.unoplus.Screens.GameViewProt;
 
 /**
- * Created by ekzhu on 01.05.2018.
+ * Created by ekzhu on 04.06.2018.
  */
 
-public class HandCardDragListener implements View.OnDragListener {
-    // Drawable enterShape = getResources().getDrawable(R.drawable.all_blue);
-    //Drawable normalShape = getResources().getDrawable(R.drawable.all_red);
-
+public class ThrowAwayDragListener implements View.OnDragListener{
     public GameViewProt gamescreen = null;
 
-    public HandCardDragListener(GameViewProt screen)
+    public ThrowAwayDragListener(GameViewProt screen)
     {
         this.gamescreen = screen;
     }
@@ -37,7 +34,7 @@ public class HandCardDragListener implements View.OnDragListener {
 
                 ImageView droppedview = (ImageView) event.getLocalState();
                 HandCardView playedcard = (HandCardView) droppedview.getTag();
-                this.gamescreen.player.playCard(playedcard.card);
+                this.gamescreen.player.throwAwayCard(playedcard.card);
 
                 break;
             case DragEvent.ACTION_DRAG_ENDED:

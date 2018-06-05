@@ -1,7 +1,10 @@
 package com.example.marti.unoplus.gameLogicImpl;
 
+import android.util.Log;
+
 import com.example.marti.unoplus.GameActions;
 //import com.example.marti.unoplus.Screens.CardViewTest;
+import com.example.marti.unoplus.Screens.GameViewProt;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.cards.Deck;
 import com.example.marti.unoplus.players.Player;
@@ -95,7 +98,35 @@ public class GameController {
             case WISH_COLOR:
                 colorWish(action.playerID, action.colorWish);
                 break;
+            case THROW_CARD:
+                this.throwAwayCard(action.playerID, action.card);
+                break;
         }
+    }
+
+    private void throwAwayCard(int playerID, Card card) {
+        Log.d("GameDebug", "Player trying to throw away card :" + card.value.toString() + " " + card.color.toString());
+        Player p = players.getPlayer(playerID);
+        if(p == null) {
+            Log.d("GameDebug", "Player was null");
+            return;
+        }
+        if(!p.hasCard(card)) {
+            Log.d("GameDebug", "Player does not have that card");
+            return;
+        }
+        if(!logic.canThrowAwayCard(card, p))
+        {
+            Log.d("GameDebug", "Player can not throw away card because reasons");
+            return;
+        }
+
+        gA = new GameActions(GameActions.actions.THROW_CARD_CONFIRM, playerID, card);
+
+        update();
+
+        Log.d("GameDebug", "Updated");
+
     }
 
     //Method that updates all players
@@ -130,29 +161,28 @@ public class GameController {
         Player p = players.getPlayer(player);
         //Check if player is allowed to play the card
         if (logic.checkCard(card, p)) {
-            //Remove the played card from the players hand
-            gA = new GameActions(GameActions.actions.PLAY_CARD, player, card);
+            //Remove the played card from the players hand and update Players
+            gA = new GameActions(GameActions.actions.PLAY_CARD, player, card, true);
             update();
 
-            for (Player pl : this.players.getPlayers())
-            {
-                gA = new GameActions(GameActions.actions.UPDATE, pl.getID(), card);
-                update();
-            }
             //Run game logic for the card that was played
             logic.runLogic(p, card);
-            this.gvp.updateCurrentPlayCard(card);
+        } else {
+            gA = new GameActions(GameActions.actions.PLAY_CARD,player,false);
+            update();
         }
     }
 
     //Method to change the color that has to be played next
-    void colorWish(int player, Card.colors color) {
+    void colorWish(int ID, Card.colors color) {
         logic.wishColor(color);
-        Player p = players.getPlayer(player);
-        logic.nextPlayer(p);
+        Player p = players.getPlayer(ID);
+        if (p.equals(logic.activePlayer)) {
+            logic.nextPlayer(p);
 
-        gA = new GameActions(GameActions.actions.UPDATE, new Card(logic.lastCardColor, logic.lastCardValue), logic.getActivePlayer().getID());
-        update();
+            gA = new GameActions(GameActions.actions.UPDATE, logic.getActivePlayer().getID(), new Card(logic.lastCardColor, logic.lastCardValue));
+            update();
+        }
     }
 
 
@@ -187,9 +217,6 @@ public class GameController {
     public void playTopCard() {
         Card topCard = deck.draw();
         logic.playTopCard(topCard);
-        gA = new GameActions(GameActions.actions.UPDATE, topCard, logic.getActivePlayer().getID());
-
-        update();
     }
 
     /*

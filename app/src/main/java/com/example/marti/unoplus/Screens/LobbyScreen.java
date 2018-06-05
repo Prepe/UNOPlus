@@ -10,7 +10,6 @@ import android.widget.Button;
 
 import com.example.marti.unoplus.GameStatics;
 import com.example.marti.unoplus.R;
-import com.example.marti.unoplus.gameLogicImpl.GameViewProt;
 
 
 public class LobbyScreen extends AppCompatActivity {

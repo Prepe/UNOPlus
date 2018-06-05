@@ -17,7 +17,10 @@ public class GameActions {
         DROP_CARD (4),
         TRADE_CARD (5),
         NEXT_PLAYER (6),
-        INIT_GAME(7);
+        INIT_GAME (7),
+        GAME_FINISH (8),
+        THROW_CARD(9),
+        THROW_CARD_CONFIRM (10);
 
         private int value;
         actions(int value){this.value = value;}
@@ -33,7 +36,7 @@ public class GameActions {
     public Card.colors colorWish;
     public boolean gcSend = false;
 
-    //Used to update all players to what card was last played and the who is currently the active player
+    //Used to update all players to what card was last played and who is currently the active player
     public GameActions (actions action, Card card, int nextPID) {
         this.action = action;
         nextPlayerID = nextPID;
@@ -58,6 +61,13 @@ public class GameActions {
         this.action = action;
         playerID = pID;
         this.card = card;
+    }
+
+    public GameActions(actions action, int pID, Card card, boolean check) {
+        this.action = action;
+        playerID = pID;
+        this.card = card;
+        this.check = check;
     }
 
     //Used to give 1 player a number of card from the deck

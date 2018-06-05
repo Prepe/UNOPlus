@@ -1,12 +1,9 @@
 package com.example.marti.unoplus.players;
 
 import android.util.Log;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.marti.unoplus.GameActions;
 import com.example.marti.unoplus.GameStatics;
-import com.example.marti.unoplus.R;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.cards.HandCardList;
 import com.example.marti.unoplus.gameLogicImpl.GameViewProt;
@@ -64,18 +61,16 @@ public class Player {
     }
 
     //<---------- Player Actions ---------->
-    //Ask server for Cards
+    //Ask for Cards
     public void drawCard(){
         GameActions action;
         action = new GameActions(GameActions.actions.DRAW_CARD, ID);
-       // gameViewProt.updateAllConnected(action);
     }
 
-    //Tell Server what Card you want to play
+    //Tell what Card you want to play
     public void playCard(Card c){
         GameActions action;
         action = new GameActions(GameActions.actions.PLAY_CARD, ID, c);
-        //gameViewProt.updateAllConnected(action);
         Log.d("GameDebug", "Player playCard :" + c.value.toString() + " " + c.color.toString());
         this.gameViewProt.writeNetMessage(action);
     }
@@ -91,14 +86,21 @@ public class Player {
     //<---------- Player Reactions ---------->
     public void callPlayer(GameActions action) {
         switch(action.action){
+            case THROW_CARD_CONFIRM:
+                this.throwAwayCardConfirmed(action.playerID, action.card);
+                break;
             case DRAW_CARD:
                 gotCard(action.playerID, action.cards);
                 break;
             case PLAY_CARD:
-                cardPlayed(action.playerID, action.card);
+                if (action.check) {
+                    cardPlayed(action.playerID, action.card);
+                } else {
+                    wrongCard(action.playerID);
+                }
                 break;
             case UPDATE:
-                updateGame(action.card);
+                updateGame(action.playerID, action.card);
                 break;
             case NEXT_PLAYER:
                 //TODO ipml
@@ -115,28 +117,35 @@ public class Player {
     }
 
     //Check if the GA is for you
-    boolean checkID(int ID){
-        return ID == this.ID;
+    boolean checkID(int pID){
+        return pID == this.ID;
     }
 
     //Update Game Screen (last played Card, etc.)
-    void updateGame(Card lastCard) {
+    void updateGame(int nextPID, Card card) {
+        updateLastCard(card);
+        if (ID == nextPID) {
+            gameViewProt.toastYourTurn();
+        }
+    }
+
+    void updateLastCard(Card lastCard) {
         this.lastCard = lastCard;
         this.gameViewProt.updateCurrentPlayCard(this.lastCard);
     }
 
     //Add given Cards to your handcards
-    void gotCard(int ID, List<Card> cards) {
-        if (checkID(ID)) {
+    void gotCard(int pID, List<Card> cards) {
+        if (checkID(pID)) {
             for (Card c : cards) {
                 //this.handcards.add(c);
                 this.hand.addCard(c);
                 //this.gameViewProt.addCardToHand(c);
                 this.gameViewProt.handChanged(hand.getHand());
             }
-            updateHandCardCounter(cards.size(), ID);
+            updateHandCardCounter(cards.size(), pID);
         } else {
-            updateHandCardCounter(cards.size(), ID);
+            updateHandCardCounter(cards.size(), pID);
         }
 
     }
@@ -150,8 +159,22 @@ public class Player {
             this.gameViewProt.handChanged(hand.getHand());
             updateHandCardCounter(-1, ID);
         } else {
-            updateHandCardCounter(-1, ID);
+            updateHandCardCounter(-1, pID);
         }
+
+        updateLastCard(card);
+    }
+
+    //Your intended Card couldn't be played
+    void wrongCard(int pID) {
+        if (checkID(pID)) {
+            gameViewProt.toastWrongCard();
+        }
+    }
+
+    public boolean hasCard(Card card)
+    {
+        return this.handcards.contains(card);
     }
 
     //<---------- Misc ---------->
@@ -171,5 +194,28 @@ public class Player {
     void updateHandCardCounter(int count, int ID ){
         handcardcounter[ID] += count;
         gameViewProt.updateCountersInView();
+    }
+
+    void winGame() {
+        GameActions win = new GameActions(GameActions.actions.GAME_FINISH,ID,true);
+        gameViewProt.writeNetMessage(win);
+        gameViewProt.toastGameFinished(ID);
+    }
+
+    public void throwAwayCard(Card card){
+        Log.d("GameDebug", "Player threw Card away :" + card.value.toString() + " " + card.color.toString());
+        GameActions tam = new GameActions(GameActions.actions.THROW_CARD, ID,card);
+        gameViewProt.writeNetMessage(tam);
+
+    }
+
+    void throwAwayCardConfirmed(int playerID, Card card){
+        updateHandCardCounter(-1, playerID);
+        if(playerID != this.getID()){
+            return;
+        }
+        this.handcards.remove(card);
+        gameViewProt.removeCardFromHand(card);
+
     }
 }
