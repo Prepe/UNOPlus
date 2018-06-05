@@ -317,6 +317,21 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         numCards2.setText(hcc[1]+"");
     }
 
+    public void handChanged(LinkedList<Card> hand) {
+        //Clear Hand
+        LinearLayout handBox = findViewById(R.id.playerHandLayout);
+        handBox.removeAllViews();
+
+        Card card;
+        HandCardView cardview;
+        for (int i = 0; i < hand.size(); i++) {
+            card = hand.get(i);
+            cardview = new HandCardView(GameViewProt.this, this, card);
+            handCards.add(cardview);
+            handBox.addView(cardview.view);
+        }
+    }
+
     //Visualy add Cards to player hand
     public void addCardToHand(Card card) {
         //soundManager.playSound(Sounds.DRAWCARD);
