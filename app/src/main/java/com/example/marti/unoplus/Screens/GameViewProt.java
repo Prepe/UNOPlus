@@ -338,6 +338,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         //Clear Hand
         LinearLayout handBox = findViewById(R.id.playerHandLayout);
         handBox.removeAllViews();
+        handCards.clear();
 
         Card card;
         HandCardView cardview;
