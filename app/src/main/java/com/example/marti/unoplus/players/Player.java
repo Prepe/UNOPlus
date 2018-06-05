@@ -8,6 +8,7 @@ import com.example.marti.unoplus.GameActions;
 import com.example.marti.unoplus.GameStatics;
 import com.example.marti.unoplus.R;
 import com.example.marti.unoplus.cards.Card;
+import com.example.marti.unoplus.cards.HandCardList;
 import com.example.marti.unoplus.gameLogicImpl.GameViewProt;
 
 import java.util.ArrayList;
@@ -21,11 +22,13 @@ public class Player {
     Card lastCard;
     LinkedList<Card> handcards; //Hand
     int [] handcardcounter;
+    HandCardList hand;
 
 
     public Player(Integer id){
         ID = id;
-        handcards = new LinkedList<>();
+        //handcards = new LinkedList<>();
+        hand = new HandCardList();
     }
 
     public void setGV(GameViewProt gv) {
@@ -126,8 +129,10 @@ public class Player {
     void gotCard(int ID, List<Card> cards) {
         if (checkID(ID)) {
             for (Card c : cards) {
-                this.handcards.add(c);
-                this.gameViewProt.addCardToHand(c);
+                //this.handcards.add(c);
+                this.hand.addCard(c);
+                //this.gameViewProt.addCardToHand(c);
+                this.gameViewProt.handChanged(hand.getHand());
             }
             updateHandCardCounter(cards.size(), ID);
         } else {
@@ -139,10 +144,11 @@ public class Player {
     //Your intended Card was played so now you can remove it
     void cardPlayed(int ID, Card card){
         if (checkID(ID)) {
-            this.handcards.remove(card);
+            //this.handcards.remove(card);
+            this.hand.removeCard(card);
+            //this.gameViewProt.removeCardFromHand(card);
+            this.gameViewProt.handChanged(hand.getHand());
             updateHandCardCounter(-1, ID);
-            this.gameViewProt.removeCardFromHand(card);
-
         } else {
             updateHandCardCounter(-1, ID);
         }
