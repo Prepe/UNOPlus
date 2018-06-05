@@ -14,16 +14,16 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="62dp"
-        android:text="Glückwunsch !!"
+        android:text="Vielleicht beim nächsten Mal ;) !!"
         android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse" />
 
     <TextView
-        android:id="@+id/winText"
+        android:id="@+id/losingText"
         android:layout_width="wrap_content"
-        android:layout_height="60dp"
+        android:layout_height="163dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="137dp"
-        android:text="Du hast die Runde gewonnen"
+        android:text="Du hast die Runde verloren"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 </RelativeLayout>

@@ -157,6 +157,7 @@ public class Player {
             this.hand.removeCard(card);
             //this.gameViewProt.removeCardFromHand(card);
             this.gameViewProt.handChanged(hand.getHand());
+            gameViewProt.timer.cancel();
             updateHandCardCounter(-1, ID);
         } else {
             updateHandCardCounter(-1, ID);
@@ -188,6 +189,16 @@ public class Player {
             Card card = new Card(rndcolor, rndvalue);
             list.add(card);
         }
+        this.gotCard(this.getID(), list);
+    }
+
+    public void drawCardIfTimesUp()
+    {
+        List<Card> list = new ArrayList<Card>();
+            Card.colors rndcolor = GameStatics.randomEnum(Card.colors.class);
+            Card.values rndvalue = GameStatics.randomEnum(Card.values.class);
+            Card card = new Card(rndcolor, rndvalue);
+            list.add(card);
         this.gotCard(this.getID(), list);
     }
 

@@ -2,11 +2,13 @@ package com.example.marti.unoplus.Screens;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.StrictMode;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -58,10 +60,11 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     TextView numCards;
     TextView numCards2;
     SoundManager soundManager;
-    CountDownTimer timer;
+    public CountDownTimer timer;
     List<Card> card = new LinkedList<>();
     Button unoButton;
     public PlayerList playerList;
+    Vibrator vibrator;
 
 
     public GameViewProt() {
@@ -84,6 +87,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
         numCards = (TextView) findViewById(R.id.numCards1);
         numCards2 = (TextView) findViewById(R.id.numCards2);
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
         //Hier werden die IP und der Modus über den Intent aus der ConnectionScreen abgefragt
         hostAdress = getIntent().getStringExtra("adress");
@@ -151,6 +155,32 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
             }
         });
+
+        final TextView myCounter = findViewById(R.id.countdown);
+        timer = new CountDownTimer(20000, 1000) {
+
+            @Override
+            public void onFinish() {
+                player.drawCardIfTimesUp();
+
+                Toast.makeText(getApplicationContext(), "ZEIT VORBEI! Karte gezogen", Toast.LENGTH_LONG).show();
+                //timeUp(context);    eventuell so oder mit TOAST
+                timer.cancel();
+
+
+                GameActions gA = new GameActions(GameActions.actions.NEXT_PLAYER, player.getID());
+                //gameController.gA = new GameActions(GameActions.actions.UPDATE,gameLogic.activePlayer.getID(),new Card(gameLogic.lastCardColor,gameLogic.lastCardValue));
+                //gameController.update();
+                NIOmanager.writeGameaction(gA);
+                handleUpdate(gA);
+                //gameController.update();
+            }
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+                myCounter.setText("Verbleibende Zeit: " + String.valueOf(millisUntilFinished / 1000));
+            }
+        };
     }
 
     @Override
@@ -330,8 +360,8 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     public void updateCountersInView(){
         int[] hcc = player.getHandcardcounter();
 
-        numCards.setText(hcc[0]+"");
-        numCards2.setText(hcc[1]+"");
+        numCards.setText("( "+ hcc[0]+ " )");
+        numCards2.setText("( "+ hcc[1]+ " )");
     }
 
     public void handChanged(LinkedList<Card> hand) {
@@ -399,7 +429,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 handBox.removeView(c.view);
                 this.handCards.remove(c);
                 //soundManager.playSound(Sounds.DROPCARD);
-                //timer.start();
+                timer.cancel();
 
                 return;
             }
@@ -443,6 +473,8 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     //<---------- Toasts ---------->
     public void toastYourTurn() {
         Toast.makeText(getApplicationContext(), "Du bist am Zug", Toast.LENGTH_SHORT).show();
+        vibrator.vibrate(500);
+        timer.start();
     }
 
     public void toastWrongCard() {
@@ -455,13 +487,16 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         String text;
 
         if (player.getID() == pID) {
-            //Toast.makeText(getApplicationContext(), "Du hast gewonnen! °(^.^)°", Toast.LENGTH_SHORT).show();
-            text = "Du hast gewonnen! °(^.^)°";
+            Intent intent = new Intent(getApplicationContext(), WinnerScreen.class);
+            intent.putExtra("pID", pID+1);
+            startActivity(intent);
         } else {
-            //Toast.makeText(getApplicationContext(), "Nicht Aufgeben ;-)", Toast.LENGTH_SHORT).show();
-            text = "Vieleicht nächstes Mal ;-)";
+            Intent intent = new Intent(getApplicationContext(), LosingScreen.class);
+            intent.putExtra("pID", pID+1);
+            startActivity(intent);
         }
 
+        /*
         Dialog d = new AlertDialog.Builder(this,AlertDialog.THEME_HOLO_LIGHT)
                 .setTitle(text)
                 .setItems(new String[]{"Ende"}, new DialogInterface.OnClickListener() {
@@ -476,5 +511,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 .create();
         d.setCanceledOnTouchOutside(false);
         d.show();
+        */
     }
 }
