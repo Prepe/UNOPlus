@@ -6,7 +6,7 @@ import com.example.marti.unoplus.GameActions;
 import com.example.marti.unoplus.GameStatics;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.cards.HandCardList;
-import com.example.marti.unoplus.gameLogicImpl.GameViewProt;
+import com.example.marti.unoplus.Screens.GameViewProt;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -159,7 +159,7 @@ public class Player {
             this.gameViewProt.handChanged(hand.getHand());
             updateHandCardCounter(-1, ID);
         } else {
-            updateHandCardCounter(-1, pID);
+            updateHandCardCounter(-1, ID);
         }
 
         updateLastCard(card);
