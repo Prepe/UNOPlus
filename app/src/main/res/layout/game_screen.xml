@@ -150,4 +150,12 @@
         android:layout_marginRight="92dp"
         android:text="ziehe Karte" />
 
+    <Button
+        android:id="@+id/clearView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/numCards2"
+        android:layout_alignParentEnd="true"
+        android:text="Button" />
+
 </RelativeLayout>

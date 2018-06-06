@@ -166,14 +166,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 Toast.makeText(getApplicationContext(), "ZEIT VORBEI! Karte gezogen", Toast.LENGTH_LONG).show();
                 //timeUp(context);    eventuell so oder mit TOAST
                 timer.cancel();
-
-
-                GameActions gA = new GameActions(GameActions.actions.NEXT_PLAYER, player.getID());
-                //gameController.gA = new GameActions(GameActions.actions.UPDATE,gameLogic.activePlayer.getID(),new Card(gameLogic.lastCardColor,gameLogic.lastCardValue));
-                //gameController.update();
-                NIOmanager.writeGameaction(gA);
-                handleUpdate(gA);
-                //gameController.update();
             }
 
             @Override
@@ -327,10 +319,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.buttongetcard:
-                    //List<Card> card = new LinkedList<>();
-                    GameActions gA = new GameActions(GameActions.actions.DRAW_CARD, player.getID());
-                    NIOmanager.writeGameaction(gA);
-                    handleUpdate(gA);
+                    player.drawCard();
                     break;
 
                 case R.id.unounobutton:
@@ -365,9 +354,11 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     }
 
     public void handChanged(LinkedList<Card> hand) {
+        Log.d("Handkarten", hand.size()+"");
+
         //Clear Hand
         LinearLayout handBox = findViewById(R.id.playerHandLayout);
-        handBox.removeAllViewsInLayout();
+        handBox.removeAllViews();
         handCards.clear();
 
         Card card;
@@ -412,6 +403,10 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         for(int  i = 0; i < cardViewsCount; i++)
             handBox.addView(cardViews[i]);
             */
+    }
+
+    public void deleteViews(){
+
     }
 
 

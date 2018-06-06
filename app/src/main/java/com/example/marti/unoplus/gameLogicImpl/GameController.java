@@ -24,7 +24,7 @@ public class GameController {
     PlayerList players;     //reference to all Players in the Game
     Deck deck;              //reference to the Deck that is used
     GameLogic logic;        //reference to the GameLogic
-    int startingHand = 7;   //Amount of Cards every Player gets at the start of the Game
+    int startingHand = 10;   //Amount of Cards every Player gets at the start of the Game
     float turnTime;         //Turn Timer for the Game
     public GameActions gA;  //Object that gets send to all Players
     boolean[] calledUNO;    //

@@ -47,16 +47,14 @@ public class HandCardList {
                         addCardInfont(card,pointer);
                         return true;
                     }
-                } else if (pointer.getNext() == null) {
-                    new HandCardNode(nextIndex,card,pointer.getNext(),pointer);
-                    nextIndex++;
-                    last = pointer.getNext();
-                    return true;
                 }
                 pointer = pointer.getNext();
             }
+            HandCardNode temp = new HandCardNode(nextIndex,card,last.nextCard,last);
+            last.fixNetxPointer(temp);
+            last = temp;
+            nextIndex++;
         }
-
         return false;
     }
 
@@ -69,15 +67,17 @@ public class HandCardList {
             if (card.getColor() == pointerCard.getColor()) {
                 if (card.getValue() == pointerCard.getValue()) {
                     if (pointer.getNext() != null) {
-                        pointer.getNext().fixPointer(null,pointer.getPrev());
+                        pointer.getNext().fixPrevPointer(pointer.getPrev());
                     } else {
                         last = pointer.getPrev();
                     }
                     if (pointer.getPrev() != null) {
-                        pointer.getPrev().fixPointer(pointer.getNext(),null);
+                        pointer.getPrev().fixNetxPointer(pointer.getNext());
                     } else {
                         first = pointer.getNext();
                     }
+                    pointer.removePointer();
+                    nextIndex--;
                     return true;
                 }
             }

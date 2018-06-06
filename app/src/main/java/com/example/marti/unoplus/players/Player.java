@@ -65,6 +65,7 @@ public class Player {
     public void drawCard(){
         GameActions action;
         action = new GameActions(GameActions.actions.DRAW_CARD, ID);
+        gameViewProt.writeNetMessage(action);
     }
 
     //Tell what Card you want to play
@@ -155,10 +156,13 @@ public class Player {
         if (checkID(ID)) {
             //this.handcards.remove(card);
             this.hand.removeCard(card);
-            //this.gameViewProt.removeCardFromHand(card);
+            this.gameViewProt.removeCardFromHand(card);
             this.gameViewProt.handChanged(hand.getHand());
             gameViewProt.timer.cancel();
             updateHandCardCounter(-1, ID);
+            if (this.hand.getCount() == 0) {
+                winGame();
+            }
         } else {
             updateHandCardCounter(-1, ID);
         }
@@ -175,7 +179,7 @@ public class Player {
 
     public boolean hasCard(Card card)
     {
-        return this.handcards.contains(card);
+        return this.hand.getHand().contains(card);
     }
 
     //<---------- Misc ---------->
@@ -194,12 +198,7 @@ public class Player {
 
     public void drawCardIfTimesUp()
     {
-        List<Card> list = new ArrayList<Card>();
-            Card.colors rndcolor = GameStatics.randomEnum(Card.colors.class);
-            Card.values rndvalue = GameStatics.randomEnum(Card.values.class);
-            Card card = new Card(rndcolor, rndvalue);
-            list.add(card);
-        this.gotCard(this.getID(), list);
+       drawCard();
     }
 
     void updateHandCardCounter(int count, int ID ){
@@ -225,7 +224,7 @@ public class Player {
         if(playerID != this.getID()){
             return;
         }
-        this.handcards.remove(card);
+        this.hand.removeCard(card);
         gameViewProt.removeCardFromHand(card);
 
     }

@@ -17,10 +17,10 @@ public class HandCardNode {
         this.prevCard = prev;
 
         if (nextCard != null) {
-            nextCard.fixPointer(null, this);
+            nextCard.fixPrevPointer( this);
         }
         if (prevCard != null) {
-            prevCard.fixPointer(this, null);
+            prevCard.fixNetxPointer(this);
         }
         fixIndex();
     }
@@ -41,21 +41,25 @@ public class HandCardNode {
         return prevCard;
     }
 
-    public void fixPointer(HandCardNode nextCard, HandCardNode prevCard) {
-        if (nextCard != null) {
-            this.nextCard = nextCard;
-        }
-        if (prevCard != null) {
-            this.prevCard = prevCard;
-        }
+    public void fixNetxPointer(HandCardNode nextCard) {
+        this.nextCard = nextCard;
+    }
+
+    public void fixPrevPointer(HandCardNode prevCard) {
+        this.prevCard = prevCard;
     }
 
     void fixIndex() {
         if (prevCard != null) {
-            index = prevCard.getIndex()+1;
+            index = prevCard.getIndex() + 1;
         }
         if (nextCard != null) {
             nextCard.fixIndex();
         }
+    }
+
+    public void removePointer() {
+        nextCard = null;
+        prevCard = null;
     }
 }
