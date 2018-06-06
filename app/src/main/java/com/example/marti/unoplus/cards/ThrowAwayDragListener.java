@@ -34,7 +34,7 @@ public class ThrowAwayDragListener implements View.OnDragListener{
 
                 ImageView droppedview = (ImageView) event.getLocalState();
                 HandCardView playedcard = (HandCardView) droppedview.getTag();
-                this.gamescreen.player.throwAwayCard(playedcard.card);
+                this.gamescreen.player.dropCard(playedcard.card);
 
                 break;
             case DragEvent.ACTION_DRAG_ENDED:

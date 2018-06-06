@@ -1,9 +1,6 @@
 package com.example.marti.unoplus.gameLogicImpl;
 
-import android.util.Log;
-
 import com.example.marti.unoplus.GameActions;
-//import com.example.marti.unoplus.Screens.CardViewTest;
 import com.example.marti.unoplus.Screens.GameViewProt;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.cards.Deck;
@@ -12,6 +9,8 @@ import com.example.marti.unoplus.players.PlayerList;
 
 import java.util.LinkedList;
 import java.util.List;
+
+//import com.example.marti.unoplus.Screens.CardViewTest;
 
 /**
  * Created by marti on 10.04.2018.
@@ -28,8 +27,9 @@ public class GameController {
     float turnTime;         //Turn Timer for the Game
     public GameActions gA;  //Object that gets send to all Players
     boolean[] calledUNO;    //
-    boolean[] dropedCard;   //
+    boolean[] droppedCard;   //
     boolean[] tradedCard;   //
+    boolean hasDrawn = false;
 
     //<---------- Method for setting up the Game ---------->
     public GameController(GameViewProt gvp) {
@@ -39,7 +39,6 @@ public class GameController {
 
     public void setPlayerList(PlayerList pl) {
         players = pl;
-
     }
 
     /*
@@ -52,15 +51,18 @@ public class GameController {
     public void setUpGame() {
         logic = new GameLogic(players, deck, this);
 
-        deck.shuffle();
-        drawHandCardsForPlayers();
-
         if (players != null) {
             players.playerCount();
             //calledUNO = new boolean[players.playerCount()];
-            dropedCard = new boolean[players.playerCount()];
+            droppedCard = new boolean[players.playerCount()];
+            for (boolean b : droppedCard) {
+                b = false;
+            }
             //tradedCard = new boolean[players.playerCount()];
         }
+
+        deck.shuffle();
+        drawHandCardsForPlayers();
 
         playTopCard();
     }
@@ -87,7 +89,7 @@ public class GameController {
                 drawCard(action.nextPlayerID);
                 break;
             case DROP_CARD:
-                dropCard(action.playerID);
+                dropCard(action.nextPlayerID);
                 break;
             case TRADE_CARD:
                 //GC.tradeCard();
@@ -98,61 +100,40 @@ public class GameController {
             case WISH_COLOR:
                 colorWish(action.playerID, action.colorWish);
                 break;
-            case THROW_CARD:
-                this.throwAwayCard(action.playerID, action.card);
-                break;
         }
-    }
-
-    private void throwAwayCard(int playerID, Card card) {
-        Log.d("GameDebug", "Player trying to throw away card :" + card.value.toString() + " " + card.color.toString());
-        Player p = players.getPlayer(playerID);
-        if(p == null) {
-            Log.d("GameDebug", "Player was null");
-            return;
-        }
-        if(!p.hasCard(card)) {
-            Log.d("GameDebug", "Player does not have that card");
-            return;
-        }
-        if(!logic.canThrowAwayCard(card, p))
-        {
-            Log.d("GameDebug", "Player can not throw away card because reasons");
-            return;
-        }
-
-        gA = new GameActions(GameActions.actions.THROW_CARD_CONFIRM, playerID, card);
-
-        update();
-
-        Log.d("GameDebug", "Updated");
-
     }
 
     //Method that updates all players
     public void update() {
         gA.gcSend = true;
         gvp.updateAllConnected(gA);
-
+        resetCheats();
     }
 
     //Method for all Players to call to draw Cards form the Deck
     void drawCard(int playerID) {
-        if (playerID == logic.activePlayer.getID()) {
-            List<Card> cards = new LinkedList<>();
-            if (deck.isEmptyDeck()) {
-                deck.replaceTakeDeck();
+        int aID = logic.activePlayer.getID();
+        if (playerID == aID) {
+            if (hasDrawn) {
+                hasDrawn = false;
+                logic.nextPlayer(logic.activePlayer);
+
+                gA = new GameActions(GameActions.actions.NEXT_PLAYER, aID);
+                update();
+            } else {
+                List<Card> cards = new LinkedList<>();
+                if (deck.isEmptyDeck()) {
+                    deck.replaceTakeDeck();
+                }
+                int count = logic.getCardDrawCount();
+                for (int i = 0; i < count; i++) {
+                    cards.add(deck.draw());
+                }
+                hasDrawn = true;
+
+                gA = new GameActions(GameActions.actions.DRAW_CARD, playerID, cards);
+                update();
             }
-            int count = logic.getCardDrawCount();
-            for (int i = 0; i < count; i++) {
-                cards.add(deck.draw());
-            }
-
-            gA = new GameActions(GameActions.actions.DRAW_CARD, playerID, cards);
-
-            update();
-
-
         }
     }
 
@@ -168,7 +149,7 @@ public class GameController {
             //Run game logic for the card that was played
             logic.runLogic(p, card);
         } else {
-            gA = new GameActions(GameActions.actions.PLAY_CARD,player,false);
+            gA = new GameActions(GameActions.actions.PLAY_CARD, player, false);
             update();
         }
     }
@@ -188,9 +169,12 @@ public class GameController {
 
     //Method to cheat and drop a Card
     void dropCard(int player) {
-        if (!dropedCard[player]) {
-            dropedCard[player] = true;
+        if (!droppedCard[player]) {
+            droppedCard[player] = true;
             gA = new GameActions(GameActions.actions.DROP_CARD, player, true);
+            update();
+        } else {
+            gA = new GameActions(GameActions.actions.DROP_CARD, player, false);
             update();
         }
     }
@@ -225,5 +209,9 @@ public class GameController {
      * */
     private void runTimer() {
         //TODO implement
+    }
+
+    void resetCheats() {
+        droppedCard[logic.activePlayer.getID()] = false;
     }
 }

@@ -69,6 +69,10 @@ public class GameLogic {
     * Return the next Player after checking the direction of the game
     * */
     public Player nextPlayer(Player player) {
+        if (player == null) {
+            return null;
+        }
+
         if (reverse) {
             if (skip) {
                 skip = false;
@@ -89,10 +93,6 @@ public class GameLogic {
         controller.update();
 
         return activePlayer;
-    }
-
-    public boolean canThrowAwayCard(Card card, Player player){
-        return player.equals(activePlayer);
     }
 
     /*
