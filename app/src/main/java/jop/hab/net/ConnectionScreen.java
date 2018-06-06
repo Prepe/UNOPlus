@@ -37,6 +37,8 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Thread.sleep;
+
 public class ConnectionScreen extends AppCompatActivity {
 
     Button btnOnOff, btnDiscover, btnStart;

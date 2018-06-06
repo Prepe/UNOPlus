@@ -106,7 +106,6 @@ public class NetworkIOManager {
 
         Log.d("GSON Senden", GameActionString);
 
-        sendReceive.write(GameActionString.getBytes());
 
         try {
             Thread.sleep(1000);
