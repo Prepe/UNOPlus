@@ -1,8 +1,11 @@
 package com.example.marti.unoplus.Screens;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -10,11 +13,16 @@ import android.widget.EditText;
 
 import com.example.marti.unoplus.R;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import jop.hab.net.ConnectionScreen;
 
 public class NameScreen extends AppCompatActivity {
     EditText playerName;
     public static final String PLAYER_NAME = "Spielername";
+    WifiP2pManager manager;
+    WifiP2pManager.Channel channel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +34,11 @@ public class NameScreen extends AppCompatActivity {
         findViewById(R.id.weiterButton).setOnClickListener(handler);
         findViewById(R.id.zurückButton).setOnClickListener(handler);
         playerName = findViewById(R.id.playerName);
+
+
     }
+
+
 
     View.OnClickListener handler = new View.OnClickListener() {
         public void onClick(View v) {

@@ -16,9 +16,10 @@ import com.example.marti.unoplus.gameLogicImpl.GameViewProt;
 
 public class LobbyScreen extends AppCompatActivity {
 
-    public LobbyScreen() {
+   String hostAdress;
+   String mode;
+    int numClients;
 
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,12 +29,19 @@ public class LobbyScreen extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.lobby_screen);
 
+        hostAdress = getIntent().getStringExtra("adress");
+        mode = getIntent().getStringExtra("mode");
+        numClients = getIntent().getIntExtra("numofclients",1);
 
         Button button= findViewById(R.id.verbindenbutton);
         button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(LobbyScreen.this, GameViewProt.class));
+                Intent i = new Intent(getBaseContext(), GameViewProt.class);
+                i.putExtra("mode", mode);
+                i.putExtra("adress", hostAdress);
+                i.putExtra("numofclients",numClients);
+                startActivity(i);
 
                 boolean kt = false;
                 boolean kw = false;

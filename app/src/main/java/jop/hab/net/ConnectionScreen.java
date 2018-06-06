@@ -31,6 +31,8 @@ import com.example.marti.unoplus.Screens.WaitingScreen;
 import com.example.marti.unoplus.gameLogicImpl.GameController;
 import com.example.marti.unoplus.gameLogicImpl.GameViewProt;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +41,7 @@ public class ConnectionScreen extends AppCompatActivity {
 
     Button btnOnOff, btnDiscover, btnStart;
     ListView listView;
-    TextView ConnectionStatus;
+    TextView ConnectionStatus,textViewplayername;
     WifiManager wifiManager;
 
     WifiP2pManager mManager;
@@ -251,6 +253,12 @@ public class ConnectionScreen extends AppCompatActivity {
         btnDiscover = (Button) findViewById(R.id.discover);
         btnStart = (Button) findViewById(R.id.start);
 
+        textViewplayername = (TextView) findViewById(R.id.playerName);
+        textViewplayername.setText(playername);
+
+
+
+
 
         listView = (ListView) findViewById(R.id.peerListView);
 
@@ -290,8 +298,9 @@ public class ConnectionScreen extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Wifi enabled", Toast.LENGTH_SHORT).show();
 
 
-
         }
+        settingupName(playername);
+
 
 
     }
@@ -335,5 +344,31 @@ public class ConnectionScreen extends AppCompatActivity {
     public int  getNUMConnectedDevices (){
         return connectedDevices.size();
     }
-}
+
+    public void settingupName (final String playername){
+        try {
+            Method m = mManager.getClass().getMethod(
+                    "setDeviceName",
+                    new Class[] { WifiP2pManager.Channel.class, String.class,
+                            WifiP2pManager.ActionListener.class });
+
+            m.invoke(mManager ,mChannel, playername, new WifiP2pManager.ActionListener() {
+                public void onSuccess() {
+                    Log.d("setname","yes!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                }
+
+                public void onFailure(int reason) {
+                    //Code to be done while name change Fails
+                    Log.d("setname","fuck?????????????????????????????????????????????????????????????????????????????????????????");
+
+                }
+            });
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+
+
+    }}
 
