@@ -13,12 +13,15 @@ import com.example.marti.unoplus.GameStatics;
 import com.example.marti.unoplus.R;
 import com.example.marti.unoplus.gameLogicImpl.GameViewProt;
 
+import static com.example.marti.unoplus.Screens.NameScreen.PLAYER_NAME;
+
 
 public class LobbyScreen extends AppCompatActivity {
 
    String hostAdress;
    String mode;
     int numClients;
+    public String playername;
 
 
     @Override
@@ -32,6 +35,7 @@ public class LobbyScreen extends AppCompatActivity {
         hostAdress = getIntent().getStringExtra("adress");
         mode = getIntent().getStringExtra("mode");
         numClients = getIntent().getIntExtra("numofclients",1);
+        playername =   getIntent().getExtras().getString(NameScreen.PLAYER_NAME, "");
 
         Button button= findViewById(R.id.verbindenbutton);
         button.setOnClickListener(new View.OnClickListener(){
@@ -41,6 +45,7 @@ public class LobbyScreen extends AppCompatActivity {
                 i.putExtra("mode", mode);
                 i.putExtra("adress", hostAdress);
                 i.putExtra("numofclients",numClients);
+                i.putExtra(PLAYER_NAME, playername);
                 startActivity(i);
 
                 boolean kt = false;

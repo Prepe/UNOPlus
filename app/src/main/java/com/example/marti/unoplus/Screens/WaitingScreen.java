@@ -13,6 +13,7 @@ import com.example.marti.unoplus.gameLogicImpl.GameViewProt;
 
 import jop.hab.net.ConnectionScreen;
 
+import static com.example.marti.unoplus.Screens.NameScreen.PLAYER_NAME;
 import static java.lang.Thread.sleep;
 
 public class WaitingScreen extends AppCompatActivity {
@@ -20,6 +21,7 @@ public class WaitingScreen extends AppCompatActivity {
     String hostAdress;
     String mode;
     int numClients;
+    public String playername;
 
 
     @Override
@@ -33,6 +35,7 @@ public class WaitingScreen extends AppCompatActivity {
         hostAdress = getIntent().getStringExtra("adress");
         mode = getIntent().getStringExtra("mode");
         numClients = getIntent().getIntExtra("numofclients",1);
+        playername =   getIntent().getExtras().getString(PLAYER_NAME, "");
 
 
 
@@ -48,6 +51,7 @@ public  void run (){
                 i.putExtra("mode", mode);
                 i.putExtra("adress", hostAdress);
                 i.putExtra("numofclients",numClients);
+                i.putExtra(PLAYER_NAME, playername);
                 startActivity(i);
                 finish();
             } catch (InterruptedException e) {
