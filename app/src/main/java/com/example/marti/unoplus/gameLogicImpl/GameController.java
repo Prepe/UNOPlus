@@ -105,9 +105,11 @@ public class GameController {
 
     //Method that updates all players
     public void update() {
+        if (gA.action == GameActions.actions.NEXT_PLAYER) {
+            resetCheats();
+        }
         gA.gcSend = true;
         gvp.updateAllConnected(gA);
-        resetCheats();
     }
 
     //Method for all Players to call to draw Cards form the Deck
@@ -142,6 +144,7 @@ public class GameController {
         Player p = players.getPlayer(player);
         //Check if player is allowed to play the card
         if (logic.checkCard(card, p)) {
+            hasDrawn = false;
             //Remove the played card from the players hand and update Players
             gA = new GameActions(GameActions.actions.PLAY_CARD, player, card, true);
             update();
@@ -169,7 +172,7 @@ public class GameController {
 
     //Method to cheat and drop a Card
     void dropCard(int player) {
-        if (!droppedCard[player]) {
+        if (!droppedCard[player] && player != logic.activePlayer.getID()) {
             droppedCard[player] = true;
             gA = new GameActions(GameActions.actions.DROP_CARD, player, true);
             update();
