@@ -19,8 +19,7 @@ public class GameActions {
         NEXT_PLAYER (6),
         INIT_GAME (7),
         GAME_FINISH (8),
-        THROW_CARD(9),
-        THROW_CARD_CONFIRM (10);
+        INIT_PLAYER(9);
 
         private int value;
         actions(int value){this.value = value;}
@@ -88,6 +87,14 @@ public class GameActions {
     public GameActions(actions action, int pID, boolean check) {
         this.action = action;
         playerID = pID;
+        this.check = check;
+    }
+
+    //Used to for INIT_PLAYERS
+    public GameActions(actions action, int pID, int nPID, boolean check) {
+        this.action = action;
+        playerID = pID;
+        nextPlayerID = nPID;
         this.check = check;
     }
 }
