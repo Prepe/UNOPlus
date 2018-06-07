@@ -169,7 +169,6 @@ public class GameController {
         }
     }
 
-
     //Method to cheat and drop a Card
     void dropCard(int player) {
         if (!droppedCard[player] && player != logic.activePlayer.getID()) {
