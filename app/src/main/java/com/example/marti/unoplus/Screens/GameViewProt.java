@@ -292,7 +292,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
         } else {
             Log.d ("CLIENT", "Generating tempID");
-            double random = Math.random() * 10;
+            double random = Math.random() * 10 + 1;
             double tempID = 1;
             for (int i = 0; i < random; i++) {
                 double rand = Math.random()*1000;
