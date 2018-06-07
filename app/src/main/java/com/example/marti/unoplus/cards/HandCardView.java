@@ -275,6 +275,9 @@ public class HandCardView
                 case CHOOSE_COLOR:
                     pic = this.view.getResources().getDrawable(R.drawable.all_all);
                     break;
+                case DUEL:
+                    pic = this.view.getResources().getDrawable(R.drawable.duel);
+                    break;
                 default:
                     pic = this.view.getResources().getDrawable(R.drawable.card_back);
                     break;

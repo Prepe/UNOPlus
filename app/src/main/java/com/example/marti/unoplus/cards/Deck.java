@@ -80,6 +80,8 @@ public class Deck {
                 //takedeck.deck.add(new Card(5, action));
                 deck.add(new Card(4, action));
             }
+            //create Duel card
+            deck.add(new Card(4, 15));
         }
     }
 

@@ -41,7 +41,8 @@ public class Card implements Serializable {
         TURN(11),
         PLUS_TWO(12),
         CHOOSE_COLOR(13),
-        PLUS_FOUR(14);
+        PLUS_FOUR(14),
+        DUEL(15);
 
         private int value;
 
