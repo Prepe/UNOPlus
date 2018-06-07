@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
 import com.example.marti.unoplus.R;
-import com.example.marti.unoplus.gameLogicImpl.GameViewProt;
+import com.example.marti.unoplus.Screens.GameViewProt;
 
 /**
  * Created by ekzhu on 30.04.2018.

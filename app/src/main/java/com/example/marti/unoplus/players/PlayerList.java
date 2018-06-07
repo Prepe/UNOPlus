@@ -1,9 +1,7 @@
 package com.example.marti.unoplus.players;
 
-import com.example.marti.unoplus.gameLogicImpl.GameViewProt;
-import com.example.marti.unoplus.players.Player;
+import com.example.marti.unoplus.Screens.GameViewProt;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class PlayerList {

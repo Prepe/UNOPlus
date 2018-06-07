@@ -11,22 +11,18 @@ import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.marti.unoplus.R;
-import com.example.marti.unoplus.gameLogicImpl.GameController;
-import com.example.marti.unoplus.gameLogicImpl.GameViewProt;
+import com.example.marti.unoplus.Screens.GameViewProt;
 
 import java.net.InetAddress;
 import java.util.ArrayList;

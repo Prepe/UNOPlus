@@ -4,8 +4,9 @@ import android.util.Log;
 
 import com.example.marti.unoplus.GameActions;
 import com.example.marti.unoplus.GameStatics;
+import com.example.marti.unoplus.Screens.GameViewProt;
 import com.example.marti.unoplus.cards.Card;
-import com.example.marti.unoplus.gameLogicImpl.GameViewProt;
+import com.example.marti.unoplus.cards.HandCardList;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -17,12 +18,14 @@ public class Player {
     GameViewProt gameViewProt;
     Card lastCard;
     LinkedList<Card> handcards; //Hand
-    int [] handcardcounter;
+    int[] handcardcounter;
+    HandCardList hand;
+    Card dropCard;
 
-
-    public Player(Integer id){
+    public Player(Integer id) {
         ID = id;
-        handcards = new LinkedList<>();
+        //handcards = new LinkedList<>();
+        hand = new HandCardList();
     }
 
     public void setGV(GameViewProt gv) {
@@ -33,7 +36,7 @@ public class Player {
         ID = id;
     }
 
-    public List<Card> getHand(){
+    public List<Card> getHand() {
         return this.handcards;
     }
 
@@ -41,48 +44,56 @@ public class Player {
         return getHand().size();
     }
 
-    public String getName(){
+    public String getName() {
         return this.playerName;
     }
 
-    public Integer getID(){
+    public Integer getID() {
         return ID;
     }
 
-    public void initialsiedHandCardCounters(int size){
+    public void initialsiedHandCardCounters(int size) {
         handcardcounter = new int[size];
 
     }
-    public int[] getHandcardcounter(){
+
+    public int[] getHandcardcounter() {
         return handcardcounter;
     }
 
     //<---------- Player Actions ---------->
     //Ask for Cards
-    public void drawCard(){
+    public void drawCard() {
         GameActions action;
         action = new GameActions(GameActions.actions.DRAW_CARD, ID);
+        gameViewProt.writeNetMessage(action);
     }
 
     //Tell what Card you want to play
-    public void playCard(Card c){
+    public void playCard(Card c) {
         GameActions action;
         action = new GameActions(GameActions.actions.PLAY_CARD, ID, c);
         Log.d("GameDebug", "Player playCard :" + c.value.toString() + " " + c.color.toString());
         this.gameViewProt.writeNetMessage(action);
     }
 
-    public void dropCard(Card c){
-
+    public void dropCard(Card card) {
+        Log.d("GameDebug", "Player threw Card away :" + card.value.toString() + " " + card.color.toString());
+        dropCard = card;
+        GameActions tam = new GameActions(GameActions.actions.DROP_CARD, ID);
+        gameViewProt.writeNetMessage(tam);
     }
 
-    public void TradeCard(Card c, Player p){
+    public void TradeCard(Card c, Player p) {
 
     }
 
     //<---------- Player Reactions ---------->
     public void callPlayer(GameActions action) {
-        switch(action.action){
+        switch (action.action) {
+            case DROP_CARD:
+                this.canDropCard(action.playerID, action.check);
+                break;
             case DRAW_CARD:
                 gotCard(action.playerID, action.cards);
                 break;
@@ -100,7 +111,7 @@ public class Player {
                 //TODO ipml
                 break;
             case WISH_COLOR:
-                if(action.playerID == this.ID) {
+                if (action.playerID == this.ID) {
                     this.gameViewProt.chooseColor();
                 }
                 break;
@@ -111,7 +122,7 @@ public class Player {
     }
 
     //Check if the GA is for you
-    boolean checkID(int pID){
+    boolean checkID(int pID) {
         return pID == this.ID;
     }
 
@@ -132,8 +143,10 @@ public class Player {
     void gotCard(int pID, List<Card> cards) {
         if (checkID(pID)) {
             for (Card c : cards) {
-                this.handcards.add(c);
-                this.gameViewProt.addCardToHand(c);
+                //this.handcards.add(c);
+                this.hand.addCard(c);
+                //this.gameViewProt.addCardToHand(c);
+                this.gameViewProt.handChanged(hand.getHand());
             }
             updateHandCardCounter(cards.size(), pID);
         } else {
@@ -142,17 +155,20 @@ public class Player {
 
     }
 
-    //A Card was played so now you can remove it and/or update Screen
-    void cardPlayed(int pID, Card card){
-        if (checkID(pID)) {
-            this.handcards.remove(card);
-            updateHandCardCounter(-1, pID);
+    //Your intended Card was played so now you can remove it
+    void cardPlayed(int ID, Card card) {
+        if (checkID(ID)) {
+            //this.handcards.remove(card);
+            this.hand.removeCard(card);
             this.gameViewProt.removeCardFromHand(card);
-            if (this.handcards.size() == 0) {
+            this.gameViewProt.handChanged(hand.getHand());
+            gameViewProt.timer.cancel();
+            updateHandCardCounter(-1, ID);
+            if (this.hand.getCount() == 0) {
                 winGame();
             }
         } else {
-            updateHandCardCounter(-1, pID);
+            updateHandCardCounter(-1, ID);
         }
 
         updateLastCard(card);
@@ -165,12 +181,31 @@ public class Player {
         }
     }
 
+    public boolean hasCard(Card card) {
+        return this.hand.getHand().contains(card);
+    }
+
+    void canDropCard(int playerID, Boolean canDrop) {
+        if (canDrop == null) {
+            return;
+        }
+
+        if (canDrop) {
+            if (playerID == this.getID()) {
+                hand.removeCard(dropCard);
+                dropCard = null;
+                updateHandCardCounter(-1, playerID);
+                gameViewProt.handChanged(hand.getHand());
+            } else {
+                updateHandCardCounter(-1, playerID);
+            }
+        }
+    }
+
     //<---------- Misc ---------->
-    public void createDummyCards()
-    {
+    public void createDummyCards() {
         List<Card> list = new ArrayList<Card>();
-        for (int i = 0; i < 7; i++)
-        {
+        for (int i = 0; i < 7; i++) {
             Card.colors rndcolor = GameStatics.randomEnum(Card.colors.class);
             Card.values rndvalue = GameStatics.randomEnum(Card.values.class);
             Card card = new Card(rndcolor, rndvalue);
@@ -179,13 +214,17 @@ public class Player {
         this.gotCard(this.getID(), list);
     }
 
-    void updateHandCardCounter(int count, int ID ){
+    public void drawCardIfTimesUp() {
+        drawCard();
+    }
+
+    void updateHandCardCounter(int count, int ID) {
         handcardcounter[ID] += count;
         gameViewProt.updateCountersInView();
     }
 
     void winGame() {
-        GameActions win = new GameActions(GameActions.actions.GAME_FINISH,ID,true);
+        GameActions win = new GameActions(GameActions.actions.GAME_FINISH, ID, true);
         gameViewProt.writeNetMessage(win);
         gameViewProt.toastGameFinished(ID);
     }
