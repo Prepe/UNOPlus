@@ -117,6 +117,7 @@ public class GameController {
         int aID = logic.activePlayer.getID();
         if (playerID == aID) {
             if (hasDrawn) {
+
                 hasDrawn = false;
                 logic.nextPlayer(logic.activePlayer);
 
