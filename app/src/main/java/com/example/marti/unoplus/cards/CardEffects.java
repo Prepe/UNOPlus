@@ -20,6 +20,9 @@ public class CardEffects {
 
     //Method to call the cards effect
     public void cardEffect(Player player, Card cardValue) {
+        if (player == null) {
+            player = gameLogic.getActivePlayer();
+        }
         switch (cardValue.getValue()) {
             default:
                 gameLogic.nextPlayer(player);

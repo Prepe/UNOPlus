@@ -109,7 +109,7 @@ public class NetworkIOManager {
         sendReceive.write(GameActionString.getBytes());
 
         try {
-            Thread.sleep(1000);
+            Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
 
