@@ -200,21 +200,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     boolean specialUpdate(GameActions action) {
         Log.d("GVP_UPDATE", "specialUpdate: " + action.action.name());
         if (action.action.equals(GameActions.actions.INIT_PLAYER)) {
-            if (!isGameController) {
-                if (action.check && action.playerID == player.getID()) {
-                    if (action.nextPlayerID != 0) {
-                        Log.d("CLIENT", "Setting new ID");
-                        player.setID(action.nextPlayerID);
-                    }
-                } else {
-                    Log.d("CLIENT", "Asking for new ID");
-                    NIOmanager.writeGameaction(new GameActions(GameActions.actions.INIT_PLAYER, player.getID(), 0, true));
-                }
-            } else if (action.playerID != 0 && action.nextPlayerID == 0){
-                Log.d("HOST", "Give Player (ID: " + action.playerID + ") a new ID");
-                gameInit(action.playerID);
-            }
-
+            initPlayer(action);
             return true;
         }
 
@@ -314,6 +300,25 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 e.printStackTrace();
             }
 
+        }
+    }
+
+    void initPlayer(GameActions action) {
+        if (!isGameController) {
+            if (action.check) {
+                if (action.playerID == player.getID()) {
+                    if (action.nextPlayerID > 0) {
+                        Log.d("CLIENT", "Setting new ID");
+                        player.setID(action.nextPlayerID);
+                    }
+                }
+            } else {
+                Log.d("CLIENT", "Asking for new ID");
+                NIOmanager.writeGameaction(new GameActions(GameActions.actions.INIT_PLAYER, player.getID(), 0, true));
+            }
+        } else if (action.playerID != 0 && action.nextPlayerID == 0){
+            Log.d("HOST", "Give Player (ID: " + action.playerID + ") a new ID");
+            gameInit(action.playerID);
         }
     }
 
