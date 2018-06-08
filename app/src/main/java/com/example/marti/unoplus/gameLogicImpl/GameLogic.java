@@ -1,6 +1,7 @@
 package com.example.marti.unoplus.gameLogicImpl;
 
 import com.example.marti.unoplus.GameActions;
+import com.example.marti.unoplus.Screens.GameViewProt;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.cards.CardEffects;
 import com.example.marti.unoplus.cards.Deck;
@@ -177,7 +178,7 @@ public class GameLogic {
         effects.cardEffect(null, topCard);
     }
 
-    //Tels the game to skip the next player
+    //Tells the game to skip the next player
     public void skipNext() {
         skip = true;
     }
@@ -199,6 +200,7 @@ public class GameLogic {
 
     //starts the "Hot Drop"
     public void playHotDrop(){
-
+        controller.update();
+        //TODO!!
     }
 }

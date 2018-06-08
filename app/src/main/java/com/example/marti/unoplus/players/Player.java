@@ -133,6 +133,9 @@ public class Player {
         if (ID == nextPID) {
             gameViewProt.toastYourTurn();
         }
+        if(lastCard.value == Card.values.HOT_DROP){
+            gameViewProt.toastStartHotDrop();
+        }
     }
 
     void updateLastCard(Card lastCard) {

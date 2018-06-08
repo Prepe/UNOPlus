@@ -49,6 +49,7 @@ public class CardEffects {
             case HOT_DROP:
                 hotDrop();
                 gameLogic.nextPlayer(player);
+                break;
         }
 
         gameControler.gA = new GameActions(GameActions.actions.NEXT_PLAYER, gameLogic.getActivePlayer().getID());

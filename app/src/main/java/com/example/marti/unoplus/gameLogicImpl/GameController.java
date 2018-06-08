@@ -108,6 +108,9 @@ public class GameController {
         if (gA.action == GameActions.actions.NEXT_PLAYER) {
             resetCheats();
         }
+        if(logic.lastCardValue == Card.values.HOT_DROP){
+            gvp.toastStartHotDrop();
+        }
         gA.gcSend = true;
         gvp.updateAllConnected(gA);
     }

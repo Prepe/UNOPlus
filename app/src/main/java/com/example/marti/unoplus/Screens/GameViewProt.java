@@ -56,7 +56,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     ArrayList<HandCardView> handCards;
     PlayedCardView playedCardView;
     ThrowAwayView throwAwayView;
-    Button buttongetcard;
+    Button buttongetcard, hotDropButton;
     TextView numCards;
     TextView numCards2;
     SoundManager soundManager;
@@ -88,6 +88,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         numCards = (TextView) findViewById(R.id.numCards1);
         numCards2 = (TextView) findViewById(R.id.numCards2);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        hotDropButton = (Button) findViewById(R.id.hotDropButton);
 
         //Hier werden die IP und der Modus über den Intent aus der ConnectionScreen abgefragt
         hostAdress = getIntent().getStringExtra("adress");
@@ -315,6 +316,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     public int playerCountTest (int sizePL) {
         return sizePL;
     }
+
     View.OnClickListener handler = new View.OnClickListener() {
         public void onClick(View v) {
             switch (v.getId()){
@@ -324,6 +326,9 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
                 case R.id.unounobutton:
                     Toast.makeText(getApplicationContext(), "Uno!!", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.hotDropButton:
+                    //TODO!!
                     break;
             }
         }
@@ -508,4 +513,13 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         d.show();
         */
     }
+
+    public void toastStartHotDrop(){
+        Toast.makeText(getApplicationContext(), "Klicke auf den 'Hot Drop' Button!", Toast.LENGTH_SHORT).show();
+    }
+
+    public void toastEndHotDropLooser(){
+        Toast.makeText(getApplicationContext(), "Du warst leider zu langsam! +2 Karten", Toast.LENGTH_SHORT).show();
+    }
+
 }
