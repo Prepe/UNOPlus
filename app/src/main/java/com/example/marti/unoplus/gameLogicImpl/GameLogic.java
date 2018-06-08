@@ -196,4 +196,9 @@ public class GameLogic {
         lastCardColor = colorWish;
         lastCardValue = Card.values.CHOOSE_COLOR;
     }
+
+    //starts the "Hot Drop"
+    public void playHotDrop(){
+
+    }
 }

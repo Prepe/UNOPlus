@@ -235,6 +235,9 @@ public class PlayedCardView {
                 case CHOOSE_COLOR:
                     pic = this.view.getResources().getDrawable(R.drawable.all_all);
                     break;
+                case HOT_DROP:
+                    pic = this.view.getResources().getDrawable(R.drawable.hotspot);
+                    break;
                 default:
                     pic = this.view.getResources().getDrawable(R.drawable.card_back);
                     break;

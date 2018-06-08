@@ -46,6 +46,9 @@ public class CardEffects {
                 takeFour();
                 askForColorWish(player);
                 break;
+            case HOT_DROP:
+                hotDrop();
+                gameLogic.nextPlayer(player);
         }
 
         gameControler.gA = new GameActions(GameActions.actions.NEXT_PLAYER, gameLogic.getActivePlayer().getID());
@@ -80,4 +83,7 @@ public class CardEffects {
     private void skip() {
         gameLogic.skipNext();
     }
+
+    //Hot Drop Card effect method
+    private void hotDrop(){ gameLogic.playHotDrop();}
 }

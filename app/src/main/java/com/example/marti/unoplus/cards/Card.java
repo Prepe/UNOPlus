@@ -41,7 +41,8 @@ public class Card implements Serializable {
         TURN(11),
         PLUS_TWO(12),
         CHOOSE_COLOR(13),
-        PLUS_FOUR(14);
+        PLUS_FOUR(14),
+        HOT_DROP(15);
 
         private int value;
 
@@ -101,6 +102,6 @@ public class Card implements Serializable {
         return this.value == values.values()[14];
     }
 
-
+    public boolean isHotDrop(){ return this.value == values.values()[15];}
 
 }
