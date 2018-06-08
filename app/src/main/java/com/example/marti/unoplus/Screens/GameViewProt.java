@@ -290,7 +290,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 }
             }
 
-            player = new Player((int)tempID*10000);
+            player = new Player((int)(tempID*10000));
             player.setGV(this);
             Log.d("CLIENT", "tempID: " + tempID);
 
