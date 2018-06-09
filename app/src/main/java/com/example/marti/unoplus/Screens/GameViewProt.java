@@ -177,7 +177,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     @Override
     public void dataChanged() {
         try {
-            Thread.sleep(10);
+            Thread.sleep(50);
         } catch (InterruptedException e) {
             e.printStackTrace();
 
@@ -185,12 +185,12 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
         recievedGA = NIOmanager.getGameAction();
 
-        TextView tv = (TextView) findViewById(R.id.netmessage);
-        tv.setText(recievedGA.action.toString());
-        Log.d("GCP_Action", recievedGA.action.toString());
-        //TODO change placeholder player ID
+        TextView tv = findViewById(R.id.netmessage);
+        tv.setText(recievedGA.action.name());
+        Log.d("GCP_Action", recievedGA.action.name());
+
         if (specialUpdate(recievedGA)) {
-            Log.d("GCP_Action", recievedGA.action.toString());
+            Log.d("GCP_Action", recievedGA.action.name());
         } else {
             handleUpdate(recievedGA);
         }
