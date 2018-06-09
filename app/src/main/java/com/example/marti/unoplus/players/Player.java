@@ -84,7 +84,17 @@ public class Player {
         gameViewProt.writeNetMessage(tam);
     }
 
-    public void TradeCard(Card c, Player p) {
+    public void callUno() {
+        Log.d("UNOUNO", "CALL UNOI UNo");
+
+        GameActions action = new GameActions(GameActions.actions.CALL_UNO, ID);
+        gameViewProt.writeNetMessage(action);
+    }
+
+    public void TradeCard(Card card, Player p) {
+        Log.d("GameDebug", "Player wants to trade card :" + card.value.toString() + " " + card.color.toString() + "with Player " + p.getID());
+        GameActions action = new GameActions(GameActions.actions.TRADE_CARD, ID);
+        gameViewProt.writeNetMessage(action);
 
     }
 
@@ -117,6 +127,9 @@ public class Player {
                 break;
             case INIT_GAME:
                 initialsiedHandCardCounters(action.nextPlayerID);
+                break;
+            case CALL_UNO:
+                this.canSayUno(action.playerID, action.check);
                 break;
         }
     }
@@ -198,6 +211,19 @@ public class Player {
                 gameViewProt.handChanged(hand.getHand());
             } else {
                 updateHandCardCounter(-1, playerID);
+            }
+        }
+    }
+
+
+    void canSayUno(int playerID, Boolean canSayUno) {
+        if (canSayUno == null) {
+            return;
+        }
+
+        if (canSayUno) {
+            if (playerID == this.getID()) {
+                Log.d("UNOUNO", "unouno");
             }
         }
     }

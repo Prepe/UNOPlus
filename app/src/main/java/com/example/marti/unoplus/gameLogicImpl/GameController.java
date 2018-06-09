@@ -1,9 +1,12 @@
 package com.example.marti.unoplus.gameLogicImpl;
 
+import android.util.Log;
+
 import com.example.marti.unoplus.GameActions;
 import com.example.marti.unoplus.Screens.GameViewProt;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.cards.Deck;
+import com.example.marti.unoplus.cards.HandCardList;
 import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.players.PlayerList;
 
@@ -26,6 +29,7 @@ public class GameController {
     int startingHand = 10;   //Amount of Cards every Player gets at the start of the Game
     float turnTime;         //Turn Timer for the Game
     public GameActions gA;  //Object that gets send to all Players
+    HandCardList hand;
     boolean[] calledUNO;    //
     boolean[] droppedCard;   //
     boolean[] tradedCard;   //
@@ -53,7 +57,10 @@ public class GameController {
 
         if (players != null) {
             players.playerCount();
-            //calledUNO = new boolean[players.playerCount()];
+            calledUNO = new boolean[players.playerCount()];
+            for (boolean c : calledUNO) {
+                c = false;
+            }
             droppedCard = new boolean[players.playerCount()];
             for (boolean b : droppedCard) {
                 b = false;
@@ -100,6 +107,9 @@ public class GameController {
             case WISH_COLOR:
                 colorWish(action.playerID, action.colorWish);
                 break;
+            case CALL_UNO:
+                callUno(action.nextPlayerID);
+                break;
         }
     }
 
@@ -107,6 +117,7 @@ public class GameController {
     public void update() {
         if (gA.action == GameActions.actions.NEXT_PLAYER) {
             resetCheats();
+            resetCalledUno();
         }
         gA.gcSend = true;
         gvp.updateAllConnected(gA);
@@ -182,6 +193,20 @@ public class GameController {
         }
     }
 
+    //Method to call Uno
+    public void callUno(int player) {
+        if (calledUNO[player] && player == logic.activePlayer.getID() && this.hand.getCount() == 1) {
+            calledUNO[player] = true;
+            Log.d("CALLUNO", player + " hat UNO gecalled");
+            gA = new GameActions(GameActions.actions.CALL_UNO, player, true);
+            update();
+        } else {
+            gA = new GameActions(GameActions.actions.CALL_UNO, player, false);
+            update();
+        }
+
+    }
+
     //Method to cheat and trade a Card with a Player
     Card tradeCard(Player player, Card card) {
         //TODO implement
@@ -216,5 +241,12 @@ public class GameController {
 
     void resetCheats() {
         droppedCard[logic.activePlayer.getID()] = false;
+    }
+
+    void resetCalledUno(){
+        if(calledUNO[logic.activePlayer.getID()] && this.hand.getCount() > 1){
+            calledUNO[logic.activePlayer.getID()] = false;
+        }
+
     }
 }

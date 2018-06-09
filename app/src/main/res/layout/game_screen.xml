@@ -26,6 +26,16 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true" />
 
+    <ImageView
+        android:id="@+id/tradeCard"
+        android:layout_width="32dp"
+        android:layout_height="35dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/numCards1"
+        android:layout_marginStart="163dp"
+        android:layout_marginTop="-6dp"
+        android:background="@android:drawable/ic_menu_directions" />
+
     <ListView
         android:id="@+id/list"
         android:layout_width="118dp"
@@ -72,11 +82,14 @@
 
         <LinearLayout
             android:id="@+id/playerHandLayout"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:orientation="horizontal">
-        </LinearLayout>
+            android:gravity="center_horizontal|center"
+            android:orientation="horizontal"
+            android:padding="0dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"></LinearLayout>
 
     </HorizontalScrollView>
 
@@ -141,21 +154,11 @@
 
     <Button
         android:id="@+id/buttongetcard"
-        android:layout_width="72dp"
-        android:layout_height="wrap_content"
+        android:layout_width="39dp"
+        android:layout_height="65dp"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="92dp"
-        android:layout_marginRight="92dp"
-        android:text="ziehe Karte" />
-
-    <Button
-        android:id="@+id/clearView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/numCards2"
-        android:layout_alignParentEnd="true"
-        android:text="Button" />
+        android:layout_marginEnd="121dp"
+        android:background="@drawable/card_back" />
 
 </RelativeLayout>
