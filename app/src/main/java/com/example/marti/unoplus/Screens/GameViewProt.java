@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
@@ -65,6 +66,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     Button unoButton;
     public PlayerList playerList;
     Vibrator vibrator;
+    boolean buttonPressed = false;
 
 
     public GameViewProt() {
@@ -328,11 +330,16 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                     Toast.makeText(getApplicationContext(), "Uno!!", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.hotDropButton:
-                    //TODO!!
+                    buttonPressed = true;
+                    player.timer(false); //stops timer
                     break;
             }
         }
     };
+
+    public boolean getButtonPressed(){
+        return this.buttonPressed;
+    }
 
     //<--------- View Updates --------->
     //Player sends an action
@@ -356,6 +363,11 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
         numCards.setText("( "+ hcc[0]+ " )");
         numCards2.setText("( "+ hcc[1]+ " )");
+    }
+
+    public void updateForHotDrop(){
+        toastStartHotDrop();
+        player.timer(true);
     }
 
     public void handChanged(LinkedList<Card> hand) {
@@ -520,6 +532,10 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
     public void toastEndHotDropLooser(){
         Toast.makeText(getApplicationContext(), "Du warst leider zu langsam! +2 Karten", Toast.LENGTH_SHORT).show();
+    }
+
+    public void playersTime(){
+        Toast.makeText(getApplicationContext(), "Deine Zeit: " + player.getMillSecs() + " Millisekunden", Toast.LENGTH_SHORT).show();
     }
 
 }

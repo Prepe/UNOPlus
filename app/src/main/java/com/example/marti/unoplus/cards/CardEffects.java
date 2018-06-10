@@ -11,11 +11,11 @@ import com.example.marti.unoplus.players.Player;
 
 public class CardEffects {
     GameLogic gameLogic;
-    GameController gameControler;
+    GameController gameController;
 
     public CardEffects(GameLogic gL, GameController gC) {
         gameLogic = gL;
-        gameControler = gC;
+        gameController = gC;
     }
 
     //Method to call the cards effect
@@ -48,12 +48,11 @@ public class CardEffects {
                 break;
             case HOT_DROP:
                 hotDrop();
-                gameLogic.nextPlayer(player);
                 break;
         }
 
-        gameControler.gA = new GameActions(GameActions.actions.NEXT_PLAYER, gameLogic.getActivePlayer().getID());
-        gameControler.update();
+        gameController.gA = new GameActions(GameActions.actions.NEXT_PLAYER, gameLogic.getActivePlayer().getID());
+        gameController.update();
     }
 
     //TakeTwo Card effect method
@@ -64,8 +63,8 @@ public class CardEffects {
     //ChangeColour Card effect method
     private void askForColorWish(Player player) {
         if (player != null) {
-            gameControler.gA = new GameActions(GameActions.actions.WISH_COLOR,player.getID(),true);
-            gameControler.update();
+            gameController.gA = new GameActions(GameActions.actions.WISH_COLOR,player.getID(),true);
+            gameController.update();
         }
     }
 

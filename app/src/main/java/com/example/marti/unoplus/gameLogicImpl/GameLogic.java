@@ -8,6 +8,8 @@ import com.example.marti.unoplus.cards.Deck;
 import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.players.PlayerList;
 
+import java.util.LinkedList;
+
 public class GameLogic {
     PlayerList playerList;      //reference to all Players
     Deck deck;                  //reference to the Deck that is used
@@ -19,6 +21,7 @@ public class GameLogic {
     Card.values lastCardValue;  //The value of the card that is on top of the discard pile
     Card.colors lastCardColor;  //The color of the card that is on top of the discard pile
     GameController controller;
+    GameViewProt gvp;
 
     public GameLogic(PlayerList pL, Deck gameDeck, GameController gc) {
         controller = gc;
@@ -200,7 +203,50 @@ public class GameLogic {
 
     //starts the "Hot Drop"
     public void playHotDrop(){
+        LinkedList<Player> allPlayers = playerList.getPlayers();
+        gvp = new GameViewProt();
+        //gvp.updateForHotDrop();
         controller.update();
-        //TODO!!
+
+        //Wait until everyone pressed the button
+        /*try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
+
+        //Check if everyone pressed the button, otherwise we can't check who was the last one
+        for(Player p : allPlayers){
+            while(!gvp.getButtonPressed()){
+            }
+        }
+
+        //Check who was the last one
+        Player firstPlayer = playerList.getFirst();
+        int worstTime = firstPlayer.getMillSecs();
+        Player looser = firstPlayer;
+        for(Player p : allPlayers){
+            int playersTime = p.getMillSecs();
+            p.playerTime();
+            if(playersTime > worstTime){
+                worstTime = playersTime;
+                looser = p;
+            }
+        }
+
+        looser.lostHotDrop();
+
+        //Looser gets 2 cards
+        for(int i = 0; i < 2; i++) {
+            looser.drawCard();
+        }
+
+        //Reset the timer of each player
+        for(Player p : allPlayers){
+            p.resetTimer();
+        }
+
+        Player player = getActivePlayer();
+        nextPlayer(player);
     }
 }

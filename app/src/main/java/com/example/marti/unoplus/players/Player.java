@@ -1,5 +1,6 @@
 package com.example.marti.unoplus.players;
 
+import android.os.Handler;
 import android.util.Log;
 
 import com.example.marti.unoplus.GameActions;
@@ -21,6 +22,11 @@ public class Player {
     int[] handcardcounter;
     HandCardList hand;
     Card dropCard;
+
+    //Variables needed for the Hot-Drop-Feature
+    int seconds = 0;
+    boolean startRun = true;
+    int millsecs = 0;
 
     public Player(Integer id) {
         ID = id;
@@ -135,6 +141,7 @@ public class Player {
         }
         if(lastCard.value == Card.values.HOT_DROP){
             gameViewProt.toastStartHotDrop();
+            timer(startRun);
         }
     }
 
@@ -204,6 +211,40 @@ public class Player {
                 updateHandCardCounter(-1, playerID);
             }
         }
+    }
+
+    //Timer for each player when Hot-Drop-Card is played
+    public void timer(final boolean startRun){
+        final Handler handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                millsecs = seconds/1000;
+
+                if(startRun) {
+                    seconds++;
+                }
+
+                handler.postDelayed(this, 100);
+            }
+        });
+    }
+
+    public void resetTimer(){
+        startRun = true;
+        seconds = 0;
+    }
+
+    public int getMillSecs(){
+        return this.millsecs;
+    }
+
+    public void lostHotDrop(){
+        gameViewProt.toastEndHotDropLooser();
+    }
+
+    public void playerTime(){
+        gameViewProt.playersTime();
     }
 
     //<---------- Misc ---------->
