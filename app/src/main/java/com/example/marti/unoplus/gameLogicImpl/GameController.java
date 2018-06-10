@@ -100,6 +100,8 @@ public class GameController {
             case WISH_COLOR:
                 colorWish(action.playerID, action.colorWish);
                 break;
+            case HOT_DROP:
+                hotDrop(action.playerID, action.check);
         }
     }
 
@@ -110,6 +112,10 @@ public class GameController {
         }
         if(logic.lastCardValue == Card.values.HOT_DROP){
             gvp.toastStartHotDrop();
+            LinkedList<Player> allPlayers = players.getPlayers();
+            for(Player p : allPlayers){
+                p.timer(true);
+            }
         }
         gA.gcSend = true;
         gvp.updateAllConnected(gA);
@@ -190,6 +196,56 @@ public class GameController {
         //TODO implement
 
         return card;
+    }
+
+    void hotDrop(int player, boolean check){
+        LinkedList<Player> allPlayers = players.getPlayers();
+        gvp = new GameViewProt();
+        //gvp.updateForHotDrop();
+        gA = new GameActions(GameActions.actions.HOT_DROP, player);
+        update();
+
+        //Wait until everyone pressed the button
+        /*try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
+
+        //Check if everyone pressed the button, otherwise we can't check who was the last one
+        for(Player p : allPlayers){
+            while(!gvp.getButtonPressed()){
+            }
+        }
+
+        //Check who was the last one
+        Player firstPlayer = players.getFirst();
+        int worstTime = firstPlayer.getMillSecs();
+        Player looser = firstPlayer;
+        for(Player p : allPlayers){
+            int playersTime = p.getMillSecs();
+            p.playerTime();
+            if(playersTime > worstTime){
+                worstTime = playersTime;
+                looser = p;
+            }
+        }
+
+        looser.lostHotDrop();
+
+        //Looser gets 2 cards
+        for(int i = 0; i < 2; i++) {
+            looser.drawCard();
+            //gA = new GameActions(GameActions.actions.DRAW_CARD, looser.getID(), true);
+        }
+
+        //Reset the timer of each player
+        for(Player p : allPlayers){
+            p.resetTimer();
+        }
+
+        /*Player p = logic.getActivePlayer();
+        logic.nextPlayer(p);*/
     }
 
     //<---------- Method for other actions called from GameLogic, CardEffects, etc ---------->

@@ -478,6 +478,24 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
     }
 
+    public void hotDrop() {
+        Dialog d = new AlertDialog.Builder(this,AlertDialog.THEME_HOLO_LIGHT)
+                .setItems(new String[]{"Klicke schnell!"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dlg, int position) {
+                        if (position == 0) {
+                            writeNetMessage(new GameActions(GameActions.actions.HOT_DROP, player.getID(), true));
+                            buttonPressed = true;
+                            player.timer(false);
+                            dlg.cancel();
+                        }
+                    }
+                })
+                .create();
+        d.setCanceledOnTouchOutside(false);
+        d.show();
+    }
+
     void endGame() {
         startActivity(new Intent(this, MainMenu.class));
     }
@@ -534,7 +552,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         Toast.makeText(getApplicationContext(), "Du warst leider zu langsam! +2 Karten", Toast.LENGTH_SHORT).show();
     }
 
-    public void playersTime(){
+    public void toastPlayersTime(){
         Toast.makeText(getApplicationContext(), "Deine Zeit: " + player.getMillSecs() + " Millisekunden", Toast.LENGTH_SHORT).show();
     }
 

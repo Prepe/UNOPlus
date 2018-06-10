@@ -125,6 +125,9 @@ public class Player {
             case INIT_GAME:
                 initialsiedHandCardCounters(action.nextPlayerID);
                 break;
+            case HOT_DROP:
+                this.gameViewProt.hotDrop();
+                break;
         }
     }
 
@@ -138,10 +141,6 @@ public class Player {
         updateLastCard(card);
         if (ID == nextPID) {
             gameViewProt.toastYourTurn();
-        }
-        if(lastCard.value == Card.values.HOT_DROP){
-            gameViewProt.toastStartHotDrop();
-            timer(startRun);
         }
     }
 
@@ -244,7 +243,7 @@ public class Player {
     }
 
     public void playerTime(){
-        gameViewProt.playersTime();
+        gameViewProt.toastPlayersTime();
     }
 
     //<---------- Misc ---------->

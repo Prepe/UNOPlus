@@ -47,7 +47,7 @@ public class CardEffects {
                 askForColorWish(player);
                 break;
             case HOT_DROP:
-                hotDrop();
+                hotDrop(player);
                 break;
         }
 
@@ -85,5 +85,8 @@ public class CardEffects {
     }
 
     //Hot Drop Card effect method
-    private void hotDrop(){ gameLogic.playHotDrop();}
+    private void hotDrop(Player player){
+        gameController.gA = new GameActions(GameActions.actions.HOT_DROP, player.getID(), true);
+        gameController.update();
+    }
 }

@@ -20,7 +20,8 @@ public class GameActions {
         INIT_GAME (7),
         GAME_FINISH (8),
         THROW_CARD(9),
-        THROW_CARD_CONFIRM (10);
+        THROW_CARD_CONFIRM (10),
+        HOT_DROP (11);
 
         private int value;
         actions(int value){this.value = value;}
