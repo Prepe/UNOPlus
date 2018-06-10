@@ -200,4 +200,14 @@ public class GameLogic {
         lastCardColor = colorWish;
         lastCardValue = Card.values.CHOOSE_COLOR;
     }
+
+    public PlayerList getPlayerList (){
+        return playerList;
+    }
+
+    public boolean checkifreversed (){
+
+
+        return reverse;
+    }
 }

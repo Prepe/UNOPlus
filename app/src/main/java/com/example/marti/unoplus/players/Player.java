@@ -42,8 +42,13 @@ public class Player {
         ID = id;
     }
 
-    public List<Card> getHand() {
+    public LinkedList<Card> getHand() {
         return this.handcards;
+    }
+
+    public void setHand(LinkedList<Card> cards){
+        handcards = cards;
+
     }
 
     public int getHandSize() {
