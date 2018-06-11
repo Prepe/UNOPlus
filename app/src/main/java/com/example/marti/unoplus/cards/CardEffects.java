@@ -3,6 +3,7 @@ package com.example.marti.unoplus.cards;
 import android.content.Intent;
 
 import com.example.marti.unoplus.GameActions;
+import com.example.marti.unoplus.Screens.GameViewProt;
 import com.example.marti.unoplus.gameLogicImpl.GameController;
 import com.example.marti.unoplus.gameLogicImpl.GameLogic;
 import com.example.marti.unoplus.players.Player;

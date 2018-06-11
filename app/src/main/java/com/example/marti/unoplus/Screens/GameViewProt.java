@@ -479,7 +479,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     }
 
     public void hotDrop() {
-        Dialog d = new AlertDialog.Builder(this,AlertDialog.THEME_HOLO_LIGHT)
+        Dialog d = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
                 .setItems(new String[]{"Klicke schnell!"}, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dlg, int position) {
@@ -494,6 +494,14 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 .create();
         d.setCanceledOnTouchOutside(false);
         d.show();
+
+        //Wait until everyone pressed the button
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+
+        }
     }
 
     void endGame() {
