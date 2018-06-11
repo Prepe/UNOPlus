@@ -58,6 +58,9 @@ public class CardEffects {
             case CARD_SPIN:
                 cardSpin(player);
                 break;
+            case DUEL:
+                startDuel(player);
+                break;
         }
 
         gameController.gA = new GameActions(GameActions.actions.NEXT_PLAYER, gameLogic.getActivePlayer().getID());
@@ -166,5 +169,12 @@ public class CardEffects {
 
         gameController.gA = new GameActions(GameActions.actions.CARD_SPIN, player.getID(),true );
         gameController.update();
+    }
+
+    private void startDuel(Player player){
+        if (player != null) {
+            gameController.gA = new GameActions(GameActions.actions.DUEL_START, player.getID(), true);
+            gameController.update();
+        }
     }
 }

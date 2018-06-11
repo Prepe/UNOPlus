@@ -478,6 +478,79 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
     }
 
+    public void startDuel(){
+        Dialog d = new AlertDialog.Builder(this,AlertDialog.THEME_HOLO_LIGHT)
+                .setTitle("Such eine Farbe für Duel aus!")
+                .setItems(new String[]{"Rot", "Blau", "Gelb", "Grün"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dlg, int position) {
+                        if (position == 0) {
+                            dlg.cancel();
+                            startDuel_chooseOpponent(Card.colors.RED);
+                        } else if (position == 1) {
+                            dlg.cancel();
+                            startDuel_chooseOpponent(Card.colors.BLUE);
+                        } else if (position == 2) {
+                            dlg.cancel();
+                            startDuel_chooseOpponent(Card.colors.YELLOW);
+                        } else if (position == 3) {
+                            dlg.cancel();
+                            startDuel_chooseOpponent(Card.colors.GREEN);
+                        }
+                    }
+                })
+                .create();
+        d.setCanceledOnTouchOutside(false);
+        d.show();
+
+    }
+
+    private void startDuel_chooseOpponent(final Card.colors color) {
+        Dialog d = new AlertDialog.Builder(this,AlertDialog.THEME_HOLO_LIGHT)
+                .setTitle("Such einen Opponent aus!")
+                .setItems(new String[]{"Anderer Spieler"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dlg, int position) {
+                        if (position == 0) {
+                            //TODO works for 2 players. Change to use PlayerList
+                            writeNetMessage(new GameActions(GameActions.actions.DUEL_START, player.getID(), (player.getID()+1)%2, color));
+                            dlg.cancel();
+                        }
+                    }
+                })
+                .create();
+        d.setCanceledOnTouchOutside(false);
+        d.show();
+    }
+
+    public void duelOpponentDialog(int duelStarterID){
+        Dialog d = new AlertDialog.Builder(this,AlertDialog.THEME_HOLO_LIGHT)
+                .setTitle("Spieler" + duelStarterID + "fordert dich zum Duel heraus. Such eine Farbe aus!")
+                .setItems(new String[]{"Rot", "Blau", "Gelb", "Grün"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dlg, int position) {
+                        if (position == 0) {
+                            dlg.cancel();
+                            writeNetMessage(new GameActions(GameActions.actions.DUEL_OPPONENT, player.getID(), Card.colors.RED));
+                        } else if (position == 1) {
+                            dlg.cancel();
+                            writeNetMessage(new GameActions(GameActions.actions.DUEL_OPPONENT, player.getID(), Card.colors.BLUE));;
+                        } else if (position == 2) {
+                            dlg.cancel();
+                            writeNetMessage(new GameActions(GameActions.actions.DUEL_OPPONENT, player.getID(), Card.colors.YELLOW));
+                        } else if (position == 3) {
+                            dlg.cancel();
+                            writeNetMessage(new GameActions(GameActions.actions.DUEL_OPPONENT, player.getID(), Card.colors.GREEN));
+                        }
+                    }
+                })
+                .create();
+        d.setCanceledOnTouchOutside(false);
+        d.show();
+
+    }
+
+
     public void hotDrop() {
         Dialog d = new AlertDialog.Builder(this,AlertDialog.THEME_HOLO_LIGHT)
                 .setItems(new String[]{"Klicke schnell!"}, new DialogInterface.OnClickListener() {

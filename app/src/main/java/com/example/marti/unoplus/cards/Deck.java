@@ -76,7 +76,7 @@ public class Deck {
     private void createWildCards() {
         for (int i = 0; i < 4; i++) {
             for (int x = 0; x < 2; x++) {
-                int action = (x == 0) ? 13 : 15;
+                int action = (x == 0) ? 13 : 17;
                 //takedeck.deck.add(new Card(5, action));
                 deck.add(new Card(4, action));
             }

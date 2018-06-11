@@ -22,7 +22,9 @@ public class GameActions {
         THROW_CARD(9),
         THROW_CARD_CONFIRM (10),
         HOT_DROP (11),
-        CARD_SPIN(12);
+        CARD_SPIN(12),
+        DUEL_START(13),  //ask for color and opponent by card play
+        DUEL_OPPONENT(14); //response from opponent with color
 
         private int value;
         actions(int value){this.value = value;}
@@ -91,5 +93,20 @@ public class GameActions {
         this.action = action;
         playerID = pID;
         this.check = check;
+    }
+
+    //Constructor for startDuel_Request
+    public GameActions(actions action, int pID, int opponentPID, Card.colors color) {
+        this.action = action;
+        playerID = pID;
+        nextPlayerID = opponentPID;
+        colorWish = color;
+    }
+
+    //Constructor for startDuel_Response
+    public GameActions(actions action, int pID, int opponentPID) {
+        this.action = action;
+        playerID = pID;
+        nextPlayerID = opponentPID;
     }
 }

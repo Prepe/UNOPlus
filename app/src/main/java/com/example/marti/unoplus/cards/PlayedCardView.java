@@ -238,6 +238,9 @@ public class PlayedCardView {
                 case HOT_DROP:
                     pic = this.view.getResources().getDrawable(R.drawable.hotspot);
                     break;
+                case DUEL:
+                    pic = this.view.getResources().getDrawable(R.drawable.duel);
+                    break;
                 default:
                     pic = this.view.getResources().getDrawable(R.drawable.card_back);
                     break;

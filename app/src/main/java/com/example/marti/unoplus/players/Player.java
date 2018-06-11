@@ -133,6 +133,16 @@ public class Player {
             case HOT_DROP:
                 this.gameViewProt.hotDrop();
                 break;
+            case DUEL_START:
+                if (action.playerID == this.ID) {
+                    this.gameViewProt.startDuel();
+                }
+                break;
+            case DUEL_OPPONENT:
+                if (action.playerID == this.ID) {
+                    this.gameViewProt.duelOpponentDialog(action.nextPlayerID);
+                }
+                break;
         }
     }
 

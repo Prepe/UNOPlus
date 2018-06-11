@@ -43,7 +43,8 @@ public class Card implements Serializable {
         CHOOSE_COLOR(13),
         PLUS_FOUR(14),
         HOT_DROP(15),
-        CARD_SPIN(16);
+        CARD_SPIN(16),
+        DUEL (17);
 
         private int value;
 
@@ -107,6 +108,10 @@ public class Card implements Serializable {
 
     public boolean isCardSpin() {
         return this.value == values.values()[16];
+    }
+
+    public boolean isDuel() {
+        return this.value == values.values()[17];
     }
 
 }

@@ -278,7 +278,10 @@ public class HandCardView
                 case HOT_DROP:
                     pic = this.view.getResources().getDrawable(R.drawable.hotspot);
                     break;
-                    default:
+                case DUEL:
+                    pic = this.view.getResources().getDrawable(R.drawable.duel);
+                    break;
+                default:
                     pic = this.view.getResources().getDrawable(R.drawable.card_back);
                     break;
             }

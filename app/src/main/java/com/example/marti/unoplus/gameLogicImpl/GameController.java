@@ -30,6 +30,7 @@ public class GameController {
     boolean[] droppedCard;   //
     boolean[] tradedCard;   //
     boolean hasDrawn = false;
+    DuelData duelData;
 
     //<---------- Method for setting up the Game ---------->
     public GameController(GameViewProt gvp) {
@@ -102,6 +103,14 @@ public class GameController {
                 break;
             case HOT_DROP:
                 hotDrop(action.playerID, action.check);
+                break;
+            case DUEL_START:
+                startDuel(action);
+                break;
+            case DUEL_OPPONENT:
+                endDuel(action);
+                break;
+
         }
     }
 
@@ -146,6 +155,20 @@ public class GameController {
                 update();
             }
         }
+    }
+
+    void drawCardAsDuelLoser(int loserID){
+        List<Card> cards = new LinkedList<>();
+        if (deck.isEmptyDeck()) {
+            deck.replaceTakeDeck();
+        }
+        int count = 1;
+        for (int i = 0; i < count; i++) {
+            cards.add(deck.draw());
+        }
+
+        gA = new GameActions(GameActions.actions.DRAW_CARD, loserID, cards);
+        update();
     }
 
     //Method for playing cards
@@ -275,5 +298,18 @@ public class GameController {
 
     void resetCheats() {
         droppedCard[logic.activePlayer.getID()] = false;
+    }
+
+    private void startDuel(GameActions action) {
+        this.duelData = new DuelData(action.playerID, action.nextPlayerID, action.colorWish);
+        gA = new GameActions(GameActions.actions.DUEL_OPPONENT, action.nextPlayerID, action.playerID);
+        update();
+    }
+
+    private void endDuel(GameActions action) {
+        int loserID = this.duelData.getDuelLoserID(action.colorWish);
+        this.duelData = null;
+        drawCardAsDuelLoser(loserID);
+
     }
 }
