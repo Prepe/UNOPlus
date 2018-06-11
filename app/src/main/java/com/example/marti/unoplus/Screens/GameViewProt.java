@@ -177,7 +177,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     @Override
     public void dataChanged() {
         try {
-            Thread.sleep(50);
+            Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
 
@@ -282,8 +282,8 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             double random = Math.random() * 10 + 1;
             double tempID = 1;
             for (int i = 0; i < random; i++) {
-                double rand = Math.random()*1000;
-                tempID += random * rand;
+                double rand = Math.random()*10;
+                tempID += random + rand;
                 try {
                     Thread.sleep((int)tempID%5);
                 } catch (InterruptedException e) {
@@ -291,9 +291,9 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 }
             }
 
-            player = new Player((int)(tempID*10000));
+            player = new Player((int)(tempID*10000000));
             player.setGV(this);
-            Log.d("CLIENT", "tempID: " + tempID);
+            Log.d("CLIENT", "tempID: " + player.getID());
 
             try {
                 Thread.sleep(4000);
@@ -307,6 +307,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     void initPlayer(GameActions action) {
         if (!isGameController) {
             if (action.check) {
+                Log.d("CLIENT", "playerID" + player.getID());
                 if (action.playerID == player.getID()) {
                     if (action.nextPlayerID > 0) {
                         Log.d("CLIENT", "Setting new ID");
@@ -339,7 +340,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         NIOmanager.writeGameaction(new GameActions(GameActions.actions.INIT_PLAYER, tempID, nextID, true));
         Log.d("PLAYER_SETUP", "Added new Player: " + temp.getID());
 
-        if (nextID == playerCount - 1) {
+        if (nextID == playerCount) {
             PlayerList pl = new PlayerList();
             pl.setPlayers(tempPlayers);
             tempPlayers.clear();
