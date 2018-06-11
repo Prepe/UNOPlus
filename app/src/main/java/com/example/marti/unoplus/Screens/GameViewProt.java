@@ -274,6 +274,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
             playerCount = numClients;
 
+            Log.d("HOST","NumPlayers: " + playerCount);
             NIOmanager.writeGameaction(new GameActions(GameActions.actions.INIT_PLAYER, 0, 0, false));
 
         } else {
@@ -310,20 +311,29 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                     if (action.nextPlayerID > 0) {
                         Log.d("CLIENT", "Setting new ID");
                         player.setID(action.nextPlayerID);
+                        return;
                     }
+                    Log.d("CLIENT","ID <= 0");
+                    return;
                 }
+                Log.d("CLIENT","Not my ID");
+                return;
             } else {
                 Log.d("CLIENT", "Asking for new ID");
                 NIOmanager.writeGameaction(new GameActions(GameActions.actions.INIT_PLAYER, player.getID(), 0, true));
+                return;
             }
         } else if (action.playerID != 0 && action.nextPlayerID == 0){
             Log.d("HOST", "Give Player (ID: " + action.playerID + ") a new ID");
             gameInit(action.playerID);
+            return;
         }
+        Log.d("INIT_PLAYER","FIX ME");
+        return;
     }
 
     void gameInit(int tempID) {
-        int nextID = tempPlayers.getLast().getID() + 1;
+        int nextID = tempPlayers.size();
         Player temp = new Player(nextID);
         tempPlayers.add(temp);
         NIOmanager.writeGameaction(new GameActions(GameActions.actions.INIT_PLAYER, tempID, nextID, true));
