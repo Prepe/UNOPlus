@@ -24,13 +24,14 @@ import java.util.List;
 public class GameController {
     GameViewProt gvp;
     PlayerList players;     //reference to all Players in the Game
+    Player player;
     Deck deck;              //reference to the Deck that is used
     GameLogic logic;        //reference to the GameLogic
     int startingHand = 10;   //Amount of Cards every Player gets at the start of the Game
     float turnTime;         //Turn Timer for the Game
     public GameActions gA;  //Object that gets send to all Players
     HandCardList hand;
-    boolean[] calledUNO;    //
+    boolean[] mustCallUNO;    //
     boolean[] droppedCard;   //
     boolean[] tradedCard;   //
     boolean hasDrawn = false;
@@ -57,15 +58,19 @@ public class GameController {
 
         if (players != null) {
             players.playerCount();
-            calledUNO = new boolean[players.playerCount()];
-            for (boolean c : calledUNO) {
-                c = false;
+            mustCallUNO = new boolean[players.playerCount()];
+            for (boolean a : mustCallUNO) {
+                a = false;
             }
             droppedCard = new boolean[players.playerCount()];
             for (boolean b : droppedCard) {
                 b = false;
             }
-            //tradedCard = new boolean[players.playerCount()];
+
+            tradedCard = new boolean[players.playerCount()];
+            for (boolean c : tradedCard) {
+                c = false;
+            }
         }
 
         deck.shuffle();
@@ -99,10 +104,10 @@ public class GameController {
                 dropCard(action.nextPlayerID);
                 break;
             case TRADE_CARD:
-                //GC.tradeCard();
+                tradeCard(action.playerID, action.nextPlayerID, action.card, action.check);
                 break;
             case PLAY_CARD:
-                playCard(action.playerID, action.card);
+                playCard(action.playerID, action.card, action.check);
                 break;
             case WISH_COLOR:
                 colorWish(action.playerID, action.colorWish);
@@ -134,6 +139,7 @@ public class GameController {
                 gA = new GameActions(GameActions.actions.NEXT_PLAYER, aID);
                 update();
             } else {
+                resetCalledUno();
                 List<Card> cards = new LinkedList<>();
                 if (deck.isEmptyDeck()) {
                     deck.replaceTakeDeck();
@@ -151,10 +157,12 @@ public class GameController {
     }
 
     //Method for playing cards
-    void playCard(int player, Card card) {
+    void playCard(int player, Card card, boolean has1Card) {
         Player p = players.getPlayer(player);
         //Check if player is allowed to play the card
         if (logic.checkCard(card, p)) {
+            resetCalledUno();
+            mustCallUNO[player] = has1Card;
             hasDrawn = false;
             //Remove the played card from the players hand and update Players
             gA = new GameActions(GameActions.actions.PLAY_CARD, player, card, true);
@@ -190,21 +198,42 @@ public class GameController {
         } else {
             gA = new GameActions(GameActions.actions.DROP_CARD, player, false);
             update();
+            this.gvp.toastCantTrade();
         }
     }
 
     //Method to call Uno
-    public void callUno(int player) {
-        if (calledUNO[player] && player == logic.activePlayer.getID() && this.hand.getCount() == 1) {
-            calledUNO[player] = true;
+    void callUno(int player) {
+        if (mustCallUNO[player]) {
+            mustCallUNO[player] = false;
             Log.d("CALLUNO", player + " hat UNO gecalled");
             gA = new GameActions(GameActions.actions.CALL_UNO, player, true);
             update();
         } else {
             gA = new GameActions(GameActions.actions.CALL_UNO, player, false);
             update();
+            drawCard(player);
         }
 
+    }
+
+    //Method to trade Card with other players
+    void tradeCard(int traderID, int tradeTargetID, Card tradedCard, boolean accepted) {
+        if (accepted) {
+            Log.d("GC", "Got Trade-Action");
+            gA = new GameActions(GameActions.actions.TRADE_CARD, traderID, tradeTargetID, tradedCard, accepted);
+            update();
+        } else {
+            if (this.tradedCard[traderID] && traderID == logic.activePlayer.getID()) {
+                gA = new GameActions(GameActions.actions.TRADE_CARD, traderID, traderID, tradedCard, true);
+                update();
+            } else {
+                Log.d("GC", "Got Trade-Action");
+                this.tradedCard[traderID] = true;
+                gA = new GameActions(GameActions.actions.TRADE_CARD, traderID, tradeTargetID, tradedCard, accepted);
+                update();
+            }
+        }
     }
 
     //Method to cheat and trade a Card with a Player
@@ -241,12 +270,12 @@ public class GameController {
 
     void resetCheats() {
         droppedCard[logic.activePlayer.getID()] = false;
+        tradedCard[logic.activePlayer.getID()] = false;
     }
 
-    void resetCalledUno(){
-        if(calledUNO[logic.activePlayer.getID()] && this.hand.getCount() > 1){
-            calledUNO[logic.activePlayer.getID()] = false;
+    void resetCalledUno() {
+        for (int i = 0; i < mustCallUNO.length; i++) {
+            mustCallUNO[i] = false;
         }
-
     }
 }

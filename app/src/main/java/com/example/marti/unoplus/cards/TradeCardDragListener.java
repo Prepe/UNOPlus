@@ -5,6 +5,8 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.example.marti.unoplus.Screens.GameViewProt;
+import com.example.marti.unoplus.gameLogicImpl.GameLogic;
+import com.example.marti.unoplus.players.Player;
 
 /**
  * Created by sebit on 09.06.2018.
@@ -12,7 +14,8 @@ import com.example.marti.unoplus.Screens.GameViewProt;
 
 public class TradeCardDragListener implements View.OnDragListener {
     public GameViewProt gamescreen = null;
-    public Card card;
+    public Player player;
+    public GameLogic logic;
 
     public TradeCardDragListener(GameViewProt screen)
     {
@@ -35,7 +38,7 @@ public class TradeCardDragListener implements View.OnDragListener {
 
                 ImageView droppedview = (ImageView) event.getLocalState();
                 HandCardView playedcard = (HandCardView) droppedview.getTag();
-                this.gamescreen.choosePlayer();
+                this.gamescreen.choosePlayer(playedcard.card);
 
                 break;
             case DragEvent.ACTION_DRAG_ENDED:

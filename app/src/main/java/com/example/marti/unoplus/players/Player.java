@@ -19,8 +19,11 @@ public class Player {
     Card lastCard;
     LinkedList<Card> handcards; //Hand
     int[] handcardcounter;
-    HandCardList hand;
+    public HandCardList hand;
     Card dropCard;
+    Card tradeCard;
+    int tradedwith;
+    boolean activeTrade;
 
     public Player(Integer id) {
         ID = id;
@@ -52,6 +55,10 @@ public class Player {
         return ID;
     }
 
+    public Integer getIDForTrading(Integer ID) {
+        return ID;
+    }
+
     public void initialsiedHandCardCounters(int size) {
         handcardcounter = new int[size];
 
@@ -73,6 +80,11 @@ public class Player {
     public void playCard(Card c) {
         GameActions action;
         action = new GameActions(GameActions.actions.PLAY_CARD, ID, c);
+        if (hand.getCount() == 1) {
+            action.check = true;
+        } else {
+            action.check = false;
+        }
         Log.d("GameDebug", "Player playCard :" + c.value.toString() + " " + c.color.toString());
         this.gameViewProt.writeNetMessage(action);
     }
@@ -85,17 +97,20 @@ public class Player {
     }
 
     public void callUno() {
-        Log.d("UNOUNO", "CALL UNOI UNo");
+        Log.d("UNOUNO", "CALL UNO UNo");
 
         GameActions action = new GameActions(GameActions.actions.CALL_UNO, ID);
         gameViewProt.writeNetMessage(action);
     }
 
-    public void TradeCard(Card card, Player p) {
-        Log.d("GameDebug", "Player wants to trade card :" + card.value.toString() + " " + card.color.toString() + "with Player " + p.getID());
-        GameActions action = new GameActions(GameActions.actions.TRADE_CARD, ID);
+    public void tradeCard(int tradeTargetID , Card tradedCard) {
+        hand.removeCard(tradedCard);
+        gameViewProt.removeCardFromHand(tradedCard);
+        activeTrade = true;
+        tradedwith = tradeTargetID;
+        Log.d("GameDebug", "Player wants to trade card :" + tradedCard.value.toString() + " " + tradedCard.color.toString() + "with Player ..");
+        GameActions action = new GameActions(GameActions.actions.TRADE_CARD, ID, tradeTargetID, tradedCard, false);
         gameViewProt.writeNetMessage(action);
-
     }
 
     //<---------- Player Reactions ---------->
@@ -131,8 +146,13 @@ public class Player {
             case CALL_UNO:
                 this.canSayUno(action.playerID, action.check);
                 break;
+            case TRADE_CARD:
+                this.gotCardTrade(action.playerID, action.nextPlayerID, action.check, action.card);
+                break;
         }
     }
+
+
 
     //Check if the GA is for you
     boolean checkID(int pID) {
@@ -194,6 +214,13 @@ public class Player {
         }
     }
 
+    //Your intended Card couldn't be played
+    void notAllowed(int pID) {
+        if (checkID(pID)) {
+            gameViewProt.toastYourNotAllowed();
+        }
+    }
+
     public boolean hasCard(Card card) {
         return this.hand.getHand().contains(card);
     }
@@ -215,6 +242,32 @@ public class Player {
         }
     }
 
+    void gotCardTrade(int traderID, int tradeTargetID, boolean accepted, Card tradedCard) {
+        if(accepted){
+            if(activeTrade && traderID == this.ID && tradedwith == tradeTargetID){
+                activeTrade = false;
+            } else if(traderID == tradeTargetID){
+                if(traderID == this.ID){
+                    activeTrade = false;
+                    gameViewProt.toastAlreadyTraded();
+                }
+                updateHandCardCounter(-1, traderID);
+            }
+
+            LinkedList<Card> temp = new LinkedList<>();
+            temp.add(tradedCard);
+            gotCard(traderID, temp);
+
+        } else {
+            Log.d("TRADE_CARRD", "Player " + traderID + " wasnts to trade with Player " + tradeTargetID);
+            updateHandCardCounter(-1, traderID);
+            if(traderID == tradedwith && activeTrade){
+                acceptTrade(tradeTargetID,  tradedCard);
+            } else if(tradeTargetID == this.ID){
+                gameViewProt.tradeOffer(traderID, tradedCard);
+            }
+        }
+    }
 
     void canSayUno(int playerID, Boolean canSayUno) {
         if (canSayUno == null) {
@@ -222,9 +275,9 @@ public class Player {
         }
 
         if (canSayUno) {
-            if (playerID == this.getID()) {
-                Log.d("UNOUNO", "unouno");
-            }
+            //TODO coreect
+        } else {
+            //TODO wrong
         }
     }
 
@@ -253,5 +306,15 @@ public class Player {
         GameActions win = new GameActions(GameActions.actions.GAME_FINISH, ID, true);
         gameViewProt.writeNetMessage(win);
         gameViewProt.toastGameFinished(ID);
+    }
+
+    public void acceptTrade(int tradeTargetID,  Card tradedCard){
+        GameActions trade = new GameActions(GameActions.actions.TRADE_CARD, ID, tradeTargetID, tradedCard,  true);
+        gameViewProt.writeNetMessage(trade);
+    }
+
+    public void declineTrade(int traderID, Card tradedCard){
+        GameActions trade = new GameActions(GameActions.actions.TRADE_CARD,traderID,  ID, tradedCard,  true);
+        gameViewProt.writeNetMessage(trade);
     }
 }

@@ -35,39 +35,6 @@ public class HandCardView
 
     }
 
-        /*
-    @Override
-    public int compareTo(@NonNull HandCardView handCards) {
-        if(this == handCards){
-            return 0;
-        }
-
-        int cardColors = this.card.color.compareTo(handCards.card.color);
-
-        if(cardColors != 0) {
-            return cardColors;
-        }
-        return this.card.value.compareTo(handCards.card.value);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    @Override
-    public boolean equals(Object handCards) {
-        if (this == handCards) {
-            return true;
-        }
-
-        if (handCards.getClass() != getClass()) {
-            return false;
-        }
-
-        HandCardView handCardView = (HandCardView) handCards;
-
-        return Objects.equals(card.color, this.card.color);
-
-    }
-    */
-
     public void updateCardPicture() {
         if (this.card == null) {
             this.view.setBackground(this.view.getResources().getDrawable(R.drawable.card_back));

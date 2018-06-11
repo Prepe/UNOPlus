@@ -91,4 +91,13 @@ public class GameActions {
         playerID = pID;
         this.check = check;
     }
+
+    //Used for cheat action trade Card
+    public GameActions(actions action, int pID,  int nextPID, Card card, boolean check) {
+        this.action = action;
+        playerID = pID;
+        this.nextPlayerID = nextPID;
+        this.card = card;
+        this.check = check;
+    }
 }
