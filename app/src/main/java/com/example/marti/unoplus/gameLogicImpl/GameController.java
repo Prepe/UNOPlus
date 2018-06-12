@@ -116,7 +116,7 @@ public class GameController {
                 endDuel(action);
                 break;
             case CARD_SPIN:
-                cardSpin2(action.playerID, action.cards);
+                cardSpin2(action);
                 break;
             case GIVE_Hand:
                 saveGottenHands(action.playerID, action.cards);
@@ -302,17 +302,23 @@ public class GameController {
         gA = new GameActions(GameActions.actions.CARD_SPIN, id);
         update();
     }
-    void cardSpin2 (int playerID, LinkedList<Card> cards) {
-        int resivingPlayerID;
+    void cardSpin2 (GameActions action) {
+        if (action.check == null) {
+            int playerID = action.playerID;
+            LinkedList<Card> cards = action.cards;
+            int resivingPlayerID;
 
-        if (logic.reverse) {
-            resivingPlayerID = players.getPrevious(players.getPlayer(playerID)).getID();
+            if (logic.reverse) {
+                resivingPlayerID = players.getPrevious(players.getPlayer(playerID)).getID();
+            } else {
+                resivingPlayerID = players.getNext(players.getPlayer(playerID)).getID();
+            }
+
+            gA = new GameActions(GameActions.actions.CARD_SPIN, resivingPlayerID, cards);
+            update();
         } else {
-            resivingPlayerID = players.getNext(players.getPlayer(playerID)).getID();
+            logic.nextPlayer(players.getPlayer(action.playerID));
         }
-
-        gA = new GameActions(GameActions.actions.CARD_SPIN, resivingPlayerID,cards);
-        update();
     }
 
     private void saveGottenHands(int id, LinkedList<Card> cards) {

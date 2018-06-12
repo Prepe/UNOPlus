@@ -320,23 +320,39 @@ public class Player {
     }
     void cardSpin(GameActions action) {
         if (action.playerID == ID) {
+            Log.d("PLAYER","Called CardSpin");
+            LinkedList<Card> temp = new LinkedList<>();
             if (!cardSpinStart) {
+                Log.d("PLAYER", "Saving old Hand");
                 cardSpinStart = true;
-                gameViewProt.writeNetMessage(new GameActions(GameActions.actions.CARD_SPIN, ID, hand.getHand()));
+                temp = hand.getHand();
                 hand.removeHand();
             }
 
             if (action.cards != null) {
+                Log.d ("PLAYER","Override Hand");
                 cardSpinStart = false;
                 for (int i = 0; i < action.cards.size(); i++) {
                     hand.addCard(action.cards.get(i));
                 }
                 handcardcounter[ID] = hand.getCount();
+                gameViewProt.handChanged(hand.getHand());
+            }
+
+            if (temp.size() != 0) {
+                Log.d ("PLAYER", "Sending old Hand");
+                gameViewProt.writeNetMessage(new GameActions(GameActions.actions.CARD_SPIN, ID, temp));
+            } else {
+                Log.d ("PLAYER", "Card Spin Finished");
+                gameViewProt.writeNetMessage(new GameActions(GameActions.actions.CARD_SPIN, ID, true));
             }
         } else {
+            Log.d("PLAYER","Not my GA");
             if (action.cards != null) {
+                Log.d("PLAYER", "UPDATE");
                 handcardcounter[action.playerID] = action.cards.size();
             }
         }
+        gameViewProt.updateCountersInView();
     }
 }
