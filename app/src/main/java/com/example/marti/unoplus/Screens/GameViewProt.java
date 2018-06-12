@@ -36,11 +36,17 @@ import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.players.PlayerList;
 import com.example.marti.unoplus.sound.SoundManager;
 
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Date;
 
 import jop.hab.net.NetworkIOManager;
 import jop.hab.net.ObserverInterface;
@@ -552,29 +558,19 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
 
     public void hotDrop() {
+        final long timer =  System.currentTimeMillis();
+
         Dialog d = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
                 .setItems(new String[]{"Klicke schnell!"}, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dlg, int position) {
-                        if (position == 0) {
-                            writeNetMessage(new GameActions(GameActions.actions.HOT_DROP, player.getID(), true));
-                            buttonPressed = true;
-                            player.timer(false);
+                            writeNetMessage(new GameActions(GameActions.actions.HOT_DROP, player.getID(), System.currentTimeMillis() - timer));
                             dlg.cancel();
-                        }
                     }
                 })
                 .create();
         d.setCanceledOnTouchOutside(false);
         d.show();
-
-        //Wait until everyone pressed the button
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-
-        }
     }
 
     void endGame() {

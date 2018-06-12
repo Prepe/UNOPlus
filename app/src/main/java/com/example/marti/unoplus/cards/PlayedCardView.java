@@ -241,6 +241,9 @@ public class PlayedCardView {
                 case DUEL:
                     pic = this.view.getResources().getDrawable(R.drawable.duel);
                     break;
+                case CARD_SPIN:
+                    pic = this.view.getResources().getDrawable(R.drawable.spin);
+                    break;
                 default:
                     pic = this.view.getResources().getDrawable(R.drawable.card_back);
                     break;
