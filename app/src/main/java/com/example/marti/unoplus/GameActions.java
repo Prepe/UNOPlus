@@ -2,6 +2,7 @@ package com.example.marti.unoplus;
 
 import com.example.marti.unoplus.cards.Card;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -27,7 +28,8 @@ public class GameActions {
         DUEL_OPPONENT(14), //response from opponent with color
         GIVE_Hand (15),
         GET_NEWHand(16),
-        GOT_Hand(17);
+        GOT_Hand(17),
+        DO_CardSpin(18);
 
         private int value;
         actions(int value){this.value = value;}
@@ -38,7 +40,7 @@ public class GameActions {
     public Integer nextPlayerID;
     public String countCards;
     public Card card;
-    public List<Card> cards;
+    public LinkedList<Card> cards;
     public Boolean check;
     public Card.colors colorWish;
     public boolean gcSend = false;
@@ -79,7 +81,7 @@ public class GameActions {
     }
 
     //Used to give 1 player a number of card from the deck
-    public GameActions(actions action, int pID, List<Card> drawnCards) {
+    public GameActions(actions action, int pID, LinkedList<Card> drawnCards) {
         this.action = action;
         playerID = pID;
         cards = drawnCards;

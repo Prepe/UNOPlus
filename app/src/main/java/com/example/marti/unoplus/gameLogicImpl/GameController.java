@@ -76,7 +76,7 @@ public class GameController {
     //Drawing handcards for all players
     private void drawHandCardsForPlayers() {
         for (int j = 0; j < players.playerCount(); j++) {
-            List<Card> handcards = new LinkedList<>();
+            LinkedList<Card> handcards = new LinkedList<>();
             for (int i = 0; i < startingHand; i++) {
                 handcards.add(deck.draw());
             }
@@ -115,6 +115,16 @@ public class GameController {
             case DUEL_OPPONENT:
                 endDuel(action);
                 break;
+            case CARD_SPIN:
+                cardSpin2(action.playerID, action.cards);
+                break;
+            case GIVE_Hand:
+                saveGottenHands(action.playerID, action.cards);
+                break;
+            case DO_CardSpin:
+                cardspincount++;
+                doingCardSpin();
+                break;
         }
     }
 
@@ -138,7 +148,7 @@ public class GameController {
                 gA = new GameActions(GameActions.actions.NEXT_PLAYER, aID);
                 update();
             } else {
-                List<Card> cards = new LinkedList<>();
+                LinkedList<Card> cards = new LinkedList<>();
                 if (deck.isEmptyDeck()) {
                     deck.replaceTakeDeck();
                 }
@@ -155,7 +165,7 @@ public class GameController {
     }
 
     void drawCardAsDuelLoser(int loserID){
-        List<Card> cards = new LinkedList<>();
+        LinkedList<Card> cards = new LinkedList<>();
         if (deck.isEmptyDeck()) {
             deck.replaceTakeDeck();
         }
