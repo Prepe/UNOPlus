@@ -33,7 +33,7 @@ public class GameController {
     DuelData duelData;
     Player looser;
     long[] timestamps;
-    LinkedList<Card> gottenHandsCards = new LinkedList<>();
+    LinkedList<LinkedList<Card>> gottenHandsCards = new LinkedList<>();
     int cardspincount = 0;
 
     //<---------- Method for setting up the Game ---------->
