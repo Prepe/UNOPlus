@@ -22,19 +22,17 @@ import java.util.List;
 //Der GC muss das ObserverInterface implementieren, wichtig für automatische Datenabrfrage (Observer Pattern)
 
 public class GameController {
-    GameViewProt gvp;
+    GameViewProt gvp;       //reference to GameViewPrototype
     PlayerList players;     //reference to all Players in the Game
-    Player player;
     Deck deck;              //reference to the Deck that is used
     GameLogic logic;        //reference to the GameLogic
-    int startingHand = 10;   //Amount of Cards every Player gets at the start of the Game
+    int startingHand = 7;   //Amount of Cards every Player gets at the start of the Game
     float turnTime;         //Turn Timer for the Game
     public GameActions gA;  //Object that gets send to all Players
-    HandCardList hand;
-    boolean[] mustCallUNO;    //
-    boolean[] droppedCard;   //
-    boolean[] tradedCard;   //
-    boolean hasDrawn = false;
+    boolean[] mustCallUNO;  //bool array for players who called uno
+    boolean[] droppedCard;  //bool array for players who cheated with dropped card
+    boolean[] tradedCard;   //bool array for players who cheated with trade card
+    boolean hasDrawn = false; //bool to check if player has already drawn a card
 
     //<---------- Method for setting up the Game ---------->
     public GameController(GameViewProt gvp) {
@@ -59,8 +57,8 @@ public class GameController {
         if (players != null) {
             players.playerCount();
             mustCallUNO = new boolean[players.playerCount()];
-            for (boolean a : mustCallUNO) {
-                a = false;
+            for (boolean b : mustCallUNO) {
+                b = false;
             }
             droppedCard = new boolean[players.playerCount()];
             for (boolean b : droppedCard) {
@@ -68,8 +66,8 @@ public class GameController {
             }
 
             tradedCard = new boolean[players.playerCount()];
-            for (boolean c : tradedCard) {
-                c = false;
+            for (boolean b : tradedCard) {
+                b = false;
             }
         }
 
@@ -204,8 +202,8 @@ public class GameController {
 
     //Method to call Uno
     void callUno(int player) {
-        if (mustCallUNO[player]) {
-            mustCallUNO[player] = false;
+        if (!mustCallUNO[player]) {
+            mustCallUNO[player] = true;
             Log.d("CALLUNO", player + " hat UNO gecalled");
             gA = new GameActions(GameActions.actions.CALL_UNO, player, true);
             update();
@@ -236,12 +234,6 @@ public class GameController {
         }
     }
 
-    //Method to cheat and trade a Card with a Player
-    Card tradeCard(Player player, Card card) {
-        //TODO implement
-
-        return card;
-    }
 
     //<---------- Method for other actions called from GameLogic, CardEffects, etc ---------->
     //Check if a player has won the game by playing his last card
@@ -268,11 +260,13 @@ public class GameController {
         //TODO implement
     }
 
+    // resets the cheats
     void resetCheats() {
         droppedCard[logic.activePlayer.getID()] = false;
         tradedCard[logic.activePlayer.getID()] = false;
     }
 
+    //resets calledUno
     void resetCalledUno() {
         for (int i = 0; i < mustCallUNO.length; i++) {
             mustCallUNO[i] = false;

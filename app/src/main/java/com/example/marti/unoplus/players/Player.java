@@ -7,6 +7,7 @@ import com.example.marti.unoplus.GameStatics;
 import com.example.marti.unoplus.Screens.GameViewProt;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.cards.HandCardList;
+import com.example.marti.unoplus.gameLogicImpl.GameController;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -55,10 +56,6 @@ public class Player {
         return ID;
     }
 
-    public Integer getIDForTrading(Integer ID) {
-        return ID;
-    }
-
     public void initialsiedHandCardCounters(int size) {
         handcardcounter = new int[size];
 
@@ -89,6 +86,7 @@ public class Player {
         this.gameViewProt.writeNetMessage(action);
     }
 
+    //Tell what card has to be dropped
     public void dropCard(Card card) {
         Log.d("GameDebug", "Player threw Card away :" + card.value.toString() + " " + card.color.toString());
         dropCard = card;
@@ -96,13 +94,15 @@ public class Player {
         gameViewProt.writeNetMessage(tam);
     }
 
-    public void callUno() {
+    //Tell which player called uno
+    public void callUno(int player) {
         Log.d("UNOUNO", "CALL UNO UNo");
 
-        GameActions action = new GameActions(GameActions.actions.CALL_UNO, ID);
+        GameActions action = new GameActions(GameActions.actions.CALL_UNO, player);
         gameViewProt.writeNetMessage(action);
     }
 
+    //Tell what card you want to trade and remove it
     public void tradeCard(int tradeTargetID , Card tradedCard) {
         hand.removeCard(tradedCard);
         gameViewProt.removeCardFromHand(tradedCard);
@@ -191,7 +191,6 @@ public class Player {
     //Your intended Card was played so now you can remove it
     void cardPlayed(int ID, Card card) {
         if (checkID(ID)) {
-            //this.handcards.remove(card);
             this.hand.removeCard(card);
             this.gameViewProt.removeCardFromHand(card);
             this.gameViewProt.handChanged(hand.getHand());
@@ -214,17 +213,11 @@ public class Player {
         }
     }
 
-    //Your intended Card couldn't be played
-    void notAllowed(int pID) {
-        if (checkID(pID)) {
-            gameViewProt.toastYourNotAllowed();
-        }
-    }
-
     public boolean hasCard(Card card) {
         return this.hand.getHand().contains(card);
     }
 
+    // Card which will be dropped can now be dropped
     void canDropCard(int playerID, Boolean canDrop) {
         if (canDrop == null) {
             return;
@@ -242,6 +235,7 @@ public class Player {
         }
     }
 
+    // if accepeted card will be traded if not card wont be traded
     void gotCardTrade(int traderID, int tradeTargetID, boolean accepted, Card tradedCard) {
         if(accepted){
             if(activeTrade && traderID == this.ID && tradedwith == tradeTargetID){
@@ -275,7 +269,9 @@ public class Player {
         }
 
         if (canSayUno) {
-            //TODO coreect
+            if (playerID == this.ID && hand.getCount() == 1){
+
+            }
         } else {
             //TODO wrong
         }

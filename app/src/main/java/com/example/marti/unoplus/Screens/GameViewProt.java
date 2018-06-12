@@ -58,15 +58,14 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     PlayedCardView playedCardView;
     ThrowAwayView throwAwayView;
     TradeCardView tradeCardView;
-    Button buttongetcard;
     TextView numCards;
     TextView numCards2;
     SoundManager soundManager;
     public CountDownTimer timer;
     List<Card> card = new LinkedList<>();
     Button unoButton;
-    public PlayerList playerList;
     Vibrator vibrator;
+    ArrayList<String> playersInListView = new ArrayList<>();
 
 
     public GameViewProt() {
@@ -114,17 +113,17 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
         unoButton = findViewById(R.id.unounobutton);
         unoButton.setOnClickListener(handler);
-        ArrayList<String> playersSS = new ArrayList<>();
+
 
         //int playerSize = playerList.playerCount();
         int plsize = 0;
         plsize = playerCountTest(plsize);
         for (int i = 1; i <= 2; i++) {
-            playersSS.add("Player " + i);
+            playersInListView.add("Player " + i);
 
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, playersSS);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_items, playersInListView);
 
         ListView lv = findViewById(R.id.list);
         lv.setAdapter(adapter);
@@ -327,7 +326,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                     break;
 
                 case R.id.unounobutton:
-                    player.callUno();
+                    player.callUno(player.getID());
                     break;
             }
         }

@@ -5,26 +5,14 @@ import com.example.marti.unoplus.Screens.GameViewProt;
 import java.util.LinkedList;
 
 public class PlayerList {
-
     LinkedList<Player> players;
-    private Player active_player;
-    GameViewProt gameViewProt;
-
 
     //String[] player1 = new String[players.size()];
     public void setPlayers(LinkedList<Player> players){
         this.players = players;
     }
 
-    public void removePlayer(String name){
-        //TO DO
-    }
-    
-    public Player getPlayer(String name){
-        return this.active_player;
-    }
-
-
+    // returns the next player
     public Player getNext(Player p){
         int i = players.indexOf(p);
 
@@ -36,6 +24,7 @@ public class PlayerList {
 
     }
 
+    //returns the previous player
     public Player getPrevious(Player p){
         int i = players.indexOf(p);
 

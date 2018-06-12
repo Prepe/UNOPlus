@@ -14,8 +14,7 @@ import com.example.marti.unoplus.players.Player;
 
 public class TradeCardDragListener implements View.OnDragListener {
     public GameViewProt gamescreen = null;
-    public Player player;
-    public GameLogic logic;
+
 
     public TradeCardDragListener(GameViewProt screen)
     {

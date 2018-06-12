@@ -17,9 +17,7 @@ import java.util.Objects;
  * Created by ekzhu on 30.04.2018.
  */
 
-public class HandCardView
-        //implements Comparable<HandCardView>
-{
+public class HandCardView {
     public Card card = null;
     public ImageView view;
 
