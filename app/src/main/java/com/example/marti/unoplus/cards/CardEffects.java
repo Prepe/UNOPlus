@@ -27,9 +27,7 @@ public class CardEffects {
 
     //Method to call the cards effect
     public void cardEffect(Player player, Card cardValue) {
-        if (player == null) {
-            player = gameLogic.getActivePlayer();
-        }
+
         switch (cardValue.getValue()) {
             default:
                 gameLogic.nextPlayer(player);
@@ -54,7 +52,7 @@ public class CardEffects {
                 askForColorWish(player);
                 break;
             case HOT_DROP:
-                hotDrop(player);
+                hotDrop();
                 break;
             case CARD_SPIN:
                 cardSpin(player);
@@ -84,7 +82,6 @@ public class CardEffects {
     //TakeFourChangeColour Card effect method
     private void takeFour() {
         gameLogic.changeCardDrawCount(4);
-
     }
 
     //Reverse Card effect method
@@ -98,8 +95,8 @@ public class CardEffects {
     }
 
     //Hot Drop Card effect method
-    private void hotDrop(Player player) {
-        gameController.gA = new GameActions(GameActions.actions.HOT_DROP, player.getID(), true);
+    private void hotDrop() {
+        gameController.gA = new GameActions(GameActions.actions.HOT_DROP, 0, true);
         gameController.update();
     }
 

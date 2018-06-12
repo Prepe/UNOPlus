@@ -39,6 +39,7 @@ public class GameActions {
     public Boolean check;
     public Card.colors colorWish;
     public boolean gcSend = false;
+    public Long timestamp;
 
     //Used to update all players to what card was last played and who is currently the active player
     public GameActions (actions action, Card card, int nextPID) {
@@ -108,5 +109,12 @@ public class GameActions {
         this.action = action;
         playerID = pID;
         nextPlayerID = opponentPID;
+    }
+
+    //Constructor for HotDrop
+    public GameActions(actions action, int pID, long timestamp){
+        this.action = action;
+        playerID = pID;
+        this.timestamp = timestamp;
     }
 }

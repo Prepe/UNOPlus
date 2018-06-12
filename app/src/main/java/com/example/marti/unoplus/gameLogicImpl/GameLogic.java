@@ -74,6 +74,7 @@ public class GameLogic {
     * */
     public Player nextPlayer(Player player) {
         if (player == null) {
+            skip = false;
             return null;
         }
 

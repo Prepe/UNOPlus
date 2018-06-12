@@ -31,6 +31,8 @@ public class GameController {
     boolean[] tradedCard;   //
     boolean hasDrawn = false;
     DuelData duelData;
+    Player looser;
+    long[] timestamps;
 
     //<---------- Method for setting up the Game ---------->
     public GameController(GameViewProt gvp) {
@@ -60,6 +62,7 @@ public class GameController {
                 b = false;
             }
             //tradedCard = new boolean[players.playerCount()];
+            timestamps = new long[players.playerCount()];
         }
 
         deck.shuffle();
@@ -102,7 +105,7 @@ public class GameController {
                 colorWish(action.playerID, action.colorWish);
                 break;
             case HOT_DROP:
-                hotDrop(action.playerID, action.check);
+                hotDrop(action.playerID, action.timestamp);
                 break;
             case DUEL_START:
                 startDuel(action);
@@ -110,7 +113,6 @@ public class GameController {
             case DUEL_OPPONENT:
                 endDuel(action);
                 break;
-
         }
     }
 
@@ -118,13 +120,6 @@ public class GameController {
     public void update() {
         if (gA.action == GameActions.actions.NEXT_PLAYER) {
             resetCheats();
-        }
-        if(logic.lastCardValue == Card.values.HOT_DROP){
-            gvp.toastStartHotDrop();
-            LinkedList<Player> allPlayers = players.getPlayers();
-            for(Player p : allPlayers){
-                p.timer(true);
-            }
         }
         gA.gcSend = true;
         gvp.updateAllConnected(gA);
@@ -162,13 +157,15 @@ public class GameController {
         if (deck.isEmptyDeck()) {
             deck.replaceTakeDeck();
         }
-        int count = 1;
+        int count = logic.getCardDrawCount();
         for (int i = 0; i < count; i++) {
             cards.add(deck.draw());
         }
 
         gA = new GameActions(GameActions.actions.DRAW_CARD, loserID, cards);
         update();
+
+        logic.nextPlayer(logic.getActivePlayer());
     }
 
     //Method for playing cards
@@ -221,54 +218,26 @@ public class GameController {
         return card;
     }
 
-    void hotDrop(int player, boolean check){
-        LinkedList<Player> allPlayers = players.getPlayers();
-        gvp = new GameViewProt();
-        //gvp.updateForHotDrop();
-        gA = new GameActions(GameActions.actions.HOT_DROP, player);
-        update();
+    void hotDrop(int player, long timestamp){
+        timestamps[player] = timestamp;
 
-        //Wait until everyone pressed the button
-        /*try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
-
-        //Check if everyone pressed the button, otherwise we can't check who was the last one
-        for(Player p : allPlayers){
-            while(!gvp.getButtonPressed()){
+        for (int i = 0; i < timestamps.length; i++) {
+            if(timestamps[i] == 0){
+                return;
             }
         }
 
-        //Check who was the last one
-        Player firstPlayer = players.getFirst();
-        int worstTime = firstPlayer.getMillSecs();
-        Player looser = firstPlayer;
-        for(Player p : allPlayers){
-            int playersTime = p.getMillSecs();
-            p.playerTime();
-            if(playersTime > worstTime){
-                worstTime = playersTime;
-                looser = p;
+        int slowestPlayer = 0;
+        for (int i = 1; i < timestamps.length; i++) {
+            if(timestamps[i] > timestamps[slowestPlayer]){
+                slowestPlayer = i;
             }
         }
 
-        looser.lostHotDrop();
+        timestamps = new long[timestamps.length];
 
-        //Looser gets 2 cards
-        for(int i = 0; i < 2; i++) {
-            looser.drawCard();
-            //gA = new GameActions(GameActions.actions.DRAW_CARD, looser.getID(), true);
-        }
-
-        //Reset the timer of each player
-        for(Player p : allPlayers){
-            p.resetTimer();
-        }
-
-        /*Player p = logic.getActivePlayer();
-        logic.nextPlayer(p);*/
+        logic.cardDrawCount = 2;
+        drawCardAsDuelLoser(slowestPlayer);
     }
 
     //<---------- Method for other actions called from GameLogic, CardEffects, etc ---------->
@@ -285,6 +254,9 @@ public class GameController {
     //Playing the top card of the deck without GameLogic
     public void playTopCard() {
         Card topCard = deck.draw();
+        while (topCard.color == Card.colors.WILD) {
+            topCard = deck.draw();
+        }
         logic.playTopCard(topCard);
     }
 
