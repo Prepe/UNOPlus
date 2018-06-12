@@ -22,6 +22,7 @@ public class Player {
     int[] handcardcounter;
     HandCardList hand;
     Card dropCard;
+    boolean cardSpinStart = false;
 
     //Variables needed for the Hot-Drop-Feature
     int seconds = 0;
@@ -142,6 +143,18 @@ public class Player {
                 if (action.playerID == this.ID) {
                     this.gameViewProt.duelOpponentDialog(action.nextPlayerID);
                 }
+                break;
+            case CARD_SPIN:
+                cardSpin(action);
+                //giveHand();
+                break;
+            case GOT_Hand:
+                GameActions ga  = new GameActions(GameActions.actions.DO_CardSpin,ID);
+                gameViewProt.writeNetMessage(ga);
+                hand.removeHand();
+                break;
+            case GET_NEWHand:
+                setNewHand(action.playerID,(LinkedList)action.cards);
                 break;
         }
     }
@@ -286,5 +299,60 @@ public class Player {
         GameActions win = new GameActions(GameActions.actions.GAME_FINISH, ID, true);
         gameViewProt.writeNetMessage(win);
         gameViewProt.toastGameFinished(ID);
+    }
+
+    public void giveHand (){
+
+        GameActions ga  = new GameActions(GameActions.actions.GIVE_Hand,ID,hand.getHand());
+        gameViewProt.writeNetMessage(ga);
+
+
+    }
+    public void setNewHand (int id, LinkedList<Card> cards){
+
+        if(id == ID){
+
+            for (Card card:cards) {
+                hand.addCard(card);
+            }
+        }
+
+    }
+    void cardSpin(GameActions action) {
+        if (action.playerID == ID) {
+            Log.d("PLAYER","Called CardSpin");
+            LinkedList<Card> temp = new LinkedList<>();
+            if (!cardSpinStart) {
+                Log.d("PLAYER", "Saving old Hand");
+                cardSpinStart = true;
+                temp = hand.getHand();
+                hand.removeHand();
+            }
+
+            if (action.cards != null) {
+                Log.d ("PLAYER","Override Hand");
+                cardSpinStart = false;
+                for (int i = 0; i < action.cards.size(); i++) {
+                    hand.addCard(action.cards.get(i));
+                }
+                handcardcounter[ID] = hand.getCount();
+                gameViewProt.handChanged(hand.getHand());
+            }
+
+            if (temp.size() != 0) {
+                Log.d ("PLAYER", "Sending old Hand");
+                gameViewProt.writeNetMessage(new GameActions(GameActions.actions.CARD_SPIN, ID, temp));
+            } else {
+                Log.d ("PLAYER", "Card Spin Finished");
+                gameViewProt.writeNetMessage(new GameActions(GameActions.actions.CARD_SPIN, ID, true));
+            }
+        } else {
+            Log.d("PLAYER","Not my GA");
+            if (action.cards != null) {
+                Log.d("PLAYER", "UPDATE");
+                handcardcounter[action.playerID] = action.cards.size();
+            }
+        }
+        gameViewProt.updateCountersInView();
     }
 }

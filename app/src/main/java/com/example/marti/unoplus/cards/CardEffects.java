@@ -100,79 +100,15 @@ public class CardEffects {
         gameController.update();
     }
 
-    private void cardSpin(Player player) {
-
-        PlayerList players = gameLogic.getPlayerList();
-
-        LinkedList<Card> cards;
-
-        Player activePlayer = gameLogic.getActivePlayer();
-
-        Integer activeID = activePlayer.getID();
-
-        if (gameLogic.checkifreversed()) {
-
-            cards = activePlayer.getHand();
-            int i = activeID;
-            int count = 0;
-
-
-            Player givingPlayer;
-            Player gettingPlayer;
-            while (count < players.playerCount()-1) {
-                gettingPlayer = players.getPlayer(i);
-                givingPlayer = players.getPrevious(gettingPlayer);
-
-                gettingPlayer.setHand(givingPlayer.getHand());
-
-                if (i == 0) {
-                    i = players.playerCount();
-                } else {
-                    i--;
-                }
-                count++;
-            }
-
-            activePlayer.setHand(cards);
-
-            //players.getNext(players.getPlayer(i)).setHand(players.getPlayer(i).getHand());
-
-
-        } else {
-
-            cards = activePlayer.getHand();
-            int i = activeID;
-            int count = 0;
-
-
-            Player givingPlayer;
-            Player gettingPlayer;
-            while (count < players.playerCount()-1) {
-                gettingPlayer = players.getPlayer(i);
-                givingPlayer = players.getPrevious(gettingPlayer);
-
-                gettingPlayer.setHand(givingPlayer.getHand());
-
-                if (i == 0) {
-                    i = players.playerCount();
-                } else {
-                    i--;
-                }
-                count++;
-            }
-
-            activePlayer.setHand(cards);
-
-        }
-
-        gameController.gA = new GameActions(GameActions.actions.CARD_SPIN, player.getID(),true );
-        gameController.update();
-    }
 
     private void startDuel(Player player){
         if (player != null) {
             gameController.gA = new GameActions(GameActions.actions.DUEL_START, player.getID(), true);
             gameController.update();
         }
+    }
+    private void cardSpin(Player player) {
+        gameController.gA = new GameActions(GameActions.actions.CARD_SPIN, player.getID(),true );
+        gameController.update();
     }
 }

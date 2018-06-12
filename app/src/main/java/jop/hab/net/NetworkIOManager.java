@@ -15,6 +15,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.LinkedList;
 
 /**
  * Created by jopihabich on 15.04.18.
@@ -44,6 +45,7 @@ public class NetworkIOManager {
 
     String testText;
     GameActions gameAction;
+    LinkedList<GameActions> actions = new LinkedList<>();
     int countready = 0;
     int numclients;
 
@@ -67,14 +69,17 @@ public class NetworkIOManager {
     public void setHostAdress(String hostAdress) {
         this.hostAdress = hostAdress;
     }
-    public void setNumclients(int numclients){this.numclients = numclients;}
+
+    public void setNumclients(int numclients) {
+        this.numclients = numclients;
+    }
 
     public String getTestText() {
         return testText;
     }
 
-    public GameActions getGameAction() {
-        return gameAction;
+    public LinkedList<GameActions> getGameAction() {
+        return actions;
     }
 
     public void open() {
@@ -96,8 +101,11 @@ public class NetworkIOManager {
 
 
     public void writeGameaction(GameActions gameAction) {
-
-
+        try {
+            Thread.sleep(0);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setLenient();
         Gson gson = gsonBuilder.create();
@@ -107,44 +115,52 @@ public class NetworkIOManager {
         Log.d("GSON Senden", GameActionString);
 
         sendReceive.write(GameActionString.getBytes());
-
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-
-        }
     }
 
-    public GameActions receiveGameaction(String gameActionString) {
+    public LinkedList<GameActions> receiveGameaction(String gameActionString) {
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setLenient();
         Gson gson = gsonBuilder.create();
+        LinkedList<String> gameactions = new LinkedList<>();
 
+        Log.d("split", "Splitting1");
+        int helper = 0;
+        for (int i = 0; i < gameActionString.length() - 1; i++) {
+            char char1 = gameActionString.charAt(i);
+            char char2 = gameActionString.charAt(i + 1);
+            if ('}' == char1 && '{' == char2) {
+                Log.d("split", "Splitting2");
+                gameactions.add(gameActionString.substring(helper, i+1));
+                helper = i + 1;
+            }
+        }
+        gameactions.add(gameActionString.substring(helper));
 
-        try {
-
-            gameAction = gson.fromJson(gameActionString, GameActions.class);
-            Log.d("GAMEACTION", gameAction.action.toString());
-
-
-        } catch (Exception e) {
-
-            Log.e("JSon error", "error");
+        for (int i = 0; i < gameactions.size(); i++) {
+            Log.d ("Action", gameactions.get(i));
+            try {
+                actions.add(gson.fromJson(gameactions.get(i), GameActions.class));
+                Log.d("GAMEACTION", gameAction.action.toString());
+            } catch (Exception e) {
+                Log.e("JSon error", "error");
+            }
         }
 
-        return gameAction;
+        return actions;
     }
-    public void writeReady (){
 
+    public void updatesProcessed() {
+        actions = new LinkedList<>();
+    }
+
+    public void writeReady() {
         String ready = "ready";
         sendReceive.write(ready.getBytes());
-
     }
 
-    public boolean waitforClientsreadyingup (){
-        while (countready!= numclients){
+    public boolean waitforClientsreadyingup() {
+        while (countready != numclients) {
             try {
                 Thread.sleep(20);
             } catch (InterruptedException e) {
@@ -159,39 +175,19 @@ public class NetworkIOManager {
     Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-
-
-
             switch (msg.what) {
-
                 case MESSAGE_READ:
                     byte[] readBuffer = (byte[]) msg.obj;
                     String tmpmsg = new String(readBuffer, 0, msg.arg1);
-
-                    if (!tmpmsg.equals("ready")){
-
-                    Log.d("JSon Empfangen", tmpmsg);
-
-                    gameAction = receiveGameaction(tmpmsg);
-
-
-                    //versteh ich nicht:
-//                       callGameController(gameAction);
-
-
-                    //wenn Daten über den handler empfangen werden, wird Observer informiert.
-                    observerInterface.dataChanged();}
-
-                    else{
+                    if (!tmpmsg.equals("ready")) {
+                        Log.d("JSon Empfangen", tmpmsg);
+                        actions = receiveGameaction(tmpmsg);
+                        observerInterface.dataChanged();
+                    } else {
                         countready++;
-
-
                     }
-
-
                     break;
             }
-
             return true;
         }
     });
@@ -222,8 +218,6 @@ public class NetworkIOManager {
             sendReceive = new SendReceive(socket);
 
             sendReceive.start();
-
-
 
 
         }
