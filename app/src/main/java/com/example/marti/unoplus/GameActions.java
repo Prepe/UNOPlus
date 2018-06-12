@@ -24,7 +24,8 @@ public class GameActions {
         HOT_DROP (11),
         CARD_SPIN(12),
         DUEL_START(13),  //ask for color and opponent by card play
-        DUEL_OPPONENT(14); //response from opponent with color
+        DUEL_OPPONENT(14), //response from opponent with color
+        GIVE_Hand (15);
 
         private int value;
         actions(int value){this.value = value;}

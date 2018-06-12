@@ -22,6 +22,7 @@ public class Player {
     int[] handcardcounter;
     HandCardList hand;
     Card dropCard;
+    boolean cardSpinStart = false;
 
     //Variables needed for the Hot-Drop-Feature
     int seconds = 0;
@@ -286,5 +287,44 @@ public class Player {
         GameActions win = new GameActions(GameActions.actions.GAME_FINISH, ID, true);
         gameViewProt.writeNetMessage(win);
         gameViewProt.toastGameFinished(ID);
+    }
+
+    public void giveHand (){
+
+        GameActions ga  = new GameActions(GameActions.actions.GIVE_Hand,ID,hand.getHand());
+        gameViewProt.writeNetMessage(ga);
+
+
+    }
+    public void setNewHand (int id, LinkedList<Card> cards){
+
+        if(id == ID){
+
+            for (Card card:cards) {
+                hand.addCard(card);
+            }
+        }
+
+    }
+    void cardSpin(GameActions action) {
+        if (action.playerID == ID) {
+            if (!cardSpinStart) {
+                cardSpinStart = true;
+                gameViewProt.writeNetMessage(new GameActions(GameActions.actions.CARD_SPIN, ID, hand.getHand()));
+                hand.removeHand();
+            }
+
+            if (action.cards != null) {
+                cardSpinStart = false;
+                for (int i = 0; i < action.cards.size(); i++) {
+                    hand.addCard(action.cards.get(i));
+                }
+                handcardcounter[ID] = hand.getCount();
+            }
+        } else {
+            if (action.cards != null) {
+                handcardcounter[action.playerID] = action.cards.size();
+            }
+        }
     }
 }
