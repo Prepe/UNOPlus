@@ -25,7 +25,9 @@ public class GameActions {
         CARD_SPIN(12),
         DUEL_START(13),  //ask for color and opponent by card play
         DUEL_OPPONENT(14), //response from opponent with color
-        GIVE_Hand (15);
+        GIVE_Hand (15),
+        GET_NEWHand(16),
+        GOT_Hand(17);
 
         private int value;
         actions(int value){this.value = value;}

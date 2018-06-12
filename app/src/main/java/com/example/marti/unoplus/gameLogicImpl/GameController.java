@@ -33,6 +33,8 @@ public class GameController {
     DuelData duelData;
     Player looser;
     long[] timestamps;
+    LinkedList<Card> gottenHandsCards = new LinkedList<>();
+    int cardspincount = 0;
 
     //<---------- Method for setting up the Game ---------->
     public GameController(GameViewProt gvp) {
@@ -284,4 +286,121 @@ public class GameController {
         drawCardAsDuelLoser(loserID);
 
     }
+
+
+    private void cardSpin(int id) {
+        gA = new GameActions(GameActions.actions.CARD_SPIN, id);
+        update();
+    }
+    void cardSpin2 (int playerID, LinkedList<Card> cards) {
+        int resivingPlayerID;
+
+        if (logic.reverse) {
+            resivingPlayerID = players.getPrevious(players.getPlayer(playerID)).getID();
+        } else {
+            resivingPlayerID = players.getNext(players.getPlayer(playerID)).getID();
+        }
+
+        gA = new GameActions(GameActions.actions.CARD_SPIN, resivingPlayerID,cards);
+        update();
+    }
+
+    private void saveGottenHands(int id, LinkedList<Card> cards) {
+        gottenHandsCards.add(id, cards);
+
+        gA = new GameActions(GameActions.actions.GOT_Hand, id);
+        update();
+    }
+
+    private void doingCardSpin() {
+
+        if (cardspincount==gottenHandsCards.size()){
+
+            if (logic.checkifreversed()) {
+
+
+                for (int i = 0; i < gottenHandsCards.size(); i++) {
+
+                    LinkedList<Card> newCards = gottenHandsCards.get(i);
+                    int id = i;
+                    if (id == 0) {
+                        id = gottenHandsCards.size() - 1;
+                    } else {
+                        id--;
+                    }
+
+
+                    gA = new GameActions(GameActions.actions.GET_NEWHand, id, newCards);
+                    update();
+
+                }
+
+           /*
+            Player givingPlayer;
+            Player gettingPlayer;
+            while (count < players.playerCount()-1) {
+                gettingPlayer = players.getPlayer(i);
+                givingPlayer = players.getPrevious(gettingPlayer);
+
+                gettingPlayer.setHand(givingPlayer.getHand());
+
+                if (i == 0) {
+                    i = players.playerCount();
+                } else {
+                    i--;
+                }
+                count++;
+            }
+
+            activePlayer.setHand(cards);
+
+            //players.getNext(players.getPlayer(i)).setHand(players.getPlayer(i).getHand());*/
+
+
+            } else {
+
+                for (int i = 0; i < gottenHandsCards.size(); i++) {
+
+                    LinkedList<Card> newCards = gottenHandsCards.get(i);
+                    int id = i;
+                    if (id == gottenHandsCards.size() - 1) {
+                        id = 0;
+                    } else {
+                        id--;
+                    }
+
+
+                    gA = new GameActions(GameActions.actions.GET_NEWHand, id, newCards);
+                    update();
+
+
+            /* cards = activePlayer.getHand();
+            int i = activeID;
+            int count = 0;
+
+
+            Player givingPlayer;
+            Player gettingPlayer;
+            while (count < players.playerCount()-1) {
+                gettingPlayer = players.getPlayer(i);
+                givingPlayer = players.getPrevious(gettingPlayer);
+
+                gettingPlayer.setHand(givingPlayer.getHand());
+
+                if (i == 0) {
+                    i = players.playerCount();
+                } else {
+                    i--;
+                }
+                count++;
+            }
+
+            activePlayer.setHand(cards);
+*/
+
+
+                }
+
+            }
+        }}
 }
