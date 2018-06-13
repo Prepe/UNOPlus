@@ -77,7 +77,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     boolean[] readyAll;
     LinkedList<Player> tempPlayers;
     int playerCount;
-  
+
     public GameViewProt() {
         super();
         this.handCards = new ArrayList<>();
@@ -188,9 +188,10 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         if (actionsToProcess == null) {
             Log.e("GVP", "Reseved Actions where NULL");
             return;
+        }
 
         if (actionsToProcess.size() == 0) {
-            Log.e ("GVP", "Reseved Actions where 0");
+            Log.e("GVP", "Reseved Actions where 0");
             return;
         }
 
@@ -205,8 +206,9 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             } else {
                 handleUpdate(recievedGA);
             }
-        recievedGA = null;
-        NIOmanager.updatesProcessed();
+            recievedGA = null;
+            NIOmanager.updatesProcessed();
+        }
     }
 
     boolean specialUpdate(GameActions action) {
@@ -219,7 +221,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             toastGameFinished(action.playerID);
             return true;
         }
-      
+
         return false;
     }
 
@@ -285,24 +287,33 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
             playerCount = numClients;
 
-            Log.d("HOST","NumPlayers: " + playerCount);
-            NIOmanager.writeGameaction(new GameActions(GameActions.actions.INIT_PLAYER, 0, 0, false));
-
-        } else {
-            Log.d ("CLIENT", "Generating tempID");
-            double random = Math.random() * 10 + 1;
-            double tempID = 1;
-            for (int i = 0; i < random; i++) {
-                double rand = Math.random()*10;
-                tempID += random + rand;
+            while (NIOmanager.isNotReady()) {
+                NIOmanager.open();
                 try {
-                    Thread.sleep((int)tempID%5);
+                    Thread.sleep(10);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
 
-            player = new Player((int)(tempID*10000000));
+            Log.d("HOST", "NumPlayers: " + playerCount);
+            NIOmanager.writeGameaction(new GameActions(GameActions.actions.INIT_PLAYER, 0, 0, false));
+
+        } else {
+            Log.d("CLIENT", "Generating tempID");
+            double random = Math.random() * 10 + 1;
+            double tempID = 1;
+            for (int i = 0; i < random; i++) {
+                double rand = Math.random() * 10;
+                tempID += random + rand;
+                try {
+                    Thread.sleep((int) tempID % 5);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            player = new Player((int) (tempID * 1000));
             player.setGV(this);
             Log.d("CLIENT", "tempID: " + player.getID());
         }
@@ -311,29 +322,30 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     void initPlayer(GameActions action) {
         if (!isGameController) {
             if (action.check) {
-                Log.d("CLIENT", "playerID" + player.getID());
-                if (action.playerID == player.getID()) {
+                Log.d("CLIENT", "playerID: " + player.getID());
+                Log.d("CLIENT", "ID in Action: " + action.playerID);
+                if (action.playerID.equals(player.getID())) {
                     if (action.nextPlayerID > 0) {
                         Log.d("CLIENT", "Setting new ID");
                         player.setID(action.nextPlayerID);
                         return;
                     }
-                    Log.d("CLIENT","ID <= 0");
+                    Log.d("CLIENT", "ID <= 0");
                     return;
                 }
-                Log.d("CLIENT","Not my ID");
+                Log.d("CLIENT", "Not my ID");
                 return;
             } else {
                 Log.d("CLIENT", "Asking for new ID");
                 NIOmanager.writeGameaction(new GameActions(GameActions.actions.INIT_PLAYER, player.getID(), 0, true));
                 return;
             }
-        } else if (action.playerID != 0 && action.nextPlayerID == 0){
+        } else if (action.playerID != 0 && action.nextPlayerID == 0 && !action.gcSend) {
             Log.d("HOST", "Give Player (ID: " + action.playerID + ") a new ID");
             gameInit(action.playerID);
             return;
         }
-        Log.d("INIT_PLAYER","FIX ME");
+        Log.d("INIT_PLAYER", "FIX ME");
         return;
     }
 
@@ -341,13 +353,14 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         int nextID = tempPlayers.size();
         Player temp = new Player(nextID);
         tempPlayers.add(temp);
-        NIOmanager.writeGameaction(new GameActions(GameActions.actions.INIT_PLAYER, tempID, nextID, true));
+        GameActions tempA = new GameActions(GameActions.actions.INIT_PLAYER, tempID, nextID, true);
+        tempA.gcSend = true;
+        NIOmanager.writeGameaction(tempA);
         Log.d("PLAYER_SETUP", "Added new Player: " + temp.getID());
 
         if (nextID == playerCount) {
             PlayerList pl = new PlayerList();
             pl.setPlayers(tempPlayers);
-            tempPlayers.clear();
 
             Log.d("PLAYER_SETUP", "Setup Playerlist finished");
             gameSetUp(pl);
@@ -431,40 +444,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         }
     }
 
-    //Visualy add Cards to player hand
-    public void addCardToHand(Card card) {
-        //soundManager.playSound(Sounds.DRAWCARD);
-        HandCardView cardview = new HandCardView(GameViewProt.this, this, card);
-        this.handCards.add(cardview);
-
-        LinearLayout handBox = findViewById(R.id.playerHandLayout);
-        handBox.addView(cardview.view);
-
-        /*// gets the handCardViews
-        int cardViewsCount = handBox.getChildCount();
-        View[] cardViews = new View[cardViewsCount];
-
-        for(int i = 0; i < cardViewsCount; i++)
-            cardViews[i] = handBox.getChildAt(i);
-
-        //sorts the cardViews array
-        Arrays.sort(cardViews, new Comparator<View>() {
-            @Override
-            public int compare(View card1, View card2) {
-                HandCardView Card1 = (HandCardView) card1.getTag();
-                HandCardView Card2 = (HandCardView) card2.getTag();
-                return Card1.compareTo(Card2);
-            }
-        });
-
-        //after sorting remove all handCards and add sorted handCardViews
-        handBox.removeAllViews();
-
-        for(int  i = 0; i < cardViewsCount; i++)
-            handBox.addView(cardViews[i]);
-            */
-    }
-
     //Visualy remove Cards to player hand
     public void removeCardFromHand(Card card) {
         if (GameStatics.devMode) {
@@ -537,11 +516,11 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                         }
                     }
                 })
-          .create();
+                .create();
         d.setCanceledOnTouchOutside(false);
         d.show();
     }
-  
+
     public void startDuel() {
         Dialog d = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
                 .setTitle("Such eine Farbe für Duel aus!")
@@ -624,7 +603,8 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
     void finishTradeOffer(int playerToTrade, Card c) {
         if (playerToTrade != player.getID()) {
-            player.tradeCard(playerToTrade,c);;
+            player.tradeCard(playerToTrade, c);
+            ;
         } else {
             toastTradeError();
         }
