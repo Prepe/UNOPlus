@@ -30,7 +30,8 @@ public class GameActions {
         GIVE_Hand (15),
         GET_NEWHand(16),
         GOT_Hand(17),
-        DO_CardSpin(18);
+        DO_CardSpin(18),
+        INIT_PLAYER(19);
 
         private int value;
         actions(int value){this.value = value;}
@@ -131,5 +132,13 @@ public class GameActions {
         this.action = action;
         playerID = pID;
         this.timestamp = timestamp;
+    }
+  
+    //Used to for INIT_PLAYERS
+    public GameActions(actions action, int pID, int nPID, boolean check) {
+        this.action = action;
+        playerID = pID;
+        nextPlayerID = nPID;
+        this.check = check;
     }
 }

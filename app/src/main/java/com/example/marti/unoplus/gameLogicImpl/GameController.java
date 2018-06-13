@@ -228,7 +228,6 @@ public class GameController {
         }
     }
 
-
     //Method to cheat and drop a Card
     void dropCard(int player) {
         if (!droppedCard[player] && player != logic.activePlayer.getID()) {
@@ -472,5 +471,25 @@ public class GameController {
 
             }
         }
+    }
+
+    void accusePlayer(int accusingPlayerID, int accusedPlayerID) {
+        if (droppedCard[accusedPlayerID] || tradedCard[accusedPlayerID]) {
+            droppedCard[accusedPlayerID] = false;
+            tradedCard[accusedPlayerID] = false;
+
+            logic.cardDrawCount = 2;
+            drawCard(accusedPlayerID);
+            return;
+        }
+        if (calledUNO[accusedPlayerID]) {
+            calledUNO[accusedPlayerID] = false;
+
+            logic.cardDrawCount = 2;
+            drawCard(accusedPlayerID);
+            return;
+        }
+
+        drawCard(accusingPlayerID);
     }
 }
