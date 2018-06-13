@@ -83,9 +83,7 @@ public class NetworkIOManager {
     }
 
     public void open() {
-
         if (MODE_IS_SERVER) {
-
             serverClass = new ServerClass();
             serverClass.start();
             Log.d("@mode", MODE_IS_SERVER + "");
@@ -93,10 +91,7 @@ public class NetworkIOManager {
             clientClass = new ClientClass(hostAdress);
             clientClass.start();
             Log.d("@mode", MODE_IS_SERVER + "");
-
         }
-
-
     }
 
 
@@ -106,6 +101,7 @@ public class NetworkIOManager {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setLenient();
         Gson gson = gsonBuilder.create();
@@ -113,7 +109,6 @@ public class NetworkIOManager {
         String GameActionString = gson.toJson(gameAction);
 
         Log.d("GSON Senden", GameActionString);
-
         sendReceive.write(GameActionString.getBytes());
     }
 
@@ -131,14 +126,14 @@ public class NetworkIOManager {
             char char2 = gameActionString.charAt(i + 1);
             if ('}' == char1 && '{' == char2) {
                 Log.d("split", "Splitting2");
-                gameactions.add(gameActionString.substring(helper, i+1));
+                gameactions.add(gameActionString.substring(helper, i + 1));
                 helper = i + 1;
             }
         }
         gameactions.add(gameActionString.substring(helper));
 
         for (int i = 0; i < gameactions.size(); i++) {
-            Log.d ("Action", gameactions.get(i));
+            Log.d("Action", gameactions.get(i));
             try {
                 actions.add(gson.fromJson(gameactions.get(i), GameActions.class));
                 Log.d("GAMEACTION", gameAction.action.toString());
@@ -156,7 +151,7 @@ public class NetworkIOManager {
 
     public void writeReady() {
         String ready = "ready";
-        sendReceive.write(ready.getBytes());
+        //sendReceive.write(ready.getBytes());
     }
 
     public boolean waitforClientsreadyingup() {
@@ -194,22 +189,16 @@ public class NetworkIOManager {
 
 
     public class ServerClass extends Thread {
-
         Socket socket;
         ServerSocket serverSocket;
 
         @Override
         public void run() {
-
-
             Log.d("@serverclass", "Serverclass running");
-
             try {
 //                    Log.d("socket",serverSocket.toString());
                 serverSocket = new ServerSocket(8888);
                 socket = serverSocket.accept();
-
-
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.d("@error", "sc catched");
@@ -218,22 +207,15 @@ public class NetworkIOManager {
             sendReceive = new SendReceive(socket);
 
             sendReceive.start();
-
-
         }
     }
 
     private class SendReceive extends Thread {
-
-
         private Socket socket;
         private InputStream inputStream;
         private OutputStream outputStream;
 
-
         public SendReceive(Socket socket) {
-
-
             this.socket = socket;
 
             try {
@@ -245,7 +227,6 @@ public class NetworkIOManager {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
 
 
@@ -266,34 +247,30 @@ public class NetworkIOManager {
             int bytes;
 
             while (socket != null) {
-
-                try {
-                    bytes = inputStream.read(buffer);
-                    if (bytes > 0) {
-
-                        handler.obtainMessage(MESSAGE_READ, bytes, -1, buffer).sendToTarget();
-
-
+                if (inputStream != null) {
+                    try {
+                        bytes = inputStream.read(buffer);
+                        if (bytes > 0) {
+                            handler.obtainMessage(MESSAGE_READ, bytes, -1, buffer).sendToTarget();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
-
-
             }
-
-
         }
 
-
         public void write(byte[] bytes) {
-
             try {
-
                 Log.d("@write", bytes.toString());
-
                 outputStream.write(bytes);
             } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                sleep(100);
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
