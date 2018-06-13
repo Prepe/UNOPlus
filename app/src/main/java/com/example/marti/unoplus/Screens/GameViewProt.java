@@ -75,6 +75,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     Vibrator vibrator;
     ArrayList<String> playersInListView = new ArrayList<>();
     boolean buttonPressed = false;
+    boolean[] readyAll;
 
     public GameViewProt() {
         super();
@@ -316,7 +317,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             player.setGV(this);
 
             try {
-                Thread.sleep(1000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
