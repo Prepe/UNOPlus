@@ -22,6 +22,7 @@ public class GameActions {
         GAME_FINISH (8),
         THROW_CARD(9),
         THROW_CARD_CONFIRM (10),
+        CALL_UNO(19),
         HOT_DROP (11),
         CARD_SPIN(12),
         DUEL_START(13),  //ask for color and opponent by card play
@@ -100,6 +101,14 @@ public class GameActions {
         playerID = pID;
         this.check = check;
     }
+
+    //Used for cheat action trade Card
+    public GameActions(actions action, int pID,  int nextPID, Card card, boolean check) {
+        this.action = action;
+        playerID = pID;
+        this.nextPlayerID = nextPID;
+        this.card = card;
+        this.check = check;
 
     //Constructor for startDuel_Request
     public GameActions(actions action, int pID, int opponentPID, Card.colors color) {
