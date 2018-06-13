@@ -51,6 +51,11 @@ public class Deck {
     private void buildDeck() {
         createNormalCards();
         createWildCards();
+
+        createHotDrop();
+        createDuel();
+        createCardSpin();
+
         /*
         Collections.shuffle(takedeck.deck);
         System.out.println(this.takedeck.deck.size() + " cards created and put in takedeck");
@@ -77,6 +82,36 @@ public class Deck {
         for (int i = 0; i < 4; i++) {
             for (int x = 0; x < 2; x++) {
                 int action = (x == 0) ? 13 : 14;
+                //takedeck.deck.add(new Card(5, action));
+                deck.add(new Card(4, action));
+            }
+        }
+    }
+
+    private void createHotDrop() {
+        for (int i = 0; i < 4; i++) {
+            for (int x = 0; x < 2; x++) {
+                int action = 15;
+                //takedeck.deck.add(new Card(5, action));
+                deck.add(new Card(4, action));
+            }
+        }
+    }
+
+    private void createDuel() {
+        for (int i = 0; i < 4; i++) {
+            for (int x = 0; x < 2; x++) {
+                int action = 16;
+                //takedeck.deck.add(new Card(5, action));
+                deck.add(new Card(4, action));
+            }
+        }
+    }
+
+    private void createCardSpin() {
+        for (int i = 0; i < 4; i++) {
+            for (int x = 0; x < 2; x++) {
+                int action = 17;
                 //takedeck.deck.add(new Card(5, action));
                 deck.add(new Card(4, action));
             }

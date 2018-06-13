@@ -2,6 +2,7 @@ package com.example.marti.unoplus;
 
 import com.example.marti.unoplus.cards.Card;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -21,7 +22,15 @@ public class GameActions {
         GAME_FINISH (8),
         THROW_CARD(9),
         THROW_CARD_CONFIRM (10),
-        CALL_UNO(11);
+        CALL_UNO(19),
+        HOT_DROP (11),
+        CARD_SPIN(12),
+        DUEL_START(13),  //ask for color and opponent by card play
+        DUEL_OPPONENT(14), //response from opponent with color
+        GIVE_Hand (15),
+        GET_NEWHand(16),
+        GOT_Hand(17),
+        DO_CardSpin(18);
 
         private int value;
         actions(int value){this.value = value;}
@@ -32,10 +41,11 @@ public class GameActions {
     public Integer nextPlayerID;
     public String countCards;
     public Card card;
-    public List<Card> cards;
+    public LinkedList<Card> cards;
     public Boolean check;
     public Card.colors colorWish;
     public boolean gcSend = false;
+    public Long timestamp;
 
     //Used to update all players to what card was last played and who is currently the active player
     public GameActions (actions action, Card card, int nextPID) {
@@ -72,7 +82,7 @@ public class GameActions {
     }
 
     //Used to give 1 player a number of card from the deck
-    public GameActions(actions action, int pID, List<Card> drawnCards) {
+    public GameActions(actions action, int pID, LinkedList<Card> drawnCards) {
         this.action = action;
         playerID = pID;
         cards = drawnCards;
@@ -99,5 +109,26 @@ public class GameActions {
         this.nextPlayerID = nextPID;
         this.card = card;
         this.check = check;
+
+    //Constructor for startDuel_Request
+    public GameActions(actions action, int pID, int opponentPID, Card.colors color) {
+        this.action = action;
+        playerID = pID;
+        nextPlayerID = opponentPID;
+        colorWish = color;
+    }
+
+    //Constructor for startDuel_Response
+    public GameActions(actions action, int pID, int opponentPID) {
+        this.action = action;
+        playerID = pID;
+        nextPlayerID = opponentPID;
+    }
+
+    //Constructor for HotDrop
+    public GameActions(actions action, int pID, long timestamp){
+        this.action = action;
+        playerID = pID;
+        this.timestamp = timestamp;
     }
 }

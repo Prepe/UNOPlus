@@ -1,5 +1,6 @@
 package com.example.marti.unoplus.players;
 
+import android.os.Handler;
 import android.util.Log;
 
 import com.example.marti.unoplus.GameActions;
@@ -25,6 +26,12 @@ public class Player {
     Card tradeCard;
     int tradedwith;
     boolean activeTrade;
+    boolean cardSpinStart = false;
+
+    //Variables needed for the Hot-Drop-Feature
+    int seconds = 0;
+    boolean startRun = true;
+    int millsecs = 0;
 
     public Player(Integer id) {
         ID = id;
@@ -40,8 +47,13 @@ public class Player {
         ID = id;
     }
 
-    public List<Card> getHand() {
+    public LinkedList<Card> getHand() {
         return this.handcards;
+    }
+
+    public void setHand(LinkedList<Card> cards){
+        handcards = cards;
+
     }
 
     public int getHandSize() {
@@ -64,6 +76,7 @@ public class Player {
     public int[] getHandcardcounter() {
         return handcardcounter;
     }
+
 
     //<---------- Player Actions ---------->
     //Ask for Cards
@@ -149,10 +162,33 @@ public class Player {
             case TRADE_CARD:
                 this.gotCardTrade(action.playerID, action.nextPlayerID, action.check, action.card);
                 break;
+            case HOT_DROP:
+                this.gameViewProt.hotDrop();
+                break;
+            case DUEL_START:
+                if (action.playerID == this.ID) {
+                    this.gameViewProt.startDuel();
+                }
+                break;
+            case DUEL_OPPONENT:
+                if (action.playerID == this.ID) {
+                    this.gameViewProt.duelOpponentDialog(action.nextPlayerID);
+                }
+                break;
+            case CARD_SPIN:
+                cardSpin(action);
+                //giveHand();
+                break;
+            case GOT_Hand:
+                GameActions ga  = new GameActions(GameActions.actions.DO_CardSpin,ID);
+                gameViewProt.writeNetMessage(ga);
+                hand.removeHand();
+                break;
+            case GET_NEWHand:
+                setNewHand(action.playerID,(LinkedList)action.cards);
+                break;
         }
     }
-
-
 
     //Check if the GA is for you
     boolean checkID(int pID) {
@@ -202,7 +238,6 @@ public class Player {
         } else {
             updateHandCardCounter(-1, ID);
         }
-
         updateLastCard(card);
     }
 
@@ -251,7 +286,6 @@ public class Player {
             LinkedList<Card> temp = new LinkedList<>();
             temp.add(tradedCard);
             gotCard(traderID, temp);
-
         } else {
             Log.d("TRADE_CARRD", "Player " + traderID + " wasnts to trade with Player " + tradeTargetID);
             updateHandCardCounter(-1, traderID);
@@ -275,6 +309,38 @@ public class Player {
         } else {
             //TODO wrong
         }
+
+    //Timer for each player when Hot-Drop-Card is played
+    public void timer(final boolean startRun){
+        final Handler handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                millsecs = seconds/1000;
+
+                if(startRun) {
+                    seconds++;
+                }
+                handler.postDelayed(this, 100);
+            }
+        });
+    }
+
+    public void resetTimer(){
+        startRun = true;
+        seconds = 0;
+    }
+
+    public int getMillSecs(){
+        return this.millsecs;
+    }
+
+    public void lostHotDrop(){
+        gameViewProt.toastEndHotDropLooser();
+    }
+
+    public void playerTime(){
+        gameViewProt.toastPlayersTime();
     }
 
     //<---------- Misc ---------->
@@ -312,5 +378,58 @@ public class Player {
     public void declineTrade(int traderID, Card tradedCard){
         GameActions trade = new GameActions(GameActions.actions.TRADE_CARD,traderID,  ID, tradedCard,  true);
         gameViewProt.writeNetMessage(trade);
+
+    public void giveHand (){
+        GameActions ga  = new GameActions(GameActions.actions.GIVE_Hand,ID,hand.getHand());
+        gameViewProt.writeNetMessage(ga);
+    }
+      
+    public void setNewHand (int id, LinkedList<Card> cards){
+
+        if(id == ID){
+
+            for (Card card:cards) {
+                hand.addCard(card);
+            }
+        }
+
+    }
+      
+    void cardSpin(GameActions action) {
+        if (action.playerID == ID) {
+            Log.d("PLAYER","Called CardSpin");
+            LinkedList<Card> temp = new LinkedList<>();
+            if (!cardSpinStart) {
+                Log.d("PLAYER", "Saving old Hand");
+                cardSpinStart = true;
+                temp = hand.getHand();
+                hand.removeHand();
+            }
+
+            if (action.cards != null) {
+                Log.d ("PLAYER","Override Hand");
+                cardSpinStart = false;
+                for (int i = 0; i < action.cards.size(); i++) {
+                    hand.addCard(action.cards.get(i));
+                }
+                handcardcounter[ID] = hand.getCount();
+                gameViewProt.handChanged(hand.getHand());
+            }
+
+            if (temp.size() != 0) {
+                Log.d ("PLAYER", "Sending old Hand");
+                gameViewProt.writeNetMessage(new GameActions(GameActions.actions.CARD_SPIN, ID, temp));
+            } else {
+                Log.d ("PLAYER", "Card Spin Finished");
+                gameViewProt.writeNetMessage(new GameActions(GameActions.actions.CARD_SPIN, ID, true));
+            }
+        } else {
+            Log.d("PLAYER","Not my GA");
+            if (action.cards != null) {
+                Log.d("PLAYER", "UPDATE");
+                handcardcounter[action.playerID] = action.cards.size();
+            }
+        }
+        gameViewProt.updateCountersInView();
     }
 }
