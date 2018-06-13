@@ -235,6 +235,15 @@ public class PlayedCardView {
                 case CHOOSE_COLOR:
                     pic = this.view.getResources().getDrawable(R.drawable.all_all);
                     break;
+                case HOT_DROP:
+                    pic = this.view.getResources().getDrawable(R.drawable.hotspot);
+                    break;
+                case DUEL:
+                    pic = this.view.getResources().getDrawable(R.drawable.duel);
+                    break;
+                case CARD_SPIN:
+                    pic = this.view.getResources().getDrawable(R.drawable.spin);
+                    break;
                 default:
                     pic = this.view.getResources().getDrawable(R.drawable.card_back);
                     break;

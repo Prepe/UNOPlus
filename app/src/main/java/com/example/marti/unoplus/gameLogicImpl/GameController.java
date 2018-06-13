@@ -1,9 +1,12 @@
 package com.example.marti.unoplus.gameLogicImpl;
 
+import android.util.Log;
+
 import com.example.marti.unoplus.GameActions;
 import com.example.marti.unoplus.Screens.GameViewProt;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.cards.Deck;
+import com.example.marti.unoplus.cards.HandCardList;
 import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.players.PlayerList;
 
@@ -19,17 +22,22 @@ import java.util.List;
 //Der GC muss das ObserverInterface implementieren, wichtig für automatische Datenabrfrage (Observer Pattern)
 
 public class GameController {
-    GameViewProt gvp;
+    GameViewProt gvp;       //reference to GameViewPrototype
     PlayerList players;     //reference to all Players in the Game
     Deck deck;              //reference to the Deck that is used
     GameLogic logic;        //reference to the GameLogic
-    int startingHand = 10;   //Amount of Cards every Player gets at the start of the Game
+    int startingHand = 7;   //Amount of Cards every Player gets at the start of the Game
     float turnTime;         //Turn Timer for the Game
     public GameActions gA;  //Object that gets send to all Players
-    boolean[] calledUNO;    //
-    boolean[] droppedCard;   //
-    boolean[] tradedCard;   //
-    boolean hasDrawn = false;
+    boolean[] mustCallUNO;  //bool array for players who called uno
+    boolean[] droppedCard;  //bool array for players who cheated with dropped card
+    boolean[] tradedCard;   //bool array for players who cheated with trade card
+    boolean hasDrawn = false; //bool to check if player has already drawn a card
+    DuelData duelData;
+    Player looser;
+    long[] timestamps;
+    LinkedList<LinkedList<Card>> gottenHandsCards = new LinkedList<>();
+    int cardspincount = 0;
 
     //<---------- Method for setting up the Game ---------->
     public GameController(GameViewProt gvp) {
@@ -53,12 +61,21 @@ public class GameController {
 
         if (players != null) {
             players.playerCount();
-            //calledUNO = new boolean[players.playerCount()];
+            mustCallUNO = new boolean[players.playerCount()];
+            for (boolean b : mustCallUNO) {
+                b = false;
+            }
             droppedCard = new boolean[players.playerCount()];
             for (boolean b : droppedCard) {
                 b = false;
             }
+            tradedCard = new boolean[players.playerCount()];
+            for (boolean b : tradedCard) {
+                b = false;
+            }
+          
             //tradedCard = new boolean[players.playerCount()];
+            timestamps = new long[players.playerCount()];
         }
 
         deck.shuffle();
@@ -70,7 +87,7 @@ public class GameController {
     //Drawing handcards for all players
     private void drawHandCardsForPlayers() {
         for (int j = 0; j < players.playerCount(); j++) {
-            List<Card> handcards = new LinkedList<>();
+            LinkedList<Card> handcards = new LinkedList<>();
             for (int i = 0; i < startingHand; i++) {
                 handcards.add(deck.draw());
             }
@@ -92,13 +109,35 @@ public class GameController {
                 dropCard(action.nextPlayerID);
                 break;
             case TRADE_CARD:
-                //GC.tradeCard();
+                tradeCard(action.playerID, action.nextPlayerID, action.card, action.check);
                 break;
             case PLAY_CARD:
-                playCard(action.playerID, action.card);
+                playCard(action.playerID, action.card, action.check);
                 break;
             case WISH_COLOR:
                 colorWish(action.playerID, action.colorWish);
+                break;
+            case CALL_UNO:
+                callUno(action.nextPlayerID);
+                break;
+            case HOT_DROP:
+                hotDrop(action.playerID, action.timestamp);
+                break;
+            case DUEL_START:
+                startDuel(action);
+                break;
+            case DUEL_OPPONENT:
+                endDuel(action);
+                break;
+            case CARD_SPIN:
+                cardSpin2(action);
+                break;
+            case GIVE_Hand:
+                saveGottenHands(action.playerID, action.cards);
+                break;
+            case DO_CardSpin:
+                cardspincount++;
+                doingCardSpin();
                 break;
         }
     }
@@ -107,6 +146,7 @@ public class GameController {
     public void update() {
         if (gA.action == GameActions.actions.NEXT_PLAYER) {
             resetCheats();
+            resetCalledUno();
         }
         gA.gcSend = true;
         gvp.updateAllConnected(gA);
@@ -123,7 +163,8 @@ public class GameController {
                 gA = new GameActions(GameActions.actions.NEXT_PLAYER, aID);
                 update();
             } else {
-                List<Card> cards = new LinkedList<>();
+                resetCalledUno();
+                LinkedList<Card> cards = new LinkedList<>();
                 if (deck.isEmptyDeck()) {
                     deck.replaceTakeDeck();
                 }
@@ -139,11 +180,29 @@ public class GameController {
         }
     }
 
+    void drawCardAsDuelLoser(int loserID){
+        LinkedList<Card> cards = new LinkedList<>();
+        if (deck.isEmptyDeck()) {
+            deck.replaceTakeDeck();
+        }
+        int count = logic.getCardDrawCount();
+        for (int i = 0; i < count; i++) {
+            cards.add(deck.draw());
+        }
+
+        gA = new GameActions(GameActions.actions.DRAW_CARD, loserID, cards);
+        update();
+
+        logic.nextPlayer(logic.getActivePlayer());
+    }
+
     //Method for playing cards
-    void playCard(int player, Card card) {
+    void playCard(int player, Card card, boolean has1Card) {
         Player p = players.getPlayer(player);
         //Check if player is allowed to play the card
         if (logic.checkCard(card, p)) {
+            resetCalledUno();
+            mustCallUNO[player] = has1Card;
             hasDrawn = false;
             //Remove the played card from the players hand and update Players
             gA = new GameActions(GameActions.actions.PLAY_CARD, player, card, true);
@@ -178,14 +237,64 @@ public class GameController {
         } else {
             gA = new GameActions(GameActions.actions.DROP_CARD, player, false);
             update();
+            this.gvp.toastCantTrade();
         }
     }
 
-    //Method to cheat and trade a Card with a Player
-    Card tradeCard(Player player, Card card) {
-        //TODO implement
+    //Method to call Uno
+    void callUno(int player) {
+        if (!mustCallUNO[player]) {
+            mustCallUNO[player] = true;
+            Log.d("CALLUNO", player + " hat UNO gecalled");
+            gA = new GameActions(GameActions.actions.CALL_UNO, player, true);
+            update();
+        } else {
+            gA = new GameActions(GameActions.actions.CALL_UNO, player, false);
+            update();
+            drawCard(player);
+        }
 
-        return card;
+    }
+  
+    //Method to trade Card with other players
+    void tradeCard(int traderID, int tradeTargetID, Card tradedCard, boolean accepted) {
+        if (accepted) {
+            Log.d("GC", "Got Trade-Action");
+            gA = new GameActions(GameActions.actions.TRADE_CARD, traderID, tradeTargetID, tradedCard, accepted);
+            update();
+        } else {
+            if (this.tradedCard[traderID] && traderID == logic.activePlayer.getID()) {
+                gA = new GameActions(GameActions.actions.TRADE_CARD, traderID, traderID, tradedCard, true);
+                update();
+            } else {
+                Log.d("GC", "Got Trade-Action");
+                this.tradedCard[traderID] = true;
+                gA = new GameActions(GameActions.actions.TRADE_CARD, traderID, tradeTargetID, tradedCard, accepted);
+                update();
+            }
+        }
+    }
+
+    void hotDrop(int player, long timestamp){
+        timestamps[player] = timestamp;
+
+        for (int i = 0; i < timestamps.length; i++) {
+            if(timestamps[i] == 0){
+                return;
+            }
+        }
+
+        int slowestPlayer = 0;
+        for (int i = 1; i < timestamps.length; i++) {
+            if(timestamps[i] > timestamps[slowestPlayer]){
+                slowestPlayer = i;
+            }
+        }
+
+        timestamps = new long[timestamps.length];
+
+        logic.cardDrawCount = 2;
+        drawCardAsDuelLoser(slowestPlayer);
     }
 
     //<---------- Method for other actions called from GameLogic, CardEffects, etc ---------->
@@ -202,6 +311,9 @@ public class GameController {
     //Playing the top card of the deck without GameLogic
     public void playTopCard() {
         Card topCard = deck.draw();
+        while (topCard.color == Card.colors.WILD) {
+            topCard = deck.draw();
+        }
         logic.playTopCard(topCard);
     }
 
@@ -213,8 +325,152 @@ public class GameController {
         //TODO implement
     }
 
+    // resets the cheats
     void resetCheats() {
         droppedCard[logic.activePlayer.getID()] = false;
+        tradedCard[logic.activePlayer.getID()] = false;
+    }
+
+    //resets calledUno
+    void resetCalledUno() {
+        for (int i = 0; i < mustCallUNO.length; i++) {
+            mustCallUNO[i] = false;
+        }
+    }
+
+    private void startDuel(GameActions action) {
+        this.duelData = new DuelData(action.playerID, action.nextPlayerID, action.colorWish);
+        gA = new GameActions(GameActions.actions.DUEL_OPPONENT, action.nextPlayerID, action.playerID);
+        update();
+    }
+
+    private void endDuel(GameActions action) {
+        int loserID = this.duelData.getDuelLoserID(action.colorWish);
+        this.duelData = null;
+        drawCardAsDuelLoser(loserID);
+
+    }
+
+
+    private void cardSpin(int id) {
+        gA = new GameActions(GameActions.actions.CARD_SPIN, id);
+        update();
+    }
+    void cardSpin2 (GameActions action) {
+        if (action.check == null) {
+            int playerID = action.playerID;
+            LinkedList<Card> cards = action.cards;
+            int resivingPlayerID;
+
+            if (logic.reverse) {
+                resivingPlayerID = players.getPrevious(players.getPlayer(playerID)).getID();
+            } else {
+                resivingPlayerID = players.getNext(players.getPlayer(playerID)).getID();
+            }
+
+            gA = new GameActions(GameActions.actions.CARD_SPIN, resivingPlayerID, cards);
+            update();
+        } else {
+            logic.nextPlayer(players.getPlayer(action.playerID));
+        }
+    }
+
+    private void saveGottenHands(int id, LinkedList<Card> cards) {
+        gottenHandsCards.add(id, cards);
+
+        gA = new GameActions(GameActions.actions.GOT_Hand, id);
+        update();
+    }
+
+    private void doingCardSpin() {
+
+        if (cardspincount==gottenHandsCards.size()){
+
+            if (logic.checkifreversed()) {
+
+
+                for (int i = 0; i < gottenHandsCards.size(); i++) {
+
+                    LinkedList<Card> newCards = gottenHandsCards.get(i);
+                    int id = i;
+                    if (id == 0) {
+                        id = gottenHandsCards.size() - 1;
+                    } else {
+                        id--;
+                    }
+
+
+                    gA = new GameActions(GameActions.actions.GET_NEWHand, id, newCards);
+                    update();
+
+                }
+
+           /*
+            Player givingPlayer;
+            Player gettingPlayer;
+            while (count < players.playerCount()-1) {
+                gettingPlayer = players.getPlayer(i);
+                givingPlayer = players.getPrevious(gettingPlayer);
+
+                gettingPlayer.setHand(givingPlayer.getHand());
+
+                if (i == 0) {
+                    i = players.playerCount();
+                } else {
+                    i--;
+                }
+                count++;
+            }
+
+            activePlayer.setHand(cards);
+
+            //players.getNext(players.getPlayer(i)).setHand(players.getPlayer(i).getHand());*/
+
+
+            } else {
+
+                for (int i = 0; i < gottenHandsCards.size(); i++) {
+
+                    LinkedList<Card> newCards = gottenHandsCards.get(i);
+                    int id = i;
+                    if (id == gottenHandsCards.size() - 1) {
+                        id = 0;
+                    } else {
+                        id--;
+                    }
+
+
+                    gA = new GameActions(GameActions.actions.GET_NEWHand, id, newCards);
+                    update();
+
+
+            /* cards = activePlayer.getHand();
+            int i = activeID;
+            int count = 0;
+
+
+            Player givingPlayer;
+            Player gettingPlayer;
+            while (count < players.playerCount()-1) {
+                gettingPlayer = players.getPlayer(i);
+                givingPlayer = players.getPrevious(gettingPlayer);
+
+                gettingPlayer.setHand(givingPlayer.getHand());
+
+                if (i == 0) {
+                    i = players.playerCount();
+                } else {
+                    i--;
+                }
+                count++;
+            }
+
+            activePlayer.setHand(cards);
+*/
+                }
+
+            }
+        }
     }
 
     void accusePlayer(int accusingPlayerID, int accusedPlayerID) {

@@ -1,11 +1,14 @@
 package com.example.marti.unoplus.gameLogicImpl;
 
 import com.example.marti.unoplus.GameActions;
+import com.example.marti.unoplus.Screens.GameViewProt;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.cards.CardEffects;
 import com.example.marti.unoplus.cards.Deck;
 import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.players.PlayerList;
+
+import java.util.LinkedList;
 
 public class GameLogic {
     PlayerList playerList;      //reference to all Players
@@ -18,6 +21,7 @@ public class GameLogic {
     Card.values lastCardValue;  //The value of the card that is on top of the discard pile
     Card.colors lastCardColor;  //The color of the card that is on top of the discard pile
     GameController controller;
+    GameViewProt gvp;
 
     public GameLogic(PlayerList pL, Deck gameDeck, GameController gc) {
         controller = gc;
@@ -70,7 +74,7 @@ public class GameLogic {
     * */
     public Player nextPlayer(Player player) {
         if (player == null) {
-            return null;
+            player = activePlayer;
         }
 
         if (reverse) {
@@ -177,7 +181,7 @@ public class GameLogic {
         effects.cardEffect(null, topCard);
     }
 
-    //Tels the game to skip the next player
+    //Tells the game to skip the next player
     public void skipNext() {
         skip = true;
     }
@@ -195,5 +199,15 @@ public class GameLogic {
     public void wishColor(Card.colors colorWish) {
         lastCardColor = colorWish;
         lastCardValue = Card.values.CHOOSE_COLOR;
+    }
+
+    public PlayerList getPlayerList (){
+        return playerList;
+    }
+
+    public boolean checkifreversed (){
+
+
+        return reverse;
     }
 }

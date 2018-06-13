@@ -20,4 +20,5 @@
     <string name="connection_status">Connection Status</string>
     <string name="discover">discover</string>
     <string name="title_activity_game_view_prot">GameViewProt</string>
+    <color name="UserWhite">#FFFFFF</color>
 </resources>

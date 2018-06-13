@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
@@ -30,16 +31,23 @@ import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.cards.HandCardView;
 import com.example.marti.unoplus.cards.PlayedCardView;
 import com.example.marti.unoplus.cards.ThrowAwayView;
+import com.example.marti.unoplus.cards.TradeCardView;
 import com.example.marti.unoplus.gameLogicImpl.GameController;
 import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.players.PlayerList;
 import com.example.marti.unoplus.sound.SoundManager;
 
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Date;
 
 import jop.hab.net.NetworkIOManager;
 import jop.hab.net.ObserverInterface;
@@ -56,21 +64,24 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     ArrayList<HandCardView> handCards;
     PlayedCardView playedCardView;
     ThrowAwayView throwAwayView;
-    Button buttongetcard;
+    TradeCardView tradeCardView;
+    Button buttongetcard, hotDropButton;
     TextView numCards;
     TextView numCards2;
     SoundManager soundManager;
     public CountDownTimer timer;
     Button unoButton;
     Vibrator vibrator;
+    ArrayList<String> playersInListView = new ArrayList<>();
+    boolean buttonPressed = false;
+    boolean[] readyAll;
     LinkedList<Player> tempPlayers;
     int playerCount;
-
+  
     public GameViewProt() {
         super();
         this.handCards = new ArrayList<>();
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,17 +122,16 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
         unoButton = findViewById(R.id.unounobutton);
         unoButton.setOnClickListener(handler);
-        ArrayList<String> playersSS = new ArrayList<>();
+
 
         //int playerSize = playerList.playerCount();
         int plsize = 0;
         plsize = playerCountTest(plsize);
         for (int i = 1; i <= 2; i++) {
-            playersSS.add("Player " + i);
-
+            playersInListView.add("Player " + i);
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, playersSS);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_items, playersInListView);
 
         ListView lv = findViewById(R.id.list);
         lv.setAdapter(adapter);
@@ -160,11 +170,9 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
             @Override
             public void onFinish() {
-                player.drawCardIfTimesUp();
-
                 Toast.makeText(getApplicationContext(), "ZEIT VORBEI! Karte gezogen", Toast.LENGTH_LONG).show();
-                //timeUp(context);    eventuell so oder mit TOAST
                 timer.cancel();
+                player.drawCard();
             }
 
             @Override
@@ -176,25 +184,29 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
     @Override
     public void dataChanged() {
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        LinkedList<GameActions> actionsToProcess = NIOmanager.getGameAction();
+        if (actionsToProcess == null) {
+            Log.e("GVP", "Reseved Actions where NULL");
+            return;
 
+        if (actionsToProcess.size() == 0) {
+            Log.e ("GVP", "Reseved Actions where 0");
+            return;
         }
 
-        recievedGA = NIOmanager.getGameAction();
-
-        TextView tv = findViewById(R.id.netmessage);
-        tv.setText(recievedGA.action.name());
-        Log.d("GCP_Action", recievedGA.action.name());
-
-        if (specialUpdate(recievedGA)) {
-            Log.d("GCP_Action", recievedGA.action.name());
-        } else {
-            handleUpdate(recievedGA);
-        }
-
+        for (int i = 0; i < actionsToProcess.size(); i++) {
+            recievedGA = actionsToProcess.get(i);
+            TextView tv = (TextView) findViewById(R.id.netmessage);
+            tv.setText(recievedGA.action.toString());
+            Log.d("GCP_Action", recievedGA.action.toString());
+            //TODO change placeholder player ID
+            if (specialUpdate(recievedGA)) {
+                Log.d("GCP_Action", recievedGA.action.toString());
+            } else {
+                handleUpdate(recievedGA);
+            }
+        recievedGA = null;
+        NIOmanager.updatesProcessed();
     }
 
     boolean specialUpdate(GameActions action) {
@@ -203,13 +215,11 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             initPlayer(action);
             return true;
         }
-
         if (action.action.equals(GameActions.actions.GAME_FINISH)) {
             toastGameFinished(action.playerID);
-
             return true;
         }
-
+      
         return false;
     }
 
@@ -254,12 +264,12 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         this.playedCardView.updateCard(null);
 
         this.throwAwayView = new ThrowAwayView(this.getApplicationContext(), this);
-
+        this.tradeCardView = new TradeCardView(this.getApplicationContext(), this);
 
         if (mode.equals("server")) {
 
             try {
-                Thread.sleep(7000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -270,6 +280,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             tempPlayers = new LinkedList<>();
             player = new Player(0);
             player.setGV(this);
+
             tempPlayers.add(player);
 
             playerCount = numClients;
@@ -294,13 +305,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             player = new Player((int)(tempID*10000000));
             player.setGV(this);
             Log.d("CLIENT", "tempID: " + player.getID());
-
-            try {
-                Thread.sleep(4000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
         }
     }
 
@@ -372,11 +376,15 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                     break;
 
                 case R.id.unounobutton:
-                    Toast.makeText(getApplicationContext(), "Uno!!", Toast.LENGTH_SHORT).show();
+                    player.callUno(player.getID());
                     break;
             }
         }
     };
+
+    public boolean getButtonPressed() {
+        return this.buttonPressed;
+    }
 
     //<--------- View Updates --------->
     //Player sends an action
@@ -398,6 +406,11 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
         numCards.setText("( " + hcc[0] + " )");
         numCards2.setText("( " + hcc[1] + " )");
+    }
+
+    public void updateForHotDrop() {
+        toastStartHotDrop();
+        player.timer(true);
     }
 
     public void handChanged(LinkedList<Card> hand) {
@@ -452,11 +465,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             */
     }
 
-    public void deleteViews() {
-
-    }
-
-
     //Visualy remove Cards to player hand
     public void removeCardFromHand(Card card) {
         if (GameStatics.devMode) {
@@ -505,7 +513,136 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 .create();
         d.setCanceledOnTouchOutside(false);
         d.show();
+    }
 
+    //Method to choose Player with which you want to trade a card
+    public void choosePlayer(final Card c) {
+        Dialog d = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
+                .setTitle("Such einen Player aus, mit dem du tauschen willst!")
+                .setItems(new String[]{"Player 1", "Player 2", "Player 3", "Player 4"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dlg, int position) {
+                        if (position == 0) {
+                            finishTradeOffer(0, c);
+                            dlg.cancel();
+                        } else if (position == 1) {
+                            finishTradeOffer(1, c);
+                            dlg.cancel();
+                        } else if (position == 2) {
+                            finishTradeOffer(2, c);
+                            dlg.cancel();
+                        } else if (position == 3) {
+                            finishTradeOffer(3, c);
+                            dlg.cancel();
+                        }
+                    }
+                })
+          .create();
+        d.setCanceledOnTouchOutside(false);
+        d.show();
+    }
+  
+    public void startDuel() {
+        Dialog d = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
+                .setTitle("Such eine Farbe für Duel aus!")
+                .setItems(new String[]{"Rot", "Blau", "Gelb", "Grün"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dlg, int position) {
+                        if (position == 0) {
+                            dlg.cancel();
+                            startDuel_chooseOpponent(Card.colors.RED);
+                        } else if (position == 1) {
+                            dlg.cancel();
+                            startDuel_chooseOpponent(Card.colors.BLUE);
+                        } else if (position == 2) {
+                            dlg.cancel();
+                            startDuel_chooseOpponent(Card.colors.YELLOW);
+                        } else if (position == 3) {
+                            dlg.cancel();
+                            startDuel_chooseOpponent(Card.colors.GREEN);
+                        }
+                    }
+                })
+                .create();
+        d.setCanceledOnTouchOutside(false);
+        d.show();
+
+    }
+
+    private void startDuel_chooseOpponent(final Card.colors color) {
+        Dialog d = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
+                .setTitle("Such einen Opponent aus!")
+                .setItems(new String[]{"Player 1", "Player 2", "Player 3", "Player 4"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dlg, int position) {
+                        if (position == 0) {
+                            writeNetMessage(new GameActions(GameActions.actions.DUEL_START, player.getID(), 0, color));
+                            dlg.cancel();
+                        } else if (position == 1) {
+                            writeNetMessage(new GameActions(GameActions.actions.DUEL_START, player.getID(), 1, color));
+                            dlg.cancel();
+                        } else if (position == 2) {
+                            writeNetMessage(new GameActions(GameActions.actions.DUEL_START, player.getID(), 2, color));
+                            dlg.cancel();
+                        } else if (position == 3) {
+                            writeNetMessage(new GameActions(GameActions.actions.DUEL_START, player.getID(), 3, color));
+                            dlg.cancel();
+                        }
+                    }
+                })
+                .create();
+        d.setCanceledOnTouchOutside(false);
+        d.show();
+    }
+
+    public void duelOpponentDialog(int duelStarterID) {
+        Dialog d = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
+                .setTitle("Spieler" + duelStarterID + "fordert dich zum Duel heraus. Such eine Farbe aus!")
+                .setItems(new String[]{"Rot", "Blau", "Gelb", "Grün"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dlg, int position) {
+                        if (position == 0) {
+                            dlg.cancel();
+                            writeNetMessage(new GameActions(GameActions.actions.DUEL_OPPONENT, player.getID(), Card.colors.RED));
+                        } else if (position == 1) {
+                            dlg.cancel();
+                            writeNetMessage(new GameActions(GameActions.actions.DUEL_OPPONENT, player.getID(), Card.colors.BLUE));
+                            ;
+                        } else if (position == 2) {
+                            dlg.cancel();
+                            writeNetMessage(new GameActions(GameActions.actions.DUEL_OPPONENT, player.getID(), Card.colors.YELLOW));
+                        } else if (position == 3) {
+                            dlg.cancel();
+                            writeNetMessage(new GameActions(GameActions.actions.DUEL_OPPONENT, player.getID(), Card.colors.GREEN));
+                        }
+                    }
+                })
+                .create();
+        d.setCanceledOnTouchOutside(true);
+        d.show();
+    }
+
+    void finishTradeOffer(int playerToTrade, Card c) {
+        if (playerToTrade != player.getID()) {
+            player.tradeCard(playerToTrade,c);;
+        } else {
+            toastTradeError();
+        }
+    }
+
+    public void hotDrop() {
+        final long timer = System.currentTimeMillis();
+        Dialog d = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
+                .setItems(new String[]{"Klicke schnell!"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dlg, int position) {
+                        writeNetMessage(new GameActions(GameActions.actions.HOT_DROP, player.getID(), System.currentTimeMillis() - timer));
+                        dlg.cancel();
+                    }
+                })
+                .create();
+        d.setCanceledOnTouchOutside(false);
+        d.show();
     }
 
     void endGame() {
@@ -523,10 +660,24 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         Toast.makeText(getApplicationContext(), "Konnte Karte nicht spielen!", Toast.LENGTH_SHORT).show();
     }
 
+    public void toastYourNotAllowed() {
+        Toast.makeText(getApplicationContext(), "Du besitzt mehr als 1 Karte!", Toast.LENGTH_SHORT).show();
+    }
+
+    public void toastCantTrade() {
+        Toast.makeText(getApplicationContext(), "Du darfst nicht cheaten!", Toast.LENGTH_SHORT).show();
+    }
+
+    void toastTradeError() {
+        Toast.makeText(getApplicationContext(), "Du kannst nicht mit dir selbst Tauschen!", Toast.LENGTH_SHORT).show();
+    }
+
+    public void toastAlreadyTraded() {
+        Toast.makeText(getApplicationContext(), "Du hast schon getauscht!", Toast.LENGTH_SHORT).show();
+    }
+
     public void toastGameFinished(int pID) {
         Log.d("GAME_END", "Sieger ist Spieler " + (pID + 1) + " mit der ID: " + pID);
-
-        String text;
 
         if (player.getID() == pID) {
             Intent intent = new Intent(getApplicationContext(), WinnerScreen.class);
@@ -537,15 +688,19 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             intent.putExtra("pID", pID + 1);
             startActivity(intent);
         }
+    }
 
-        /*
-        Dialog d = new AlertDialog.Builder(this,AlertDialog.THEME_HOLO_LIGHT)
-                .setTitle(text)
-                .setItems(new String[]{"Ende"}, new DialogInterface.OnClickListener() {
+    public void tradeOffer(final int traderID, final Card tradedCard) {
+        Dialog d = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
+                .setTitle("Willst du eine Karte tauschen?")
+                .setItems(new String[]{"JA", "NEIN"}, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dlg, int position) {
                         if (position == 0) {
-                            endGame();
+                            player.acceptTrade(player.getID(), tradedCard);
+                            dlg.cancel();
+                        } else if (position == 1) {
+                            player.declineTrade(traderID, tradedCard);
                             dlg.cancel();
                         }
                     }
@@ -553,6 +708,17 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 .create();
         d.setCanceledOnTouchOutside(false);
         d.show();
-        */
+    }
+
+    public void toastStartHotDrop() {
+        Toast.makeText(getApplicationContext(), "Klicke auf den 'Hot Drop' Button!", Toast.LENGTH_SHORT).show();
+    }
+
+    public void toastEndHotDropLooser() {
+        Toast.makeText(getApplicationContext(), "Du warst leider zu langsam! +2 Karten", Toast.LENGTH_SHORT).show();
+    }
+
+    public void toastPlayersTime() {
+        Toast.makeText(getApplicationContext(), "Deine Zeit: " + player.getMillSecs() + " Millisekunden", Toast.LENGTH_SHORT).show();
     }
 }

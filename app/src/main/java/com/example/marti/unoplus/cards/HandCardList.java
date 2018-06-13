@@ -94,4 +94,9 @@ public class HandCardList {
             first = pointer.getPrev();
         }
     }
+
+    public void removeHand (){
+        first = null;
+        last = null;
+    }
 }
