@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
@@ -35,11 +36,17 @@ import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.players.PlayerList;
 import com.example.marti.unoplus.sound.SoundManager;
 
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Date;
 
 import jop.hab.net.NetworkIOManager;
 import jop.hab.net.ObserverInterface;
@@ -56,7 +63,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     ArrayList<HandCardView> handCards;
     PlayedCardView playedCardView;
     ThrowAwayView throwAwayView;
-    Button buttongetcard;
+    Button buttongetcard, hotDropButton;
     TextView numCards;
     TextView numCards2;
     SoundManager soundManager;
@@ -65,6 +72,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     Button unoButton;
     public PlayerList playerList;
     Vibrator vibrator;
+    boolean buttonPressed = false;
 
 
     public GameViewProt() {
@@ -88,11 +96,12 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         numCards = (TextView) findViewById(R.id.numCards1);
         numCards2 = (TextView) findViewById(R.id.numCards2);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        hotDropButton = (Button) findViewById(R.id.hotDropButton);
 
         //Hier werden die IP und der Modus über den Intent aus der ConnectionScreen abgefragt
         hostAdress = getIntent().getStringExtra("adress");
         mode = getIntent().getStringExtra("mode");
-        numClients = getIntent().getIntExtra("numofclients",1);
+        numClients = getIntent().getIntExtra("numofclients", 1);
 
         NIOmanager = new NetworkIOManager(this);
         NIOmanager.setMode(mode);
@@ -117,8 +126,8 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         //int playerSize = playerList.playerCount();
         int plsize = 0;
         plsize = playerCountTest(plsize);
-        for(int i = 1; i <= 2; i++ ){
-            playersSS.add("Player "+i);
+        for (int i = 1; i <= 2; i++) {
+            playersSS.add("Player " + i);
 
         }
 
@@ -177,25 +186,31 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
     @Override
     public void dataChanged() {
-        try {
-            Thread.sleep(10);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-
+        LinkedList<GameActions> actionsToProcess = NIOmanager.getGameAction();
+        if (actionsToProcess == null) {
+            Log.e("GVP", "Reseved Actions where NULL");
+            return;
         }
 
-        recievedGA = NIOmanager.getGameAction();
+        if (actionsToProcess.size() == 0) {
+            Log.e ("GVP", "Reseved Actions where 0");
+            return;
+        }
 
-        TextView tv = (TextView) findViewById(R.id.netmessage);
-        tv.setText(recievedGA.action.toString());
-        Log.d("GCP_Action", recievedGA.action.toString());
-        //TODO change placeholder player ID
-        if (specialUpdate(recievedGA)) {
+        for (int i = 0; i < actionsToProcess.size(); i++) {
+            recievedGA = actionsToProcess.get(i);
+            TextView tv = (TextView) findViewById(R.id.netmessage);
+            tv.setText(recievedGA.action.toString());
             Log.d("GCP_Action", recievedGA.action.toString());
-        } else {
-            handleUpdate(recievedGA);
+            //TODO change placeholder player ID
+            if (specialUpdate(recievedGA)) {
+                Log.d("GCP_Action", recievedGA.action.toString());
+            } else {
+                handleUpdate(recievedGA);
+            }
         }
-
+        recievedGA = null;
+        NIOmanager.updatesProcessed();
     }
 
     boolean specialUpdate(GameActions action) {
@@ -235,7 +250,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
         if (!action.gcSend && isGameController) {
             gameController.callGameController(action);
-        } else if (action.gcSend){
+        } else if (action.gcSend) {
             Log.d("player", "callplayer");
             player.callPlayer(action);
         }
@@ -249,9 +264,9 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         //Let the screen be always on.
         //No sleep mode during gameplay.
         ImageView screenOn = this.findViewById(R.id.unostack);
-       if(screenOn != null) {
-           screenOn.setKeepScreenOn(true);
-       }
+        if (screenOn != null) {
+            screenOn.setKeepScreenOn(true);
+        }
 
 
         if (mode.equals("server")) {
@@ -266,7 +281,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         if (mode.equals("server")) {
 
             try {
-                Thread.sleep(7000);
+                Thread.sleep(4000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -289,7 +304,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             Log.d("GC Playerlist", "onStart: ");
             pl.setPlayers(l);
             gameController.setPlayerList(pl);
-            GameActions temp1 = new GameActions(GameActions.actions.INIT_GAME, pl.playerCount() );
+            GameActions temp1 = new GameActions(GameActions.actions.INIT_GAME, pl.playerCount());
             temp1.gcSend = true;
             NIOmanager.writeGameaction(temp1);
             handleUpdate(temp1);
@@ -302,7 +317,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             player.setGV(this);
 
             try {
-                Thread.sleep(5000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -312,12 +327,13 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
     }
 
-    public int playerCountTest (int sizePL) {
+    public int playerCountTest(int sizePL) {
         return sizePL;
     }
+
     View.OnClickListener handler = new View.OnClickListener() {
         public void onClick(View v) {
-            switch (v.getId()){
+            switch (v.getId()) {
                 case R.id.buttongetcard:
                     player.drawCard();
                     break;
@@ -325,36 +341,47 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 case R.id.unounobutton:
                     Toast.makeText(getApplicationContext(), "Uno!!", Toast.LENGTH_SHORT).show();
                     break;
+                case R.id.hotDropButton:
+                    buttonPressed = true;
+                    player.timer(false); //stops timer
+                    break;
             }
         }
     };
 
+    public boolean getButtonPressed() {
+        return this.buttonPressed;
+    }
+
     //<--------- View Updates --------->
     //Player sends an action
-    public void writeNetMessage(GameActions action)
-    {
-        Log.d("player","playeraction");
+    public void writeNetMessage(GameActions action) {
+        Log.d("player", "playeraction");
         this.NIOmanager.writeGameaction(action);
         handleUpdate(action);
     }
 
     //Update the view to show the last played card
-    public void updateCurrentPlayCard(Card card)
-    {
+    public void updateCurrentPlayCard(Card card) {
         Log.d("PVG", card.getColor().toString());
-            this.playedCardView.updateCard(card);
+        this.playedCardView.updateCard(card);
     }
 
     //Update View to show current handCard counters
-    public void updateCountersInView(){
+    public void updateCountersInView() {
         int[] hcc = player.getHandcardcounter();
 
-        numCards.setText("( "+ hcc[0]+ " )");
-        numCards2.setText("( "+ hcc[1]+ " )");
+        numCards.setText("( " + hcc[0] + " )");
+        numCards2.setText("( " + hcc[1] + " )");
+    }
+
+    public void updateForHotDrop() {
+        toastStartHotDrop();
+        player.timer(true);
     }
 
     public void handChanged(LinkedList<Card> hand) {
-        Log.d("Handkarten", hand.size()+"");
+        Log.d("Handkarten", hand.size() + "");
 
         //Clear Hand
         LinearLayout handBox = findViewById(R.id.playerHandLayout);
@@ -405,7 +432,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             */
     }
 
-    public void deleteViews(){
+    public void deleteViews() {
 
     }
 
@@ -435,7 +462,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     //Method to choose color when special card is played
     public void chooseColor() {
 
-        Dialog d = new AlertDialog.Builder(this,AlertDialog.THEME_HOLO_LIGHT)
+        Dialog d = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
                 .setTitle("Such eine Farbe aus!")
                 .setItems(new String[]{"Rot", "Blau", "Gelb", "Grün"}, new DialogInterface.OnClickListener() {
                     @Override
@@ -461,6 +488,96 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
     }
 
+    public void startDuel() {
+        Dialog d = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
+                .setTitle("Such eine Farbe für Duel aus!")
+                .setItems(new String[]{"Rot", "Blau", "Gelb", "Grün"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dlg, int position) {
+                        if (position == 0) {
+                            dlg.cancel();
+                            startDuel_chooseOpponent(Card.colors.RED);
+                        } else if (position == 1) {
+                            dlg.cancel();
+                            startDuel_chooseOpponent(Card.colors.BLUE);
+                        } else if (position == 2) {
+                            dlg.cancel();
+                            startDuel_chooseOpponent(Card.colors.YELLOW);
+                        } else if (position == 3) {
+                            dlg.cancel();
+                            startDuel_chooseOpponent(Card.colors.GREEN);
+                        }
+                    }
+                })
+                .create();
+        d.setCanceledOnTouchOutside(false);
+        d.show();
+
+    }
+
+    private void startDuel_chooseOpponent(final Card.colors color) {
+        Dialog d = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
+                .setTitle("Such einen Opponent aus!")
+                .setItems(new String[]{"Anderer Spieler"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dlg, int position) {
+                        if (position == 0) {
+                            //TODO works for 2 players. Change to use PlayerList
+                            writeNetMessage(new GameActions(GameActions.actions.DUEL_START, player.getID(), (player.getID() + 1) % 2, color));
+                            dlg.cancel();
+                        }
+                    }
+                })
+                .create();
+        d.setCanceledOnTouchOutside(false);
+        d.show();
+    }
+
+    public void duelOpponentDialog(int duelStarterID) {
+        Dialog d = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
+                .setTitle("Spieler" + duelStarterID + "fordert dich zum Duel heraus. Such eine Farbe aus!")
+                .setItems(new String[]{"Rot", "Blau", "Gelb", "Grün"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dlg, int position) {
+                        if (position == 0) {
+                            dlg.cancel();
+                            writeNetMessage(new GameActions(GameActions.actions.DUEL_OPPONENT, player.getID(), Card.colors.RED));
+                        } else if (position == 1) {
+                            dlg.cancel();
+                            writeNetMessage(new GameActions(GameActions.actions.DUEL_OPPONENT, player.getID(), Card.colors.BLUE));
+                            ;
+                        } else if (position == 2) {
+                            dlg.cancel();
+                            writeNetMessage(new GameActions(GameActions.actions.DUEL_OPPONENT, player.getID(), Card.colors.YELLOW));
+                        } else if (position == 3) {
+                            dlg.cancel();
+                            writeNetMessage(new GameActions(GameActions.actions.DUEL_OPPONENT, player.getID(), Card.colors.GREEN));
+                        }
+                    }
+                })
+                .create();
+        d.setCanceledOnTouchOutside(false);
+        d.show();
+
+    }
+
+
+    public void hotDrop() {
+        final long timer = System.currentTimeMillis();
+
+        Dialog d = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
+                .setItems(new String[]{"Klicke schnell!"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dlg, int position) {
+                        writeNetMessage(new GameActions(GameActions.actions.HOT_DROP, player.getID(), System.currentTimeMillis() - timer));
+                        dlg.cancel();
+                    }
+                })
+                .create();
+        d.setCanceledOnTouchOutside(false);
+        d.show();
+    }
+
     void endGame() {
         startActivity(new Intent(this, MainMenu.class));
     }
@@ -477,17 +594,17 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     }
 
     public void toastGameFinished(int pID) {
-        Log.d ("GAME_END","Sieger ist Spieler " + (pID+1) + " mit der ID: " + pID);
+        Log.d("GAME_END", "Sieger ist Spieler " + (pID + 1) + " mit der ID: " + pID);
 
         String text;
 
         if (player.getID() == pID) {
             Intent intent = new Intent(getApplicationContext(), WinnerScreen.class);
-            intent.putExtra("pID", pID+1);
+            intent.putExtra("pID", pID + 1);
             startActivity(intent);
         } else {
             Intent intent = new Intent(getApplicationContext(), LosingScreen.class);
-            intent.putExtra("pID", pID+1);
+            intent.putExtra("pID", pID + 1);
             startActivity(intent);
         }
 
@@ -508,4 +625,17 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         d.show();
         */
     }
+
+    public void toastStartHotDrop() {
+        Toast.makeText(getApplicationContext(), "Klicke auf den 'Hot Drop' Button!", Toast.LENGTH_SHORT).show();
+    }
+
+    public void toastEndHotDropLooser() {
+        Toast.makeText(getApplicationContext(), "Du warst leider zu langsam! +2 Karten", Toast.LENGTH_SHORT).show();
+    }
+
+    public void toastPlayersTime() {
+        Toast.makeText(getApplicationContext(), "Deine Zeit: " + player.getMillSecs() + " Millisekunden", Toast.LENGTH_SHORT).show();
+    }
+
 }

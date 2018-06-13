@@ -1,9 +1,16 @@
 package com.example.marti.unoplus.cards;
 
+import android.content.Intent;
+
 import com.example.marti.unoplus.GameActions;
+import com.example.marti.unoplus.Screens.GameViewProt;
 import com.example.marti.unoplus.gameLogicImpl.GameController;
 import com.example.marti.unoplus.gameLogicImpl.GameLogic;
 import com.example.marti.unoplus.players.Player;
+import com.example.marti.unoplus.players.PlayerList;
+
+import java.lang.reflect.Array;
+import java.util.LinkedList;
 
 /**
  * Created by marti on 10.04.2018.
@@ -11,18 +18,16 @@ import com.example.marti.unoplus.players.Player;
 
 public class CardEffects {
     GameLogic gameLogic;
-    GameController gameControler;
+    GameController gameController;
 
     public CardEffects(GameLogic gL, GameController gC) {
         gameLogic = gL;
-        gameControler = gC;
+        gameController = gC;
     }
 
     //Method to call the cards effect
     public void cardEffect(Player player, Card cardValue) {
-        if (player == null) {
-            player = gameLogic.getActivePlayer();
-        }
+
         switch (cardValue.getValue()) {
             default:
                 gameLogic.nextPlayer(player);
@@ -46,10 +51,19 @@ public class CardEffects {
                 takeFour();
                 askForColorWish(player);
                 break;
+            case HOT_DROP:
+                hotDrop();
+                break;
+            case CARD_SPIN:
+                cardSpin(player);
+                break;
+            case DUEL:
+                startDuel(player);
+                break;
         }
 
-        gameControler.gA = new GameActions(GameActions.actions.NEXT_PLAYER, gameLogic.getActivePlayer().getID());
-        gameControler.update();
+        gameController.gA = new GameActions(GameActions.actions.NEXT_PLAYER, gameLogic.getActivePlayer().getID());
+        gameController.update();
     }
 
     //TakeTwo Card effect method
@@ -60,24 +74,41 @@ public class CardEffects {
     //ChangeColour Card effect method
     private void askForColorWish(Player player) {
         if (player != null) {
-            gameControler.gA = new GameActions(GameActions.actions.WISH_COLOR,player.getID(),true);
-            gameControler.update();
+            gameController.gA = new GameActions(GameActions.actions.WISH_COLOR, player.getID(), true);
+            gameController.update();
         }
     }
 
     //TakeFourChangeColour Card effect method
     private void takeFour() {
         gameLogic.changeCardDrawCount(4);
-
     }
 
     //Reverse Card effect method
     private void reverse() {
-      gameLogic.toggleReverse();
+        gameLogic.toggleReverse();
     }
 
     //Suspend Card effect method
     private void skip() {
         gameLogic.skipNext();
+    }
+
+    //Hot Drop Card effect method
+    private void hotDrop() {
+        gameController.gA = new GameActions(GameActions.actions.HOT_DROP, 0, true);
+        gameController.update();
+    }
+
+
+    private void startDuel(Player player){
+        if (player != null) {
+            gameController.gA = new GameActions(GameActions.actions.DUEL_START, player.getID(), true);
+            gameController.update();
+        }
+    }
+    private void cardSpin(Player player) {
+        gameController.gA = new GameActions(GameActions.actions.CARD_SPIN, player.getID(),true );
+        gameController.update();
     }
 }
