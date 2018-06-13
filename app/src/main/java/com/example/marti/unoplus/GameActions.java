@@ -109,6 +109,7 @@ public class GameActions {
         this.nextPlayerID = nextPID;
         this.card = card;
         this.check = check;
+    }
 
     //Constructor for startDuel_Request
     public GameActions(actions action, int pID, int opponentPID, Card.colors color) {

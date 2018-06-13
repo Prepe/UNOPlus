@@ -96,7 +96,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         numCards = (TextView) findViewById(R.id.numCards1);
         numCards2 = (TextView) findViewById(R.id.numCards2);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        hotDropButton = (Button) findViewById(R.id.hotDropButton);
 
         //Hier werden die IP und der Modus über den Intent aus der ConnectionScreen abgefragt
         hostAdress = getIntent().getStringExtra("adress");
@@ -128,7 +127,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         plsize = playerCountTest(plsize);
         for (int i = 1; i <= 2; i++) {
             playersInListView.add("Player " + i);
-            playersSS.add("Player " + i);
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_items, playersInListView);
@@ -342,10 +340,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 case R.id.unounobutton:
                     player.callUno(player.getID());
                     break;
-                case R.id.hotDropButton:
-                    buttonPressed = true;
-                    player.timer(false); //stops timer
-                    break;
             }
         }
     };
@@ -544,12 +538,20 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     private void startDuel_chooseOpponent(final Card.colors color) {
         Dialog d = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
                 .setTitle("Such einen Opponent aus!")
-                .setItems(new String[]{"Anderer Spieler"}, new DialogInterface.OnClickListener() {
+                .setItems(new String[]{"Player 1", "Player 2", "Player 3", "Player 4"}, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dlg, int position) {
                         if (position == 0) {
-                            //TODO works for 2 players. Change to use PlayerList
-                            writeNetMessage(new GameActions(GameActions.actions.DUEL_START, player.getID(), (player.getID() + 1) % 2, color));
+                            writeNetMessage(new GameActions(GameActions.actions.DUEL_START, player.getID(), 0, color));
+                            dlg.cancel();
+                        } else if (position == 1) {
+                            writeNetMessage(new GameActions(GameActions.actions.DUEL_START, player.getID(), 1, color));
+                            dlg.cancel();
+                        } else if (position == 2) {
+                            writeNetMessage(new GameActions(GameActions.actions.DUEL_START, player.getID(), 2, color));
+                            dlg.cancel();
+                        } else if (position == 3) {
+                            writeNetMessage(new GameActions(GameActions.actions.DUEL_START, player.getID(), 3, color));
                             dlg.cancel();
                         }
                     }
@@ -577,7 +579,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                             writeNetMessage(new GameActions(GameActions.actions.DUEL_OPPONENT, player.getID(), Card.colors.YELLOW));
                         } else if (position == 3) {
                             dlg.cancel();
-                            writeNetMessage(new GameActions(GameActions.actions.DUEL_OPPONENT, player.getID(), Card.colors.GREEN))
+                            writeNetMessage(new GameActions(GameActions.actions.DUEL_OPPONENT, player.getID(), Card.colors.GREEN));
                         }
                     }
                 })
@@ -626,10 +628,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
     public void toastYourNotAllowed() {
         Toast.makeText(getApplicationContext(), "Du besitzt mehr als 1 Karte!", Toast.LENGTH_SHORT).show();
-    }
-
-    public void toastGameFinished(int pID) {
-        Log.d("GAME_END", "Sieger ist Spieler " + (pID + 1) + " mit der ID: " + pID);
     }
 
     public void toastCantTrade() {

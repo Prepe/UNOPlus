@@ -119,6 +119,7 @@ public class GameController {
                 break;
             case CALL_UNO:
                 callUno(action.nextPlayerID);
+                break;
             case HOT_DROP:
                 hotDrop(action.playerID, action.timestamp);
                 break;

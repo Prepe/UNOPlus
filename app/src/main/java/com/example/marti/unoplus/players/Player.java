@@ -51,7 +51,7 @@ public class Player {
         return this.handcards;
     }
 
-    public void setHand(LinkedList<Card> cards){
+    public void setHand(LinkedList<Card> cards) {
         handcards = cards;
 
     }
@@ -116,7 +116,7 @@ public class Player {
     }
 
     //Tell what card you want to trade and remove it
-    public void tradeCard(int tradeTargetID , Card tradedCard) {
+    public void tradeCard(int tradeTargetID, Card tradedCard) {
         hand.removeCard(tradedCard);
         gameViewProt.removeCardFromHand(tradedCard);
         activeTrade = true;
@@ -180,12 +180,12 @@ public class Player {
                 //giveHand();
                 break;
             case GOT_Hand:
-                GameActions ga  = new GameActions(GameActions.actions.DO_CardSpin,ID);
+                GameActions ga = new GameActions(GameActions.actions.DO_CardSpin, ID);
                 gameViewProt.writeNetMessage(ga);
                 hand.removeHand();
                 break;
             case GET_NEWHand:
-                setNewHand(action.playerID,(LinkedList)action.cards);
+                setNewHand(action.playerID, (LinkedList) action.cards);
                 break;
         }
     }
@@ -272,11 +272,11 @@ public class Player {
 
     // if accepeted card will be traded if not card wont be traded
     void gotCardTrade(int traderID, int tradeTargetID, boolean accepted, Card tradedCard) {
-        if(accepted){
-            if(activeTrade && traderID == this.ID && tradedwith == tradeTargetID){
+        if (accepted) {
+            if (activeTrade && traderID == this.ID && tradedwith == tradeTargetID) {
                 activeTrade = false;
-            } else if(traderID == tradeTargetID){
-                if(traderID == this.ID){
+            } else if (traderID == tradeTargetID) {
+                if (traderID == this.ID) {
                     activeTrade = false;
                     gameViewProt.toastAlreadyTraded();
                 }
@@ -289,9 +289,9 @@ public class Player {
         } else {
             Log.d("TRADE_CARRD", "Player " + traderID + " wasnts to trade with Player " + tradeTargetID);
             updateHandCardCounter(-1, traderID);
-            if(traderID == tradedwith && activeTrade){
-                acceptTrade(tradeTargetID,  tradedCard);
-            } else if(tradeTargetID == this.ID){
+            if (traderID == tradedwith && activeTrade) {
+                acceptTrade(tradeTargetID, tradedCard);
+            } else if (tradeTargetID == this.ID) {
                 gameViewProt.tradeOffer(traderID, tradedCard);
             }
         }
@@ -303,22 +303,23 @@ public class Player {
         }
 
         if (canSayUno) {
-            if (playerID == this.ID && hand.getCount() == 1){
+            if (playerID == this.ID && hand.getCount() == 1) {
 
             }
         } else {
             //TODO wrong
         }
+    }
 
     //Timer for each player when Hot-Drop-Card is played
-    public void timer(final boolean startRun){
+    public void timer(final boolean startRun) {
         final Handler handler = new Handler();
         handler.post(new Runnable() {
             @Override
             public void run() {
-                millsecs = seconds/1000;
+                millsecs = seconds / 1000;
 
-                if(startRun) {
+                if (startRun) {
                     seconds++;
                 }
                 handler.postDelayed(this, 100);
@@ -326,20 +327,20 @@ public class Player {
         });
     }
 
-    public void resetTimer(){
+    public void resetTimer() {
         startRun = true;
         seconds = 0;
     }
 
-    public int getMillSecs(){
+    public int getMillSecs() {
         return this.millsecs;
     }
 
-    public void lostHotDrop(){
+    public void lostHotDrop() {
         gameViewProt.toastEndHotDropLooser();
     }
 
-    public void playerTime(){
+    public void playerTime() {
         gameViewProt.toastPlayersTime();
     }
 
@@ -370,34 +371,35 @@ public class Player {
         gameViewProt.toastGameFinished(ID);
     }
 
-    public void acceptTrade(int tradeTargetID,  Card tradedCard){
-        GameActions trade = new GameActions(GameActions.actions.TRADE_CARD, ID, tradeTargetID, tradedCard,  true);
+    public void acceptTrade(int tradeTargetID, Card tradedCard) {
+        GameActions trade = new GameActions(GameActions.actions.TRADE_CARD, ID, tradeTargetID, tradedCard, true);
         gameViewProt.writeNetMessage(trade);
     }
 
-    public void declineTrade(int traderID, Card tradedCard){
-        GameActions trade = new GameActions(GameActions.actions.TRADE_CARD,traderID,  ID, tradedCard,  true);
+    public void declineTrade(int traderID, Card tradedCard) {
+        GameActions trade = new GameActions(GameActions.actions.TRADE_CARD, traderID, ID, tradedCard, true);
         gameViewProt.writeNetMessage(trade);
+    }
 
-    public void giveHand (){
-        GameActions ga  = new GameActions(GameActions.actions.GIVE_Hand,ID,hand.getHand());
+    public void giveHand() {
+        GameActions ga = new GameActions(GameActions.actions.GIVE_Hand, ID, hand.getHand());
         gameViewProt.writeNetMessage(ga);
     }
-      
-    public void setNewHand (int id, LinkedList<Card> cards){
 
-        if(id == ID){
+    public void setNewHand(int id, LinkedList<Card> cards) {
 
-            for (Card card:cards) {
+        if (id == ID) {
+
+            for (Card card : cards) {
                 hand.addCard(card);
             }
         }
 
     }
-      
+
     void cardSpin(GameActions action) {
         if (action.playerID == ID) {
-            Log.d("PLAYER","Called CardSpin");
+            Log.d("PLAYER", "Called CardSpin");
             LinkedList<Card> temp = new LinkedList<>();
             if (!cardSpinStart) {
                 Log.d("PLAYER", "Saving old Hand");
@@ -407,7 +409,7 @@ public class Player {
             }
 
             if (action.cards != null) {
-                Log.d ("PLAYER","Override Hand");
+                Log.d("PLAYER", "Override Hand");
                 cardSpinStart = false;
                 for (int i = 0; i < action.cards.size(); i++) {
                     hand.addCard(action.cards.get(i));
@@ -417,14 +419,14 @@ public class Player {
             }
 
             if (temp.size() != 0) {
-                Log.d ("PLAYER", "Sending old Hand");
+                Log.d("PLAYER", "Sending old Hand");
                 gameViewProt.writeNetMessage(new GameActions(GameActions.actions.CARD_SPIN, ID, temp));
             } else {
-                Log.d ("PLAYER", "Card Spin Finished");
+                Log.d("PLAYER", "Card Spin Finished");
                 gameViewProt.writeNetMessage(new GameActions(GameActions.actions.CARD_SPIN, ID, true));
             }
         } else {
-            Log.d("PLAYER","Not my GA");
+            Log.d("PLAYER", "Not my GA");
             if (action.cards != null) {
                 Log.d("PLAYER", "UPDATE");
                 handcardcounter[action.playerID] = action.cards.size();
