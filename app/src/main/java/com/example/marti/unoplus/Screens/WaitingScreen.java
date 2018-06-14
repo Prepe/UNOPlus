@@ -7,21 +7,24 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.example.marti.unoplus.R;
 import com.example.marti.unoplus.gameLogicImpl.GameViewProt;
 
 import jop.hab.net.ConnectionScreen;
 
+import static android.view.View.INVISIBLE;
 import static com.example.marti.unoplus.Screens.NameScreen.PLAYER_NAME;
 import static java.lang.Thread.sleep;
 
 public class WaitingScreen extends AppCompatActivity {
-    Button verbindenbutton;
+    Button buttonStart;
     String hostAdress;
     String mode;
     int numClients;
     public String playername;
+    ProgressBar progressBar;
 
 
     @Override
@@ -31,17 +34,37 @@ public class WaitingScreen extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_waiting_screen);
 
-        verbindenbutton = findViewById(R.id.verbindenbutton);
         hostAdress = getIntent().getStringExtra("adress");
         mode = getIntent().getStringExtra("mode");
         numClients = getIntent().getIntExtra("numofclients",1);
         playername =   getIntent().getExtras().getString(PLAYER_NAME, "");
 
+        progressBar = findViewById(R.id.progressBar2);
+        buttonStart = findViewById(R.id.buttonStart);
 
+        buttonStart.postDelayed(new Runnable(){
+            @Override
+            public void run(){
+                progressBar.setVisibility(View.INVISIBLE);
+                buttonStart.setVisibility(View.VISIBLE);
+            }
+        }, 5000);
 
-       run();
+        buttonStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(WaitingScreen.this, GameViewProt.class);
+                i.putExtra("mode", mode);
+                i.putExtra("adress", hostAdress);
+                i.putExtra("numofclients",numClients);
+                i.putExtra(PLAYER_NAME, playername);
+                startActivity(i);
+            }
+        });
     }
-public  void run (){
+
+
+/*public  void run (){
 
     Thread waitingscreen = new Thread(){
         public void run() {
@@ -63,17 +86,6 @@ public  void run (){
 
 
 
-}
-
-
-    View.OnClickListener handler = new View.OnClickListener() {
-        public void onClick(View v) {
-            switch (v.getId()){
-                case R.id.verbindenbutton:
-
-                    break;
-            }
-        }
-    };
+}*/
 
 }

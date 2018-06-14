@@ -136,7 +136,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                     case 0:
                         Toast.makeText(getApplicationContext(), "Player 1", Toast.LENGTH_SHORT).show();
                         //TO DO
-
                         break;
                     case 1:
                         Toast.makeText(getApplicationContext(), "Player 2", Toast.LENGTH_SHORT).show();

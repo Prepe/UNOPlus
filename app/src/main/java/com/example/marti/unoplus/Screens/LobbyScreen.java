@@ -8,10 +8,16 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ProgressBar;
 
 import com.example.marti.unoplus.GameStatics;
 import com.example.marti.unoplus.R;
 import com.example.marti.unoplus.gameLogicImpl.GameViewProt;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import jop.hab.net.ConnectionScreen;
 
 import static com.example.marti.unoplus.Screens.NameScreen.PLAYER_NAME;
 
@@ -22,6 +28,8 @@ public class LobbyScreen extends AppCompatActivity {
    String mode;
     int numClients;
     public String playername;
+    Button buttonStart;
+    ProgressBar progressBar;
 
 
     @Override
@@ -41,7 +49,7 @@ public class LobbyScreen extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getBaseContext(), GameViewProt.class);
+                Intent i = new Intent(LobbyScreen.this, GameViewProt.class);
                 i.putExtra("mode", mode);
                 i.putExtra("adress", hostAdress);
                 i.putExtra("numofclients",numClients);

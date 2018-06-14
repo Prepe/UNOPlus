@@ -25,4 +25,5 @@
     <string name="zurück">Zurück</string>
     <string name="weiter">Weiter</string>
     <string name="waiting">Bitte warte bis alle Optionen ausgewählt wurden.</string>
+    <string name="start">Start</string>
 </resources>
