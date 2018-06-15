@@ -404,12 +404,12 @@ public class Player {
                 Log.d("PLAYER", "Saving old Hand");
                 cardSpinStart = true;
                 temp = hand.getHand();
-                hand.removeHand();
             }
 
             if (action.cards != null) {
                 Log.d("PLAYER", "Override Hand");
                 cardSpinStart = false;
+                hand = new HandCardList();
                 for (int i = 0; i < action.cards.size(); i++) {
                     hand.addCard(action.cards.get(i));
                 }
@@ -424,6 +424,7 @@ public class Player {
                 Log.d("PLAYER", "Card Spin Finished");
                 gameViewProt.writeNetMessage(new GameActions(GameActions.actions.CARD_SPIN, ID, true));
             }
+
         } else {
             Log.d("PLAYER", "Not my GA");
             if (action.cards != null) {
