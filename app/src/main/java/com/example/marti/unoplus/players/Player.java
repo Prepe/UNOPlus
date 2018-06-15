@@ -64,6 +64,8 @@ public class Player {
         return this.playerName;
     }
 
+    public void setName(String name){playerName = name;}
+
     public Integer getID() {
         return ID;
     }

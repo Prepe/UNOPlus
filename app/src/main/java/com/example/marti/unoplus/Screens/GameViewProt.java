@@ -54,8 +54,7 @@ import jop.hab.net.ObserverInterface;
 
 public class GameViewProt extends AppCompatActivity implements ObserverInterface {
     NetworkIOManager NIOmanager;
-    String hostAdress;
-    String mode;
+    String hostAdress, mode, playerName;
     int numClients;
     boolean isGameController = false;
     GameController gameController;
@@ -128,7 +127,9 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         int plsize = 0;
         plsize = playerCountTest(plsize);
         for (int i = 1; i <= 2; i++) {
-            playersInListView.add("Player " + i);
+            //playersInListView.add("Player " + i);
+            playerName = getIntent().getExtras().getString(NameScreen.PLAYER_NAME, "");
+            playersInListView.add(playerName);
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_items, playersInListView);
@@ -155,7 +156,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                         //TO DO
                         break;
                     case 3:
-                        Toast.makeText(getApplicationContext(), "Plöayer 4", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Player 4", Toast.LENGTH_SHORT).show();
                         //TO DO
                         break;
                     default:

@@ -23,16 +23,23 @@ import android.widget.Toast;
 
 import com.example.marti.unoplus.R;
 import com.example.marti.unoplus.Screens.GameViewProt;
+import com.example.marti.unoplus.Screens.LobbyScreen;
+import com.example.marti.unoplus.Screens.NameScreen;
+import com.example.marti.unoplus.Screens.WaitingScreen;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.lang.Thread.sleep;
 
 public class ConnectionScreen extends AppCompatActivity {
 
     Button btnOnOff, btnDiscover, btnStart;
     ListView listView;
-    TextView ConnectionStatus;
+    TextView ConnectionStatus, textViewplayername;
     WifiManager wifiManager;
 
     WifiP2pManager mManager;
@@ -44,7 +51,7 @@ public class ConnectionScreen extends AppCompatActivity {
     String[] deviceNameArray;
     WifiP2pDevice[] deviceArray;
     public  ArrayList<String> connectedDevices = new ArrayList<>();
-
+    public String playername;
 
     static final int MESSAGE_READ = 1;
 
@@ -58,6 +65,8 @@ public class ConnectionScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test_activity_layout);
+
+        playername =   getIntent().getExtras().getString(NameScreen.PLAYER_NAME, "");
 
         initialWork();
         exqListener();
@@ -172,9 +181,10 @@ public class ConnectionScreen extends AppCompatActivity {
                 btnStart.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i = new Intent(getBaseContext(), GameViewProt.class);
+                        Intent i = new Intent(getBaseContext(), LobbyScreen.class);
                         i.putExtra("mode", "server");
                         i.putExtra("adress", groupOwnerAdress.getHostAddress());
+                        i.putExtra("numofclients",getNUMConnectedDevices());
                         startActivity(i);
                     }
                 });
@@ -205,7 +215,7 @@ public class ConnectionScreen extends AppCompatActivity {
                 btnStart.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i = new Intent(getBaseContext(), GameViewProt.class);
+                        Intent i = new Intent(getBaseContext(), WaitingScreen.class);
 
 
 
@@ -240,6 +250,8 @@ public class ConnectionScreen extends AppCompatActivity {
         btnDiscover = (Button) findViewById(R.id.discover);
         btnStart = (Button) findViewById(R.id.start);
 
+        textViewplayername = (TextView) findViewById(R.id.playerName);
+        textViewplayername.setText(playername);
 
         listView = (ListView) findViewById(R.id.peerListView);
 
@@ -280,7 +292,28 @@ public class ConnectionScreen extends AppCompatActivity {
 
         }
 
+        settingupName(playername);
 
+    }
+
+    public void settingupName (final String playername) {
+        try {
+            Method m = mManager.getClass().getMethod(
+                    "setDeviceName",
+                    new Class[]{WifiP2pManager.Channel.class, String.class, WifiP2pManager.ActionListener.class});
+            m.invoke(mManager, mChannel, playername, new WifiP2pManager.ActionListener() {
+                public void onSuccess() {
+                    Log.d("setname", "yes!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                }
+
+                public void onFailure(int reason) {
+                    //Code to be done while name change Fails
+                    Log.d("setname", "fuck?????????????????????????????????????????????????????????????????????????????????????????");
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
