@@ -48,22 +48,18 @@ public class NetworkIOManager {
     LinkedList<GameActions> actions = new LinkedList<>();
     int countready = 0;
     int numclients;
-
+    boolean isReady = false;
 
     public NetworkIOManager(ObserverInterface observerInterface) {
         this.observerInterface = observerInterface;
-
-
     }
 
     public void setMode(String mode) {
-
         if (mode.equals("server")) {
             MODE_IS_SERVER = true;
         } else {
             MODE_IS_SERVER = false;
         }
-
     }
 
     public void setHostAdress(String hostAdress) {
@@ -84,8 +80,13 @@ public class NetworkIOManager {
 
     public void open() {
         if (MODE_IS_SERVER) {
-            serverClass = new ServerClass();
-            serverClass.start();
+            if (serverClass == null) {
+                serverClass = new ServerClass();
+                serverClass.start();
+                serverClass.ready = true;
+            } else {
+                serverClass.fixState();
+            }
             Log.d("@mode", MODE_IS_SERVER + "");
         } else {
             clientClass = new ClientClass(hostAdress);
@@ -96,12 +97,6 @@ public class NetworkIOManager {
 
 
     public void writeGameaction(GameActions gameAction) {
-        try {
-            Thread.sleep(0);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setLenient();
         Gson gson = gsonBuilder.create();
@@ -166,6 +161,15 @@ public class NetworkIOManager {
         return true;
     }
 
+    public boolean isNotReady() {
+        if (serverClass == null) {
+            return true;
+        } else if (sendReceive == null) {
+            return  true;
+        }
+        return !(sendReceive.ready && serverClass.ready);
+    }
+
 
     Handler handler = new Handler(new Handler.Callback() {
         @Override
@@ -191,6 +195,7 @@ public class NetworkIOManager {
     public class ServerClass extends Thread {
         Socket socket;
         ServerSocket serverSocket;
+        boolean ready = false;
 
         @Override
         public void run() {
@@ -205,8 +210,24 @@ public class NetworkIOManager {
             }
 
             sendReceive = new SendReceive(socket);
-
             sendReceive.start();
+            sendReceive.ready = true;
+        }
+
+        public void fixState() {
+            if (serverSocket == null) {
+                run();
+            } else if (socket == null){
+                try {
+                    socket = serverSocket.accept();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                sendReceive = new SendReceive(socket);
+                sendReceive.start();
+                sendReceive.ready = true;
+            }
         }
     }
 
@@ -214,6 +235,7 @@ public class NetworkIOManager {
         private Socket socket;
         private InputStream inputStream;
         private OutputStream outputStream;
+        boolean ready = false;
 
         public SendReceive(Socket socket) {
             this.socket = socket;
@@ -269,7 +291,7 @@ public class NetworkIOManager {
             }
 
             try {
-                sleep(100);
+                sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

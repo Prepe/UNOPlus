@@ -351,11 +351,11 @@ public class GameController {
 
     }
 
-
     private void cardSpin(int id) {
         gA = new GameActions(GameActions.actions.CARD_SPIN, id);
         update();
     }
+
     void cardSpin2 (GameActions action) {
         if (action.check == null) {
             int playerID = action.playerID;
@@ -383,14 +383,9 @@ public class GameController {
     }
 
     private void doingCardSpin() {
-
         if (cardspincount==gottenHandsCards.size()){
-
             if (logic.checkifreversed()) {
-
-
                 for (int i = 0; i < gottenHandsCards.size(); i++) {
-
                     LinkedList<Card> newCards = gottenHandsCards.get(i);
                     int id = i;
                     if (id == 0) {
@@ -399,38 +394,11 @@ public class GameController {
                         id--;
                     }
 
-
                     gA = new GameActions(GameActions.actions.GET_NEWHand, id, newCards);
                     update();
-
                 }
-
-           /*
-            Player givingPlayer;
-            Player gettingPlayer;
-            while (count < players.playerCount()-1) {
-                gettingPlayer = players.getPlayer(i);
-                givingPlayer = players.getPrevious(gettingPlayer);
-
-                gettingPlayer.setHand(givingPlayer.getHand());
-
-                if (i == 0) {
-                    i = players.playerCount();
-                } else {
-                    i--;
-                }
-                count++;
-            }
-
-            activePlayer.setHand(cards);
-
-            //players.getNext(players.getPlayer(i)).setHand(players.getPlayer(i).getHand());*/
-
-
             } else {
-
                 for (int i = 0; i < gottenHandsCards.size(); i++) {
-
                     LinkedList<Card> newCards = gottenHandsCards.get(i);
                     int id = i;
                     if (id == gottenHandsCards.size() - 1) {
@@ -439,36 +407,9 @@ public class GameController {
                         id--;
                     }
 
-
                     gA = new GameActions(GameActions.actions.GET_NEWHand, id, newCards);
                     update();
-
-
-            /* cards = activePlayer.getHand();
-            int i = activeID;
-            int count = 0;
-
-
-            Player givingPlayer;
-            Player gettingPlayer;
-            while (count < players.playerCount()-1) {
-                gettingPlayer = players.getPlayer(i);
-                givingPlayer = players.getPrevious(gettingPlayer);
-
-                gettingPlayer.setHand(givingPlayer.getHand());
-
-                if (i == 0) {
-                    i = players.playerCount();
-                } else {
-                    i--;
                 }
-                count++;
-            }
-
-            activePlayer.setHand(cards);
-*/
-                }
-
             }
         }
     }
@@ -482,8 +423,8 @@ public class GameController {
             drawCard(accusedPlayerID);
             return;
         }
-        if (calledUNO[accusedPlayerID]) {
-            calledUNO[accusedPlayerID] = false;
+        if (mustCallUNO[accusedPlayerID]) {
+            mustCallUNO[accusedPlayerID] = false;
 
             logic.cardDrawCount = 2;
             drawCard(accusedPlayerID);
