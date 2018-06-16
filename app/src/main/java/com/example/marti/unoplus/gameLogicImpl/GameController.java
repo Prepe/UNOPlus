@@ -356,6 +356,8 @@ public class GameController {
         update();
     }
 
+
+
     void cardSpin2 (GameActions action) {
         if (action.check == null) {
             int playerID = action.playerID;
@@ -432,5 +434,8 @@ public class GameController {
         }
 
         drawCard(accusingPlayerID);
+    }
+    public LinkedList<LinkedList<Card>> getGottenHandsCards() {
+        return gottenHandsCards;
     }
 }
