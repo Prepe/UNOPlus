@@ -185,7 +185,7 @@ public class TestCardspin {
         gameController.setPlayerList(playerList);
         gameController.setUpGame();
         gameLogic.toggleReverse();
-        
+
         GameActions savecards1 = new GameActions(GameActions.actions.GIVE_Hand, 0, cards1);
         GameActions savecards2 = new GameActions(GameActions.actions.GIVE_Hand, 1, cards2);
         GameActions expected1 = new GameActions(GameActions.actions.GET_NEWHand, 0, cards2);

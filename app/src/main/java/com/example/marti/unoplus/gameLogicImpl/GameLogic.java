@@ -210,4 +210,12 @@ public class GameLogic {
 
         return reverse;
     }
+
+    public void setLastCardValue(Card.values lastCardValue) {
+        this.lastCardValue = lastCardValue;
+    }
+
+    public void setLastCardColor(Card.colors lastCardColor) {
+        this.lastCardColor = lastCardColor;
+    }
 }
