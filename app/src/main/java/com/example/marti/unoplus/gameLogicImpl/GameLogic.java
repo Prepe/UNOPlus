@@ -218,4 +218,9 @@ public class GameLogic {
     public void setLastCardColor(Card.colors lastCardColor) {
         this.lastCardColor = lastCardColor;
     }
+
+    public Card.colors getLastCardColor(){return lastCardColor;}
+
+    public Card.values getLastCardValue(){return lastCardValue;}
+
 }
