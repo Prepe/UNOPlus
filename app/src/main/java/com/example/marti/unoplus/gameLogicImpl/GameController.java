@@ -33,7 +33,7 @@ public class GameController {
     boolean[] droppedCard;  //bool array for players who cheated with dropped card
     boolean[] tradedCard;   //bool array for players who cheated with trade card
     boolean hasDrawn = false; //bool to check if player has already drawn a card
-    DuelData duelData;
+    public DuelData duelData;
     Player looser;
     long[] timestamps;
     LinkedList<LinkedList<Card>> gottenHandsCards = new LinkedList<>();
@@ -437,5 +437,9 @@ public class GameController {
     }
     public LinkedList<LinkedList<Card>> getGottenHandsCards() {
         return gottenHandsCards;
+    }
+
+    public DuelData getDuelData() {
+        return duelData;
     }
 }
