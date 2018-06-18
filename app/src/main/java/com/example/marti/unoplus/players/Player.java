@@ -273,10 +273,9 @@ public class Player {
                 if (traderID == this.ID) {
                     activeTrade = false;
                     gameViewProt.toastAlreadyTraded();
-                    return;
                 }
             }
-            updateHandCardCounter(1, traderID);
+            //updateHandCardCounter(1, traderID);
             LinkedList<Card> temp = new LinkedList<>();
             temp.add(tradedCard);
             gotCard(traderID, temp);
