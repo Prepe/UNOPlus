@@ -1,24 +1,17 @@
 package com.example.marti.unoplus.cards;
 
-import android.content.Intent;
-
 import com.example.marti.unoplus.GameActions;
-import com.example.marti.unoplus.Screens.GameViewProt;
 import com.example.marti.unoplus.gameLogicImpl.GameController;
 import com.example.marti.unoplus.gameLogicImpl.GameLogic;
 import com.example.marti.unoplus.players.Player;
-import com.example.marti.unoplus.players.PlayerList;
-
-import java.lang.reflect.Array;
-import java.util.LinkedList;
 
 /**
  * Created by marti on 10.04.2018.
  */
 
 public class CardEffects {
-    GameLogic gameLogic;
-    GameController gameController;
+    private GameLogic gameLogic;
+    private GameController gameController;
 
     public CardEffects(GameLogic gL, GameController gC) {
         gameLogic = gL;
@@ -99,7 +92,6 @@ public class CardEffects {
         gameController.gA = new GameActions(GameActions.actions.HOT_DROP, 0, true);
         gameController.update();
     }
-
 
     private void startDuel(Player player){
         if (player != null) {

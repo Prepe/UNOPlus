@@ -8,25 +8,23 @@ import com.example.marti.unoplus.GameStatics;
 import com.example.marti.unoplus.Screens.GameViewProt;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.cards.HandCardList;
-import com.example.marti.unoplus.gameLogicImpl.GameController;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Player {
-    String playerName;
-    Integer ID;
     GameViewProt gameViewProt;
     Card lastCard;
     LinkedList<Card> handcards; //Hand
-    int[] handcardcounter;
-    public HandCardList hand;
     Card dropCard;
-    Card tradeCard;
-    int tradedwith;
-    boolean activeTrade;
-    boolean cardSpinStart = false;
+    private String playerName;
+    private Integer ID;
+    private int[] handcardcounter;
+    public HandCardList hand;
+    private int tradedwith;
+    private boolean activeTrade;
+    private boolean cardSpinStart = false;
 
     //Variables needed for the Hot-Drop-Feature
     int seconds = 0;
@@ -35,7 +33,6 @@ public class Player {
 
     public Player(Integer id) {
         ID = id;
-        //handcards = new LinkedList<>();
         hand = new HandCardList();
     }
 
@@ -53,7 +50,6 @@ public class Player {
 
     public void setHand(LinkedList<Card> cards) {
         handcards = cards;
-
     }
 
     public int getHandSize() {
@@ -70,7 +66,6 @@ public class Player {
 
     public void initialsiedHandCardCounters(int size) {
         handcardcounter = new int[size];
-
     }
 
     public int[] getHandcardcounter() {
@@ -221,7 +216,6 @@ public class Player {
         } else {
             updateHandCardCounter(cards.size(), pID);
         }
-
     }
 
     //Your intended Card was played so now you can remove it
@@ -279,6 +273,7 @@ public class Player {
                 if (traderID == this.ID) {
                     activeTrade = false;
                     gameViewProt.toastAlreadyTraded();
+                    return;
                 }
             }
             updateHandCardCounter(1, traderID);
@@ -393,7 +388,6 @@ public class Player {
                 hand.addCard(card);
             }
         }
-
     }
 
     void cardSpin(GameActions action) {

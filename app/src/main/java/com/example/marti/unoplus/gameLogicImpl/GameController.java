@@ -6,14 +6,11 @@ import com.example.marti.unoplus.GameActions;
 import com.example.marti.unoplus.Screens.GameViewProt;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.cards.Deck;
-import com.example.marti.unoplus.cards.HandCardList;
 import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.players.PlayerList;
 
 import java.util.LinkedList;
-import java.util.List;
 
-//import com.example.marti.unoplus.Screens.CardViewTest;
 
 /**
  * Created by marti on 10.04.2018.
@@ -25,19 +22,17 @@ public class GameController {
     GameViewProt gvp;       //reference to GameViewPrototype
     PlayerList players;     //reference to all Players in the Game
     Deck deck;              //reference to the Deck that is used
-    public GameLogic logic;        //reference to the GameLogic
-    int startingHand = 7;   //Amount of Cards every Player gets at the start of the Game
-    float turnTime;         //Turn Timer for the Game
-    public GameActions gA;  //Object that gets send to all Players
-    boolean[] mustCallUNO;  //bool array for players who called uno
-    boolean[] droppedCard;  //bool array for players who cheated with dropped card
-    boolean[] tradedCard;   //bool array for players who cheated with trade card
-    boolean hasDrawn = false; //bool to check if player has already drawn a card
     DuelData duelData;
-    Player looser;
-    long[] timestamps;
-    LinkedList<LinkedList<Card>> gottenHandsCards = new LinkedList<>();
-    int cardspincount = 0;
+    public GameLogic logic;        //reference to the GameLogic
+    public GameActions gA;  //Object that gets send to all Players
+    private int startingHand = 7;   //Amount of Cards every Player gets at the start of the Game
+    private boolean[] mustCallUNO;  //bool array for players who called uno
+    private boolean[] droppedCard;  //bool array for players who cheated with dropped card
+    private boolean[] tradedCard;   //bool array for players who cheated with trade card
+    private boolean hasDrawn = false; //bool to check if player has already drawn a card
+    private long[] timestamps;
+    private LinkedList<LinkedList<Card>> gottenHandsCards = new LinkedList<>();
+    private int cardspincount = 0;
 
     //<---------- Method for setting up the Game ---------->
     public GameController(GameViewProt gvp) {

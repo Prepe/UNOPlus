@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.os.StrictMode;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
@@ -37,46 +36,38 @@ import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.players.PlayerList;
 import com.example.marti.unoplus.sound.SoundManager;
 
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Comparator;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Date;
 
 import jop.hab.net.NetworkIOManager;
 import jop.hab.net.ObserverInterface;
 
 public class GameViewProt extends AppCompatActivity implements ObserverInterface {
     NetworkIOManager NIOmanager;
-    String hostAdress;
-    String mode;
-    int numClients;
-    boolean isGameController = false;
     GameController gameController;
-    public Player player;
     GameActions recievedGA;
     ArrayList<HandCardView> handCards;
     PlayedCardView playedCardView;
     ThrowAwayView throwAwayView;
     TradeCardView tradeCardView;
-    Button buttongetcard, hotDropButton;
-    TextView numCards;
-    TextView numCards2;
     SoundManager soundManager;
-    public CountDownTimer timer;
-    Button unoButton;
-    Vibrator vibrator;
-    ArrayList<String> playersInListView = new ArrayList<>();
-    boolean buttonPressed = false;
-    boolean[] readyAll;
     LinkedList<Player> tempPlayers;
-    int playerCount;
+    ArrayList<String> playersInListView = new ArrayList<>();
+    public Player player;
+    private TextView numCards;
+    private TextView numCards2;
+    private TextView playerTurn;
+    private Button unoButton;
+    private Vibrator vibrator;
+    private String hostAdress;
+    private String mode;
+    private int numClients;
+    private int playerCount;
+    private boolean isGameController = false;
+    public CountDownTimer timer;
+    private boolean buttonPressed = false;
+
+
 
     public GameViewProt() {
         super();
@@ -97,6 +88,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
         numCards = (TextView) findViewById(R.id.numCards1);
         numCards2 = (TextView) findViewById(R.id.numCards2);
+        playerTurn = (TextView) findViewById(R.id.playerTurn);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
         //Hier werden die IP und der Modus über den Intent aus der ConnectionScreen abgefragt
@@ -165,6 +157,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             }
         });
 
+        //Timer for players run
         final TextView myCounter = findViewById(R.id.countdown);
         timer = new CountDownTimer(20000, 1000) {
 
@@ -386,6 +379,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             switch (v.getId()) {
                 case R.id.buttongetcard:
                     player.drawCard();
+                    playerTurn.setText("");
                     break;
 
                 case R.id.unounobutton:
@@ -449,7 +443,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         if (GameStatics.devMode) {
             Log.d("GameDebug", "Gamescreen tries to remove following card from hand :" + card.value.toString() + " " + card.color.toString());
         }
-
+        playerTurn.setText("");
         LinearLayout handBox = findViewById(R.id.playerHandLayout);
         for (HandCardView c : this.handCards) {
             if (c.card.hasSameCardValueAs(card)) {
@@ -625,15 +619,12 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         d.show();
     }
 
-    void endGame() {
-        startActivity(new Intent(this, MainMenu.class));
-    }
-
     //<---------- Toasts ---------->
     public void toastYourTurn() {
         Toast.makeText(getApplicationContext(), "Du bist am Zug", Toast.LENGTH_SHORT).show();
         vibrator.vibrate(500);
         timer.start();
+        playerTurn.setText("An der Reihe: Player " + (this.player.getID()+1));
     }
 
     public void toastWrongCard() {
@@ -660,10 +651,12 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         Log.d("GAME_END", "Sieger ist Spieler " + (pID + 1) + " mit der ID: " + pID);
 
         if (player.getID() == pID) {
+            timer.cancel();
             Intent intent = new Intent(getApplicationContext(), WinnerScreen.class);
             intent.putExtra("pID", pID + 1);
             startActivity(intent);
         } else {
+            timer.cancel();
             Intent intent = new Intent(getApplicationContext(), LosingScreen.class);
             intent.putExtra("pID", pID + 1);
             startActivity(intent);

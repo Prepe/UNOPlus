@@ -2,16 +2,11 @@ package com.example.marti.unoplus.cards;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.widget.ImageView;
 
 import com.example.marti.unoplus.R;
-//import com.example.marti.unoplus.Screens.CardViewTest;
 import com.example.marti.unoplus.Screens.GameViewProt;
 
-import java.util.Objects;
 
 /**
  * Created by ekzhu on 30.04.2018.
