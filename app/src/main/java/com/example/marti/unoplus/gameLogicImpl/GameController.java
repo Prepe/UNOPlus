@@ -175,7 +175,7 @@ public class GameController {
         }
     }
 
-    void drawCardAsDuelLoser(int loserID){
+    public void drawCardAsDuelLoser(int loserID){
         LinkedList<Card> cards = new LinkedList<>();
         if (deck.isEmptyDeck()) {
             deck.replaceTakeDeck();
