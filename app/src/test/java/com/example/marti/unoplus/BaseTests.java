@@ -365,8 +365,7 @@ public class BaseTests {
 
     }
 
-
-
+    /*
     @Test
     public void colorWishTest(){
         PowerMockito.mockStatic(Log.class);
@@ -407,7 +406,7 @@ public class BaseTests {
         Assert.assertEquals(expectedGA2.action, gameController.gA.action);
         Assert.assertEquals(expectedGA2.playerID, gameController.gA.playerID);
     }
-
+*/
 
     @Test
     public void dropCardTest2(){
