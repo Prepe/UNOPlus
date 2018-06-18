@@ -1,27 +1,23 @@
 package com.example.marti.unoplus.gameLogicImpl;
 
 import com.example.marti.unoplus.GameActions;
-import com.example.marti.unoplus.Screens.GameViewProt;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.cards.CardEffects;
 import com.example.marti.unoplus.cards.Deck;
 import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.players.PlayerList;
 
-import java.util.LinkedList;
-
 public class GameLogic {
     PlayerList playerList;      //reference to all Players
     Deck deck;                  //reference to the Deck that is used
     Player activePlayer;        //well active player (its his turn)
     CardEffects effects;        //used to call CardEffects
-    int cardDrawCount = 1;      //the amount the next Player has to draw from the deck
-    boolean reverse = false;    //is the game currently reversed or not
-    boolean skip = false;       //is the next Player suspended or not
     Card.values lastCardValue;  //The value of the card that is on top of the discard pile
     Card.colors lastCardColor;  //The color of the card that is on top of the discard pile
     GameController controller;
-    GameViewProt gvp;
+    int cardDrawCount = 1;      //the amount the next Player has to draw from the deck
+    boolean reverse = false;    //is the game currently reversed or not
+    boolean skip = false;       //is the next Player suspended or not
 
     public GameLogic(PlayerList pL, Deck gameDeck, GameController gc) {
         controller = gc;

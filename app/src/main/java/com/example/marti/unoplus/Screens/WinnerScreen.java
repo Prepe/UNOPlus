@@ -13,9 +13,9 @@ import com.example.marti.unoplus.sound.SoundManager;
 import com.example.marti.unoplus.sound.Sounds;
 
 public class WinnerScreen extends AppCompatActivity {
-    SoundManager soundManager;
-    TextView winText;
-    Integer pID;
+    private SoundManager soundManager;
+    private TextView winText;
+    private Integer pID;
 
     public WinnerScreen() {
         super();
@@ -41,7 +41,7 @@ public class WinnerScreen extends AppCompatActivity {
             pID = getIntent().getExtras().getInt("pID");
             winText.setText("Du Spieler " + pID + " hast Gewonnen");
 
-            Thread titlescreenthread = new Thread() {
+            Thread winnerScreenThread = new Thread() {
                 public void run() {
                     try {
                         sleep(8000);
@@ -53,7 +53,7 @@ public class WinnerScreen extends AppCompatActivity {
                     }
                 }
             };
-            titlescreenthread.start();
+            winnerScreenThread.start();
         }
     }
 }

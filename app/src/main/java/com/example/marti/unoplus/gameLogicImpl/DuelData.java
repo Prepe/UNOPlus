@@ -20,6 +20,7 @@ public class DuelData {
         this.starterColor = starterColor;
     }
 
+
     public int getDuelLoserID(Card.colors opponentColor) {
         if (opponentColor.equals(starterColor)){
             return duelStarterID;

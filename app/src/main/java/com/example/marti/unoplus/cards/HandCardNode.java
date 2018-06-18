@@ -5,8 +5,8 @@ package com.example.marti.unoplus.cards;
  */
 
 public class HandCardNode {
-    int index;
-    Card card;
+    private int index;
+    private Card card;
     HandCardNode nextCard;
     HandCardNode prevCard;
 

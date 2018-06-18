@@ -126,7 +126,7 @@
         android:id="@+id/netmessage"
         android:layout_width="200dp"
         android:layout_height="22dp"
-        android:layout_alignBottom="@+id/countdown"
+        android:layout_alignTop="@+id/numCards1"
         android:layout_centerHorizontal="true"
         android:text="no message recieved"
         android:textAppearance="@style/TextAppearance.AppCompat.Inverse" />
@@ -159,4 +159,14 @@
         android:layout_centerVertical="true"
         android:layout_marginEnd="121dp"
         android:background="@drawable/card_back" />
+
+    <TextView
+        android:id="@+id/playerTurn"
+        android:layout_width="154dp"
+        android:layout_height="11dp"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/numCards1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
+        android:textSize="10sp"
+        android:textStyle="bold" />
 </RelativeLayout>

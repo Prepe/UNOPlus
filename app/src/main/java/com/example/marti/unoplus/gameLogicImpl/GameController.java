@@ -180,7 +180,7 @@ public class GameController {
         }
     }
 
-    void drawCardAsDuelLoser(int loserID){
+    public void drawCardAsDuelLoser(int loserID){
         LinkedList<Card> cards = new LinkedList<>();
         if (deck.isEmptyDeck()) {
             deck.replaceTakeDeck();
@@ -437,9 +437,5 @@ public class GameController {
     }
     public LinkedList<LinkedList<Card>> getGottenHandsCards() {
         return gottenHandsCards;
-    }
-
-    public DuelData getDuelData() {
-        return duelData;
     }
 }

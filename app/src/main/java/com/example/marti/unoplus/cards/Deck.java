@@ -1,6 +1,5 @@
 package com.example.marti.unoplus.cards;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 
@@ -10,24 +9,15 @@ import java.util.LinkedList;
 
 public class Deck {
 
-    //public ArrayList<Card> deck;
-
     public Deck() {
-        //this.deck = new ArrayList<>();
         decksinit();
         buildDeck();
     }
 
-    Deck playeddeck; //deck where players take cards from ('graveyard')
-    Deck takedeck;  //deck where players take cards from
     LinkedList<Card> deck;          //the deck where players take cards from
     LinkedList<Card> drawnCards;    //all drawn cards land here waiting to be reshuffeld
 
     private void decksinit() {
-        /*
-        this.takedeck = new Deck();      // create deck where players take cards from
-        this.playeddeck = new Deck();      // create deck where players put cards down
-        */
         deck = new LinkedList<>();
         drawnCards = new LinkedList<>();
     }
@@ -56,10 +46,6 @@ public class Deck {
         createDuel();
         createCardSpin();
 
-        /*
-        Collections.shuffle(takedeck.deck);
-        System.out.println(this.takedeck.deck.size() + " cards created and put in takedeck");
-        */
         shuffle();
         System.out.println(this.deck.size() + " cards created and put in deck");
     }
@@ -70,7 +56,6 @@ public class Deck {
             for (int num = 0; num < 13; num++) {
                 int x = (num == 0) ? 1 : 2;
                 for (int i = 0; i < x; i++) {
-                    //takedeck.deck.add(new Card(color, num));
                     deck.add(new Card(color, num));
                 }
             }
@@ -82,7 +67,6 @@ public class Deck {
         for (int i = 0; i < 4; i++) {
             for (int x = 0; x < 2; x++) {
                 int action = (x == 0) ? 13 : 14;
-                //takedeck.deck.add(new Card(5, action));
                 deck.add(new Card(4, action));
             }
         }
@@ -92,7 +76,6 @@ public class Deck {
         for (int i = 0; i < 4; i++) {
             for (int x = 0; x < 2; x++) {
                 int action = 15;
-                //takedeck.deck.add(new Card(5, action));
                 deck.add(new Card(4, action));
             }
         }
@@ -102,7 +85,6 @@ public class Deck {
         for (int i = 0; i < 4; i++) {
             for (int x = 0; x < 2; x++) {
                 int action = 16;
-                //takedeck.deck.add(new Card(5, action));
                 deck.add(new Card(4, action));
             }
         }
@@ -112,7 +94,6 @@ public class Deck {
         for (int i = 0; i < 4; i++) {
             for (int x = 0; x < 2; x++) {
                 int action = 17;
-                //takedeck.deck.add(new Card(5, action));
                 deck.add(new Card(4, action));
             }
         }
@@ -135,18 +116,10 @@ public class Deck {
     //Draws the top card from the take deck and adds it to player's deck
     public Card draw() {
         //Check if pile empty, if so, take top card, shuffle played deck and make take deck from it
-        //int takeDeckSize = takedeck.getDeckSize();
         int takeDeckSize = deck.size();
         if (takeDeckSize == 0) {
             replaceTakeDeck();
         }
-
-        int lastIndex = takeDeckSize - 1;
-        /*
-        Card lastCard = takedeck.deck.get(lastIndex);
-        takedeck.deck.remove(lastCard);
-        this.deck.add(lastCard);
-        */
 
         Card lastCard = deck.getLast();
         deck.remove(lastCard);
@@ -155,36 +128,17 @@ public class Deck {
         return lastCard;
     }
 
-    /*
-    public void move(Card card, Deck originalDeck, Deck newDeck) {
-        originalDeck.deck.remove(card);
-        newDeck.deck.add(card);
-    }
-    */
-
     public void shuffle() {
         Collections.shuffle(this.deck);
     }
 
-    /*
-    public Card getLastCardPlayed() {
-        int deckSize = playeddeck.deck.size() - 1;
-        return playeddeck.deck.get(deckSize);
-    }
-    */
-
     public void replaceTakeDeck() {
         /*
         //Move top card in played deck to new deck
-        Deck newDeck = new Deck();
-        move(getLastCardPlayed(), playeddeck, newDeck);
 
         //Make played deck the main deck and shuffle take deck
-        takedeck = playeddeck;
-        takedeck.shuffle();
 
         //Make the new deck the played deck
-        playeddeck = newDeck;
         */
 
         deck = drawnCards;
