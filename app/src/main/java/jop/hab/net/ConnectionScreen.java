@@ -22,12 +22,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.marti.unoplus.R;
-import com.example.marti.unoplus.Screens.GameViewProt;
 import com.example.marti.unoplus.Screens.LobbyScreen;
 import com.example.marti.unoplus.Screens.NameScreen;
 import com.example.marti.unoplus.Screens.WaitingScreen;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.util.ArrayList;
