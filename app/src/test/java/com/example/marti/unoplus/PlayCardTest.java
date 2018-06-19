@@ -55,7 +55,7 @@ public class PlayCardTest {
         list.add(player2);
         PlayerList playerList = new PlayerList();
         playerList.setPlayers(list);
-        Card card1 = new Card(Card.colors.GREEN, Card.values.ONE);
+        Card card1 = new Card(Card.colors.WILD, Card.values.ONE);
         gameController.setPlayerList(playerList);
         gameController.setUpGame();
 
