@@ -30,8 +30,7 @@ public class CardEffects {
                 gameLogic.nextPlayer(player);
                 break;
             case TURN:
-                reverse();
-                gameLogic.nextPlayer(player);
+                reverse(player);
                 break;
             case PLUS_TWO:
                 takeTwo();
@@ -57,6 +56,7 @@ public class CardEffects {
 
         gameController.gA = new GameActions(GameActions.actions.NEXT_PLAYER, gameLogic.getActivePlayer().getID());
         gameController.update();
+
     }
 
     //TakeTwo Card effect method
@@ -78,13 +78,24 @@ public class CardEffects {
     }
 
     //Reverse Card effect method
-    private void reverse() {
-        gameLogic.toggleReverse();
+    private void reverse(Player player) {
+        int cardDrawCount = gameLogic.getCardDrawCount();
+        if (cardDrawCount > 1) {
+            gameLogic.changeCardDrawCount(cardDrawCount);
+            gameLogic.toggleReverse();
+            gameLogic.nextPlayer(player);
+            gameLogic.toggleReverse();
+        } else {
+            gameLogic.toggleReverse();
+            gameLogic.nextPlayer(player);
+        }
     }
 
     //Suspend Card effect method
     private void skip() {
-        gameLogic.skipNext();
+        if (gameLogic.getCardDrawCount() == 1) {
+            gameLogic.skipNext();
+        }
     }
 
     //Hot Drop Card effect method

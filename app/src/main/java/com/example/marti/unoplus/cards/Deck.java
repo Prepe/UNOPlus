@@ -9,9 +9,9 @@ import java.util.LinkedList;
 
 public class Deck {
 
-    public Deck() {
+    public Deck(boolean hotDrop, boolean duel, boolean cardSpin) {
         decksinit();
-        buildDeck();
+        buildDeck(hotDrop,duel,cardSpin);
     }
 
     LinkedList<Card> deck;          //the deck where players take cards from
@@ -34,17 +34,26 @@ public class Deck {
         Also:
             4 wild cards (color all)
             4 wild draw 4 cards (color all)
-
+        Bonus if enabled:
+            4 HotDrops
+            4 Duels
+            4 Card Spins
      */
 
     //Build and shuffle a new deck for a game
-    private void buildDeck() {
+    private void buildDeck(boolean hotDrop, boolean duel, boolean cardSpin) {
         createNormalCards();
         createWildCards();
 
-        createHotDrop();
-        createDuel();
-        createCardSpin();
+        if (hotDrop) {
+            createHotDrop();
+        }
+        if (duel) {
+            createDuel();
+        }
+        if (cardSpin) {
+            createCardSpin();
+        }
 
         shuffle();
         System.out.println(this.deck.size() + " cards created and put in deck");
