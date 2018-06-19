@@ -75,7 +75,7 @@ public class DropCardTest {
     }
 
 
-    @Test
+   /* @Test
     public void dropCardTest2() {
 
         PowerMockito.mockStatic(Log.class);
@@ -121,7 +121,7 @@ public class DropCardTest {
         junit.framework.Assert.assertEquals(expected2.nextPlayerID, gameController.gA.nextPlayerID);
         junit.framework.Assert.assertEquals(expected2.check, gameController.gA.check);
 
-    }
+    }*/
 
 
     @Test
