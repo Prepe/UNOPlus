@@ -1,7 +1,9 @@
 package jop.hab.net;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
@@ -53,6 +55,13 @@ public class ConnectionScreen extends AppCompatActivity {
     public String playername;
 
     static final int MESSAGE_READ = 1;
+
+    boolean hotDrop = false;
+    boolean spinCard = false;
+    boolean duel = false;
+    boolean tradeCard = false;
+    boolean dropCard = false;
+    boolean quickPlay = false;
 
 
 //Hier wird die Verbindung zwischen den geräten hergstellt. Dann wird die IP Adresse des Hosts und der Mode ("host oder server)
@@ -160,6 +169,7 @@ public class ConnectionScreen extends AppCompatActivity {
         });*/
     }
 
+    String groupOwnerAdressHost;
     WifiP2pManager.ConnectionInfoListener connectionInfoListener = new WifiP2pManager.ConnectionInfoListener() {
         @Override
         public void onConnectionInfoAvailable(WifiP2pInfo info) {
@@ -180,11 +190,13 @@ public class ConnectionScreen extends AppCompatActivity {
                 btnStart.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i = new Intent(getBaseContext(), GameViewProt.class);
+                        groupOwnerAdressHost = groupOwnerAdress.getHostAddress();
+                        selectOptionsDialog();
+                        /*Intent i = new Intent(getBaseContext(), GameViewProt.class);
                         i.putExtra("mode", "server");
                         i.putExtra("adress", groupOwnerAdress.getHostAddress());
                         i.putExtra("numofclients",getNUMConnectedDevices());
-                        startActivity(i);
+                        startActivity(i);*/
                     }
                 });
 
@@ -228,6 +240,63 @@ public class ConnectionScreen extends AppCompatActivity {
 
         }
     };
+
+    public void selectOptionsDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT);
+        builder.setTitle("Wähle die Spieloptionen")
+                .setMultiChoiceItems(new String[]{"Hot Drop", "Card Spin", "Duel", "Karten wegwerfen", "Karten tauschen", "Zwischenwerfen"}, null,
+                        new DialogInterface.OnMultiChoiceClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                                if (which == 0 && isChecked) {
+                                    hotDrop = true;
+                                    Log.d("OPTIONS", "Hotdrop set true");
+                                }
+                                if (which == 1 && isChecked) {
+                                    spinCard = true;
+                                    Log.d("OPTIONS", "SpinCard set true");
+                                }
+                                if (which == 2 && isChecked) {
+                                    duel = true;
+                                    Log.d("OPTIONS", "Duel set true");
+                                }
+                                if (which == 3 && isChecked) {
+                                    dropCard = true;
+                                    Log.d("OPTIONS", "DropCard set true");
+                                }
+                                if (which == 4 && isChecked) {
+                                    tradeCard = true;
+                                    Log.d("OPTIONS", "TradeCard set true");
+                                }
+                                if (which == 5 && isChecked) {
+                                    quickPlay = true;
+                                    Log.d("OPTIONS", "Quick play set true");
+                                }
+                            }
+                        })
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User clicked OK, so save the mSelectedItems results somewhere
+                        // or return them to the component that opened the dialog
+                        Intent i = new Intent(ConnectionScreen.this, GameViewProt.class);
+                        i.putExtra("mode", "server");
+                        i.putExtra("adress", groupOwnerAdressHost);
+                        i.putExtra("numofclients",getNUMConnectedDevices());
+
+                        i.putExtra("HotDrop", hotDrop);
+                        i.putExtra("SpinCard", spinCard);
+                        i.putExtra("Duel", duel);
+                        i.putExtra("DropCard", dropCard);
+                        i.putExtra("TradeCard", tradeCard);
+                        i.putExtra("QuickPlay", quickPlay);
+
+                        startActivity(i);
+                    }
+                });
+        builder.create();
+        builder.show();
+    }
 
     @Override
     protected void onResume() {

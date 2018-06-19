@@ -65,7 +65,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     boolean buttonPressed = false;
     LinkedList<Player> tempPlayers;
     int playerCount;
-    ArrayList selectedItems;
 
     boolean hotDrop;
     boolean spinCard;
@@ -73,6 +72,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     boolean tradeCard;
     boolean dropCard;
     boolean quickPlay;
+
 
     public GameViewProt() {
         super();
@@ -272,17 +272,20 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 e.printStackTrace();
             }
 
-            selectOptionsDialog();
+            hotDrop = getIntent().getBooleanExtra("HotDrop", false);
+            spinCard = getIntent().getBooleanExtra("SpinCard", false);
+            duel = getIntent().getBooleanExtra("Duel", false);
+            tradeCard = getIntent().getBooleanExtra("TradeCard", false);
+            dropCard = getIntent().getBooleanExtra("DropCard", false);
+            quickPlay = getIntent().getBooleanExtra("QuickPlay", false);
 
             isGameController = true;
             gameController = new GameController(this);
-
             tempPlayers = new LinkedList<>();
             player = new Player(0);
             player.setGV(this);
 
             tempPlayers.add(player);
-
             playerCount = numClients;
 
             while (NIOmanager.isNotReady()) {
@@ -293,7 +296,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                     e.printStackTrace();
                 }
             }
-
             Log.d("HOST", "NumPlayers: " + playerCount);
             NIOmanager.writeGameaction(new GameActions(GameActions.actions.INIT_PLAYER, 0, 0, false));
 
@@ -391,6 +393,15 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             }
         }
     };
+
+
+    //getter for options
+    public boolean getBooleanHotDrop(){return this.hotDrop;}
+    public boolean getBooleanSpinCard(){return this.spinCard;}
+    public boolean getBooleanDuel(){return this.duel;}
+    public boolean getBooleanDropCard(){return this.dropCard;}
+    public boolean getBooleanTradeCard(){return this.tradeCard;}
+    public boolean getBooleanQuickPlay(){return this.quickPlay;}
 
     //<--------- View Updates --------->
     //Player sends an action
@@ -593,77 +604,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         d.setCanceledOnTouchOutside(true);
         d.show();
     }
-
-    public void selectOptionsDialog() {
-        selectedItems = new ArrayList();  // Where we track the selected items
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT);
-        builder.setTitle("Wähle die Spieloptionen")
-                .setMultiChoiceItems(new String[]{"Hot Drop", "Card Spin", "Duel", "Karten wegwerfen", "Karten tauschen", "Zwischenwerfen"}, null,
-                        new DialogInterface.OnMultiChoiceClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                                if (which == 0 && isChecked) {
-                                    hotDrop = true;
-                                    selectedItems.add(which);
-                                } else if (selectedItems.contains(which == 0)) {
-                                    hotDrop = false;
-                                    selectedItems.remove(Integer.valueOf(which));
-                                }
-                                if (which == 1 && isChecked) {
-                                    spinCard = true;
-                                    selectedItems.add(which);
-                                } else if (selectedItems.contains(which == 1)) {
-                                    spinCard = false;
-                                    selectedItems.remove(Integer.valueOf(which));
-                                }
-                                if (which == 2 && isChecked) {
-                                    duel = true;
-                                    selectedItems.add(which);
-                                } else if (selectedItems.contains(which == 2)) {
-                                    duel = false;
-                                    selectedItems.remove(Integer.valueOf(which));
-                                }
-                                if (which == 3 && isChecked) {
-                                    dropCard = true;
-                                    selectedItems.add(which);
-                                } else if (selectedItems.contains(which == 3)) {
-                                    dropCard = false;
-                                    selectedItems.remove(Integer.valueOf(which));
-                                }
-                                if (which == 4 && isChecked) {
-                                    tradeCard = true;
-                                    selectedItems.add(which);
-                                } else if (selectedItems.contains(which == 4)) {
-                                    tradeCard = false;
-                                    selectedItems.remove(Integer.valueOf(which));
-                                }
-                                if (which == 5 && isChecked) {
-                                    quickPlay = true;
-                                    selectedItems.add(which);
-                                } else if (selectedItems.contains(which == 5)) {
-                                    quickPlay = false;
-                                    selectedItems.remove(Integer.valueOf(which));
-                                }
-                            }
-                        })
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User clicked OK, so save the mSelectedItems results somewhere
-                        // or return them to the component that opened the dialog
-                    }
-                });
-                builder.create();
-        builder.show();
-    }
-
-    //getter for options
-    public boolean getBooleanHotDrop(){return this.hotDrop;}
-    public boolean getBooleanSpinCard(){return this.spinCard;}
-    public boolean getBooleanDuel(){return this.duel;}
-    public boolean getBooleanDropCard(){return this.dropCard;}
-    public boolean getBooleanTradeCard(){return this.tradeCard;}
-    public boolean getBooleanQuickPlay(){return this.quickPlay;}
 
     void finishTradeOffer(int playerToTrade, Card c) {
         if (playerToTrade != player.getID()) {
