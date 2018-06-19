@@ -36,6 +36,7 @@ import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.players.PlayerList;
 import com.example.marti.unoplus.sound.SoundManager;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import java.util.LinkedList;
@@ -64,6 +65,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     boolean buttonPressed = false;
     LinkedList<Player> tempPlayers;
     int playerCount;
+    ArrayList selectedItems;
 
     public GameViewProt() {
         super();
@@ -263,6 +265,8 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 e.printStackTrace();
             }
 
+            selectOptionsDialog();
+
             isGameController = true;
             gameController = new GameController(this);
 
@@ -360,7 +364,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         temp1.gcSend = true;
         NIOmanager.writeGameaction(temp1);
         handleUpdate(temp1);
-
         gameController.setUpGame();
     }
 
@@ -381,10 +384,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             }
         }
     };
-
-    public boolean getButtonPressed() {
-        return this.buttonPressed;
-    }
 
     //<--------- View Updates --------->
     //Player sends an action
@@ -586,6 +585,69 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 .create();
         d.setCanceledOnTouchOutside(true);
         d.show();
+    }
+
+    public void selectOptionsDialog() {
+        selectedItems = new ArrayList();  // Where we track the selected items
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT);
+        builder.setTitle("Wähle die Spieloptionen")
+                .setMultiChoiceItems(new String[]{"Hot Drop", "Card Spin", "Duel", "Karten wegwerfen", "Karten tauschen", "Zwischenwerfen"}, null,
+                        new DialogInterface.OnMultiChoiceClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                                if (which == 0 && isChecked) {
+                                    gameController.hotDropEnabled = true;
+                                    selectedItems.add(which);
+                                } else if (selectedItems.contains(which == 0)) {
+                                    gameController.hotDropEnabled = false;
+                                    selectedItems.remove(Integer.valueOf(which));
+                                }
+                                if (which == 1 && isChecked) {
+                                    gameController.cardSpinEnabled = true;
+                                    selectedItems.add(which);
+                                } else if (selectedItems.contains(which == 1)) {
+                                    gameController.cardSpinEnabled = false;
+                                    selectedItems.remove(Integer.valueOf(which));
+                                }
+                                if (which == 2 && isChecked) {
+                                    gameController.duelEnabled = true;
+                                    selectedItems.add(which);
+                                } else if (selectedItems.contains(which == 2)) {
+                                    gameController.duelEnabled = false;
+                                    selectedItems.remove(Integer.valueOf(which));
+                                }
+                                if (which == 3 && isChecked) {
+                                    gameController.dropCardAllowed = true;
+                                    selectedItems.add(which);
+                                } else if (selectedItems.contains(which == 3)) {
+                                    gameController.dropCardAllowed = false;
+                                    selectedItems.remove(Integer.valueOf(which));
+                                }
+                                if (which == 4 && isChecked) {
+                                    gameController.tradeCardAllowed = true;
+                                    selectedItems.add(which);
+                                } else if (selectedItems.contains(which == 4)) {
+                                    gameController.tradeCardAllowed = false;
+                                    selectedItems.remove(Integer.valueOf(which));
+                                }
+                                if (which == 5 && isChecked) {
+                                    gameController.quickPlayAllowed = true;
+                                    selectedItems.add(which);
+                                } else if (selectedItems.contains(which == 5)) {
+                                    gameController.quickPlayAllowed = false;
+                                    selectedItems.remove(Integer.valueOf(which));
+                                }
+                            }
+                        })
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User clicked OK, so save the mSelectedItems results somewhere
+                        // or return them to the component that opened the dialog
+                    }
+                });
+                builder.create();
+        builder.show();
     }
 
     void finishTradeOffer(int playerToTrade, Card c) {

@@ -180,7 +180,7 @@ public class ConnectionScreen extends AppCompatActivity {
                 btnStart.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i = new Intent(getBaseContext(), LobbyScreen.class);
+                        Intent i = new Intent(getBaseContext(), GameViewProt.class);
                         i.putExtra("mode", "server");
                         i.putExtra("adress", groupOwnerAdress.getHostAddress());
                         i.putExtra("numofclients",getNUMConnectedDevices());
@@ -214,7 +214,7 @@ public class ConnectionScreen extends AppCompatActivity {
                 btnStart.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i = new Intent(getBaseContext(), WaitingScreen.class);
+                        Intent i = new Intent(getBaseContext(), GameViewProt.class);
 
                         i.putExtra("mode", "client");
                         i.putExtra("adress", groupOwnerAdress.getHostAddress());

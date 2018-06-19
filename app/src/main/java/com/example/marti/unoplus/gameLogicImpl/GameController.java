@@ -37,17 +37,17 @@ public class GameController {
     public DuelData duelData; // holds information about a duel
 
     //<OPTIONS>
-    boolean dropCardAllowed = true;     //enables players to drop cards
+    public boolean dropCardAllowed = true;     //enables players to drop cards
     int dropCardPunishment = 2;         //how many cards a player draws when punished
-    boolean tradeCardAllowed = true;    //enables players to trade cards
+    public boolean tradeCardAllowed = true;    //enables players to trade cards
     int tradeCardPunishment = 2;        //how many cards a player draws when punished
-    boolean quickPlayAllowed = true;    //enables players to play cards anytime turn
+    public boolean quickPlayAllowed = true;    //enables players to play cards anytime turn
     boolean counterAllowed = true;      //enables players to counter +2/4
-    boolean hotDropEnabled = true;      //enables the HotDop Card
+    public boolean hotDropEnabled = true;      //enables the HotDop Card
     int hotDropPunishment = 2;          //HotDrop looser draw amount
-    boolean duelEnabled = true;         //enables the Duel Card
+    public boolean duelEnabled = true;         //enables the Duel Card
     int duelPunishment = 2;             //Duel looser draw amount
-    boolean cardSpinEnabled = true;     //enables CardSpin Card
+    public boolean cardSpinEnabled = true;     //enables CardSpin Card
     int accusingPunishment = 1;          //amount of cards a player gets for wrong Call
 
     //Test Variables?
