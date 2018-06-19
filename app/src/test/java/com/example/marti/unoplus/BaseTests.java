@@ -1,6 +1,5 @@
 package com.example.marti.unoplus;
 
-import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
 import com.example.marti.unoplus.Screens.GameViewProt;
@@ -25,7 +24,6 @@ import java.util.LinkedList;
 
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by Luca on 16.06.2018.
@@ -47,7 +45,7 @@ public class BaseTests {
         gameController = new GameController(gameViewProt);
         gameViewProt = mock(GameViewProt.class);
         gameLogic = new GameLogic();
-        deck = new Deck();
+        deck = new Deck(true,true,true);
     }
 
 
@@ -88,7 +86,7 @@ public class BaseTests {
 
         GameActions testgameAction2 = new GameActions(GameActions.actions.DRAW_CARD, 1);
 
-        GameActions expected = new GameActions(GameActions.actions.NEXT_PLAYER, 1);
+        GameActions expected = new GameActions(GameActions.actions.UPDATE, 0);
 
         gameController.callGameController(testgameAction2);
 
@@ -337,7 +335,7 @@ public class BaseTests {
         gameController.setPlayerList(playerList);
         gameController.setUpGame();
         gameController = mock(GameController.class);
-        gameLogic = new GameLogic(playerList, deck, gameController);
+        gameLogic = new GameLogic(playerList, deck, gameController,true,true);
 
         //if deck is empty
         for (int i = 0; i < 132; i++) {
@@ -348,18 +346,18 @@ public class BaseTests {
 
         doNothing().when(gameViewProt).updateAllConnected(expectedGA1);
 
-        gameController.drawCardAsDuelLoser(gameLogic.getActivePlayer().getID());
+        gameController.forcedCardDraw(gameLogic.getActivePlayer().getID());
 
         Assert.assertEquals(expectedGA1.action, gameController.gA.action);
 
         //if deck is not empty
-        deck = new Deck();
+        deck = new Deck(true,true,true);
 
         GameActions expectedGA2 = new GameActions(GameActions.actions.UPDATE, card1, gameLogic.nextPlayer(gameLogic.getActivePlayer()).getID());
 
         doNothing().when(gameViewProt).updateAllConnected(expectedGA2);
 
-        gameController.drawCardAsDuelLoser(gameLogic.getActivePlayer().getID());
+        gameController.forcedCardDraw(gameLogic.getActivePlayer().getID());
 
         Assert.assertEquals(expectedGA2.action, gameController.gA.action);
 
@@ -421,7 +419,7 @@ public class BaseTests {
         playerList.setPlayers(list);
         gameController.setPlayerList(playerList);
         gameController.setUpGame();
-        gameLogic = new GameLogic(playerList, deck, gameController);
+        gameLogic = new GameLogic(playerList, deck, gameController,true,true);
 
         //if player hasn't cheated yet and is not the active player
         GameActions testGA1 = new GameActions(GameActions.actions.DROP_CARD, 1, 0, true);
@@ -466,7 +464,7 @@ public class BaseTests {
         Card card1 = new Card(Card.colors.GREEN, Card.values.ONE);
         gameController.setPlayerList(playerList);
         gameController.setUpGame();
-        gameLogic = new GameLogic(playerList, deck, gameController);
+        gameLogic = new GameLogic(playerList, deck, gameController,true,true);
 
         //if
         GameActions testGA1 = new GameActions(GameActions.actions.CALL_UNO, 1);

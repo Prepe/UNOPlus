@@ -35,7 +35,6 @@ public class TestCardspin {
 
     @Mock
     GameViewProt gameViewProt;
-
     GameController gameController;
     GameLogic gameLogic;
 
@@ -47,11 +46,9 @@ public class TestCardspin {
 
     }
 
-
     @Test
     public void firstGameactionsend() {
         PowerMockito.mockStatic(Log.class);
-
 
         Player player1 = new Player(0);
         Player player2 = new Player(1);
@@ -62,7 +59,6 @@ public class TestCardspin {
         playerList.setPlayers(list);
         gameController.setPlayerList(playerList);
         gameController.setUpGame();
-
 
         GameActions testgameAction = new GameActions(GameActions.actions.CARD_SPIN, 0);
         testgameAction.playerID = 0;
@@ -71,20 +67,15 @@ public class TestCardspin {
 
         doNothing().when(gameViewProt).updateAllConnected(testgameAction);
 
-
         gameController.callGameController(testgameAction);
 
-
         Assert.assertEquals(gameController.gA.action, expected.action);
-
         Assert.assertEquals(gameController.gA.playerID, expected.playerID);
-
     }
 
     @Test
     public void firstGameactionsendReversed() {
         PowerMockito.mockStatic(Log.class);
-
 
         Player player1 = new Player(0);
         Player player2 = new Player(1);
@@ -95,7 +86,6 @@ public class TestCardspin {
         playerList.setPlayers(list);
         gameController.setPlayerList(playerList);
         gameController.setUpGame();
-
 
         GameActions testgameAction = new GameActions(GameActions.actions.CARD_SPIN, 0);
         testgameAction.playerID = 1;
@@ -107,15 +97,14 @@ public class TestCardspin {
         gameLogic.toggleReverse();
         gameController.callGameController(testgameAction);
 
-
         Assert.assertEquals(gameController.gA.action, expected.action);
 
         Assert.assertEquals(gameController.gA.playerID, expected.playerID);
         gameLogic.toggleReverse();
-
-
     }
 
+    /*
+    Wird nicht gebraucht GOTHand und GIVEHand waren überbleibsel nicht genutzten codes
     @Test
     public void savegottencardsTest() {
 
@@ -281,4 +270,5 @@ public class TestCardspin {
         }
 
     }
+    */
 }

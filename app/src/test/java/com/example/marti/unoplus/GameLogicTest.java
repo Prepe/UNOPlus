@@ -42,7 +42,7 @@ public class GameLogicTest {
         gameController = new GameController(gameViewProt);
         gameViewProt = mock(GameViewProt.class);
         gameLogic = new GameLogic();
-        deck = new Deck();
+        deck = new Deck(true,true,true);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class GameLogicTest {
         PlayerList playerList = new PlayerList();
         playerList.setPlayers(list);
 
-        gameLogic = new GameLogic(playerList, deck, gameController);
+        gameLogic = new GameLogic(playerList, deck, gameController,true,true);
 
         //if player == null
         gameLogic.nextPlayer(player3);
@@ -107,7 +107,7 @@ public class GameLogicTest {
         Card card4 = new Card(Card.colors.GREEN, Card.values.FIVE);
         Card card5 = new Card(Card.colors.RED, Card.values.SEVEN);
 
-        gameLogic = new GameLogic(playerList, deck, gameController);
+        gameLogic = new GameLogic(playerList, deck, gameController,true,true);
         gameController.setPlayerList(playerList);
         gameController.setUpGame();
 
@@ -197,7 +197,7 @@ public class GameLogicTest {
         Card card2 = new Card(Card.colors.YELLOW, Card.values.PLUS_TWO);
         Card card3 = new Card(Card.colors.WILD, Card.values.PLUS_FOUR);
 
-        gameLogic = new GameLogic(playerList, deck, gameController);
+        gameLogic = new GameLogic(playerList, deck, gameController,true,true);
         gameController.setPlayerList(playerList);
         gameController.setUpGame();
 
@@ -246,7 +246,7 @@ public class GameLogicTest {
         Card card2 = new Card(Card.colors.YELLOW, Card.values.FIVE);
         Card card3 = new Card(Card.colors.GREEN, Card.values.THREE);
 
-        gameLogic = new GameLogic(playerList, deck, gameController);
+        gameLogic = new GameLogic(playerList, deck, gameController,true,true);
         gameController.setPlayerList(playerList);
         gameController.setUpGame();
 
