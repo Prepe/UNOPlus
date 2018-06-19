@@ -37,17 +37,17 @@ public class GameController {
     public DuelData duelData; // holds information about a duel
 
     //<OPTIONS>
-    public boolean dropCardAllowed = true;     //enables players to drop cards
+    boolean dropCardAllowed = true;     //enables players to drop cards
     int dropCardPunishment = 2;         //how many cards a player draws when punished
-    public boolean tradeCardAllowed = true;    //enables players to trade cards
+    boolean tradeCardAllowed = true;    //enables players to trade cards
     int tradeCardPunishment = 2;        //how many cards a player draws when punished
-    public boolean quickPlayAllowed = true;    //enables players to play cards anytime turn
+    boolean quickPlayAllowed = true;    //enables players to play cards anytime turn
     boolean counterAllowed = true;      //enables players to counter +2/4
-    public boolean hotDropEnabled = true;      //enables the HotDop Card
+    boolean hotDropEnabled = true;      //enables the HotDop Card
     int hotDropPunishment = 2;          //HotDrop looser draw amount
-    public boolean duelEnabled = true;         //enables the Duel Card
+    boolean duelEnabled = true;         //enables the Duel Card
     int duelPunishment = 2;             //Duel looser draw amount
-    public boolean cardSpinEnabled = true;     //enables CardSpin Card
+    boolean cardSpinEnabled = true;     //enables CardSpin Card
     int accusingPunishment = 1;          //amount of cards a player gets for wrong Call
 
     //Test Variables?
@@ -56,6 +56,14 @@ public class GameController {
     //<---------- Method for setting up the Game ---------->
     public GameController(GameViewProt gvp) {
         this.gvp = gvp;
+
+        this.quickPlayAllowed = gvp.getBooleanQuickPlay();
+        this.tradeCardAllowed = gvp.getBooleanTradeCard();
+        this.dropCardAllowed = gvp.getBooleanDropCard();
+        this.hotDropEnabled = gvp.getBooleanHotDrop();
+        this.duelEnabled = gvp.getBooleanDuel();
+        this.cardSpinEnabled = gvp.getBooleanSpinCard();
+
         deck = new Deck(hotDropEnabled,duelEnabled,cardSpinEnabled);
     }
 

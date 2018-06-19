@@ -67,6 +67,13 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     int playerCount;
     ArrayList selectedItems;
 
+    boolean hotDrop;
+    boolean spinCard;
+    boolean duel;
+    boolean tradeCard;
+    boolean dropCard;
+    boolean quickPlay;
+
     public GameViewProt() {
         super();
         this.handCards = new ArrayList<>();
@@ -596,45 +603,45 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                             @Override
                             public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                                 if (which == 0 && isChecked) {
-                                    gameController.hotDropEnabled = true;
+                                    hotDrop = true;
                                     selectedItems.add(which);
                                 } else if (selectedItems.contains(which == 0)) {
-                                    gameController.hotDropEnabled = false;
+                                    hotDrop = false;
                                     selectedItems.remove(Integer.valueOf(which));
                                 }
                                 if (which == 1 && isChecked) {
-                                    gameController.cardSpinEnabled = true;
+                                    spinCard = true;
                                     selectedItems.add(which);
                                 } else if (selectedItems.contains(which == 1)) {
-                                    gameController.cardSpinEnabled = false;
+                                    spinCard = false;
                                     selectedItems.remove(Integer.valueOf(which));
                                 }
                                 if (which == 2 && isChecked) {
-                                    gameController.duelEnabled = true;
+                                    duel = true;
                                     selectedItems.add(which);
                                 } else if (selectedItems.contains(which == 2)) {
-                                    gameController.duelEnabled = false;
+                                    duel = false;
                                     selectedItems.remove(Integer.valueOf(which));
                                 }
                                 if (which == 3 && isChecked) {
-                                    gameController.dropCardAllowed = true;
+                                    dropCard = true;
                                     selectedItems.add(which);
                                 } else if (selectedItems.contains(which == 3)) {
-                                    gameController.dropCardAllowed = false;
+                                    dropCard = false;
                                     selectedItems.remove(Integer.valueOf(which));
                                 }
                                 if (which == 4 && isChecked) {
-                                    gameController.tradeCardAllowed = true;
+                                    tradeCard = true;
                                     selectedItems.add(which);
                                 } else if (selectedItems.contains(which == 4)) {
-                                    gameController.tradeCardAllowed = false;
+                                    tradeCard = false;
                                     selectedItems.remove(Integer.valueOf(which));
                                 }
                                 if (which == 5 && isChecked) {
-                                    gameController.quickPlayAllowed = true;
+                                    quickPlay = true;
                                     selectedItems.add(which);
                                 } else if (selectedItems.contains(which == 5)) {
-                                    gameController.quickPlayAllowed = false;
+                                    quickPlay = false;
                                     selectedItems.remove(Integer.valueOf(which));
                                 }
                             }
@@ -649,6 +656,14 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 builder.create();
         builder.show();
     }
+
+    //getter for options
+    public boolean getBooleanHotDrop(){return this.hotDrop;}
+    public boolean getBooleanSpinCard(){return this.spinCard;}
+    public boolean getBooleanDuel(){return this.duel;}
+    public boolean getBooleanDropCard(){return this.dropCard;}
+    public boolean getBooleanTradeCard(){return this.tradeCard;}
+    public boolean getBooleanQuickPlay(){return this.quickPlay;}
 
     void finishTradeOffer(int playerToTrade, Card c) {
         if (playerToTrade != player.getID()) {
