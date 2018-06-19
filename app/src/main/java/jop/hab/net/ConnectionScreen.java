@@ -21,7 +21,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.marti.unoplus.GameActions;
 import com.example.marti.unoplus.R;
+import com.example.marti.unoplus.Screens.GameViewProt;
 import com.example.marti.unoplus.Screens.LobbyScreen;
 import com.example.marti.unoplus.Screens.NameScreen;
 import com.example.marti.unoplus.Screens.WaitingScreen;
@@ -29,9 +31,8 @@ import com.example.marti.unoplus.Screens.WaitingScreen;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-
-import static java.lang.Thread.sleep;
 
 public class ConnectionScreen extends AppCompatActivity {
 
@@ -214,8 +215,6 @@ public class ConnectionScreen extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent i = new Intent(getBaseContext(), WaitingScreen.class);
-
-
 
                         i.putExtra("mode", "client");
                         i.putExtra("adress", groupOwnerAdress.getHostAddress());

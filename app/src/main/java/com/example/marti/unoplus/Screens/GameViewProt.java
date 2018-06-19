@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.os.StrictMode;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
@@ -37,17 +36,9 @@ import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.players.PlayerList;
 import com.example.marti.unoplus.sound.SoundManager;
 
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Comparator;
+
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Date;
 
 import jop.hab.net.NetworkIOManager;
 import jop.hab.net.ObserverInterface;
@@ -64,16 +55,13 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     PlayedCardView playedCardView;
     ThrowAwayView throwAwayView;
     TradeCardView tradeCardView;
-    Button buttongetcard, hotDropButton;
     TextView numCards;
     TextView numCards2;
-    SoundManager soundManager;
     public CountDownTimer timer;
     Button unoButton;
     Vibrator vibrator;
     ArrayList<String> playersInListView = new ArrayList<>();
     boolean buttonPressed = false;
-    boolean[] readyAll;
     LinkedList<Player> tempPlayers;
     int playerCount;
 
@@ -127,9 +115,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         int plsize = 0;
         plsize = playerCountTest(plsize);
         for (int i = 1; i <= 2; i++) {
-            //playersInListView.add("Player " + i);
-            playerName = getIntent().getExtras().getString(NameScreen.PLAYER_NAME, "");
-            playersInListView.add(playerName);
+            playersInListView.add("Player " + i);
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_items, playersInListView);

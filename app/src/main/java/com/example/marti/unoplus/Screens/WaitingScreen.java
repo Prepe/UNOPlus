@@ -11,11 +11,7 @@ import android.widget.ProgressBar;
 
 import com.example.marti.unoplus.R;
 
-import jop.hab.net.ConnectionScreen;
-
-import static android.view.View.INVISIBLE;
 import static com.example.marti.unoplus.Screens.NameScreen.PLAYER_NAME;
-import static java.lang.Thread.sleep;
 
 public class WaitingScreen extends AppCompatActivity {
     Button buttonStart;
@@ -36,7 +32,6 @@ public class WaitingScreen extends AppCompatActivity {
         hostAdress = getIntent().getStringExtra("adress");
         mode = getIntent().getStringExtra("mode");
         numClients = getIntent().getIntExtra("numofclients",1);
-        playername =   getIntent().getExtras().getString(PLAYER_NAME, "");
 
         progressBar = findViewById(R.id.progressBar2);
         buttonStart = findViewById(R.id.buttonStart);

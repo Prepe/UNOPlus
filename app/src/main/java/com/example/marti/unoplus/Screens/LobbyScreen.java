@@ -8,13 +8,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ProgressBar;
 
-import java.util.ArrayList;
-import java.util.List;
-import jop.hab.net.ConnectionScreen;
-
-import com.example.marti.unoplus.GameStatics;
 import com.example.marti.unoplus.R;
 import static com.example.marti.unoplus.Screens.NameScreen.PLAYER_NAME;
 
@@ -25,8 +19,6 @@ public class LobbyScreen extends AppCompatActivity {
     String mode;
     int numClients;
     public String playername;
-    Button buttonStart;
-    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +32,6 @@ public class LobbyScreen extends AppCompatActivity {
         hostAdress = getIntent().getStringExtra("adress");
         mode = getIntent().getStringExtra("mode");
         numClients = getIntent().getIntExtra("numofclients",1);
-        playername = getIntent().getExtras().getString(NameScreen.PLAYER_NAME, "");
 
         Button button= findViewById(R.id.verbindenbutton);
         button.setOnClickListener(new View.OnClickListener(){
