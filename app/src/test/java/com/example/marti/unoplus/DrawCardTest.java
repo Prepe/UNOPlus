@@ -86,7 +86,7 @@ public class DrawCardTest {
 
         GameActions testgameAction2 = new GameActions(GameActions.actions.DRAW_CARD, 1);
 
-        GameActions expected = new GameActions(GameActions.actions.UPDATE, 0);
+        GameActions expected = new GameActions(GameActions.actions.NEXT_PLAYER, 0);
 
         gameController.callGameController(testgameAction2);
 

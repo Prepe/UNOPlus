@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.marti.unoplus.Screens.GameViewProt;
 import com.example.marti.unoplus.cards.Card;
+import com.example.marti.unoplus.cards.Deck;
 import com.example.marti.unoplus.gameLogicImpl.GameController;
 import com.example.marti.unoplus.gameLogicImpl.GameLogic;
 import com.example.marti.unoplus.players.Player;
@@ -32,6 +33,7 @@ public class DropCardTest {
     GameViewProt gameViewProt;
     GameController gameController;
     GameLogic gameLogic;
+    Deck deck;
 
     @Before
     public void setup() {

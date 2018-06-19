@@ -10,13 +10,19 @@ import com.example.marti.unoplus.gameLogicImpl.GameLogic;
 import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.players.PlayerList;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.LinkedList;
+
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Log.class})
@@ -27,6 +33,8 @@ public class ColorWishTest {
     GameController gameController;
     GameLogic gameLogic;
     Deck deck;
+    boolean quickPlayAllowed;
+    boolean counterAllowed;
 
 
     @Before
@@ -51,7 +59,7 @@ public class ColorWishTest {
         playerList.setPlayers(list);
         gameController.setPlayerList(playerList);
         gameController.setUpGame();
-        gameLogic = new GameLogic(playerList, deck, gameController);
+        gameLogic = new GameLogic(playerList, deck, gameController, quickPlayAllowed, counterAllowed);
 
         // player == active player
 
