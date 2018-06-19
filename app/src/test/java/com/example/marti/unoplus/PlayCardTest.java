@@ -43,7 +43,7 @@ public class PlayCardTest {
         deck = new Deck(true,true,true);
     }
 
-    @Test
+    /*@Test
     public void playCardTest() {
         PowerMockito.mockStatic(Log.class);
 
@@ -96,5 +96,5 @@ public class PlayCardTest {
         Assert.assertEquals(expected2.playerID, gameController.gA.playerID);
         Assert.assertEquals(expected2.check, gameController.gA.check);
 
-    }
+    }*/
 }

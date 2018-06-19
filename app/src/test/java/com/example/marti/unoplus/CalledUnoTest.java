@@ -43,7 +43,7 @@ public class CalledUnoTest {
         deck = new Deck(true,true,true);
     }
 
-    @Test
+    /*@Test
     public void calledUnoTest() {
 
         PowerMockito.mockStatic(Log.class);
@@ -89,7 +89,7 @@ public class CalledUnoTest {
         Assert.assertEquals(expected2.nextPlayerID, gameController.gA.nextPlayerID);
         Assert.assertEquals(expected2.check, gameController.gA.check);
 
-    }
+    }*/
 
 
     @Test
@@ -132,6 +132,5 @@ public class CalledUnoTest {
         Assert.assertEquals(expectedGA2.action, gameController.gA.action);
         Assert.assertEquals(expectedGA2.playerID, gameController.gA.playerID);
         Assert.assertEquals(expectedGA2.check, gameController.gA.check);
-
     }
 }
