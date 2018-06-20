@@ -280,15 +280,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
             playerCount = numClients;
 
-            while (NIOmanager.isNotReady()) {
-                NIOmanager.open();
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-
             Log.d("HOST", "NumPlayers: " + playerCount);
             NIOmanager.writeGameaction(new GameActions(GameActions.actions.INIT_PLAYER, 0, 0, false));
 
