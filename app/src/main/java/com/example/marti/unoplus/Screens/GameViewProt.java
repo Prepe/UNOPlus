@@ -122,7 +122,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         for (int i = 1; i <= 2; i++) {
             playersInListView.add("Player " + i);
         }
-
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_items, playersInListView);
 
         ListView lv = findViewById(R.id.list);
@@ -134,21 +133,16 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 final TextView mTextView = (TextView) view;
                 switch (position) {
                     case 0:
-                        Toast.makeText(getApplicationContext(), "Player 1", Toast.LENGTH_SHORT).show();
-                        //TO DO
-
+                        blamePlayers();
                         break;
                     case 1:
-                        Toast.makeText(getApplicationContext(), "Player 2", Toast.LENGTH_SHORT).show();
-                        //TO DO
+                        blamePlayers();
                         break;
                     case 2:
-                        Toast.makeText(getApplicationContext(), "Player 3", Toast.LENGTH_SHORT).show();
-                        //TO DO
+                        blamePlayers();
                         break;
                     case 3:
-                        Toast.makeText(getApplicationContext(), "Plöayer 4", Toast.LENGTH_SHORT).show();
-                        //TO DO
+                        blamePlayers();
                         break;
                     default:
                         // Nothing do!
@@ -578,6 +572,28 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                         } else if (position == 3) {
                             dlg.cancel();
                             writeNetMessage(new GameActions(GameActions.actions.DUEL_OPPONENT, player.getID(), Card.colors.GREEN));
+                        }
+                    }
+                })
+                .create();
+        d.setCanceledOnTouchOutside(true);
+        d.show();
+    }
+
+    public void blamePlayers() {
+        Dialog d = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
+                .setTitle("Beschuldigen wegen ")
+                .setItems(new String[]{"Trade Card Cheat", "Kein UNO gesagt", "Drop Card Cheat", "Für nichts"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dlg, int position) {
+                        if (position == 0) {
+                            dlg.cancel();
+                        } else if (position == 1) {
+                            dlg.cancel();
+                        } else if (position == 2) {
+                            dlg.cancel();
+                        } else if (position == 3) {
+                            dlg.cancel();
                         }
                     }
                 })
