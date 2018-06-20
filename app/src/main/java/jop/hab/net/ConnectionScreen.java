@@ -51,7 +51,7 @@ public class ConnectionScreen extends AppCompatActivity {
     List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();
     String[] deviceNameArray;
     WifiP2pDevice[] deviceArray;
-    public  ArrayList<String> connectedDevices = new ArrayList<>();
+    public ArrayList<String> connectedDevices = new ArrayList<>();
     public String playername;
 
     static final int MESSAGE_READ = 1;
@@ -62,6 +62,7 @@ public class ConnectionScreen extends AppCompatActivity {
     boolean tradeCard = false;
     boolean dropCard = false;
     boolean quickPlay = false;
+    int countDevicesconnected = 0;
 
 
 //Hier wird die Verbindung zwischen den geräten hergstellt. Dann wird die IP Adresse des Hosts und der Mode ("host oder server)
@@ -74,7 +75,7 @@ public class ConnectionScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test_activity_layout);
 
-        playername =   getIntent().getExtras().getString(NameScreen.PLAYER_NAME, "");
+        playername = getIntent().getExtras().getString(NameScreen.PLAYER_NAME, "");
 
         initialWork();
         exqListener();
@@ -137,7 +138,6 @@ public class ConnectionScreen extends AppCompatActivity {
                 config.deviceAddress = device.deviceAddress;
 
 
-
                 mManager.connect(mChannel, config, new WifiP2pManager.ActionListener() {
                     @Override
                     public void onSuccess() {
@@ -180,6 +180,7 @@ public class ConnectionScreen extends AppCompatActivity {
 
                 ConnectionStatus.setText("Host");
                 //  serverClass = new ServerClass();
+                countDevicesconnected++;
                 //serverClass.start();
 
                 //Wenn das Gerät ein Server ist, wird die eigene IP und der String "server" an den GC weiter gegeben
@@ -204,9 +205,9 @@ public class ConnectionScreen extends AppCompatActivity {
             } else if (info.groupFormed) {
 
                 ConnectionStatus.setText("Client");
+
                 //   clientClass = new ClientClass(groupOwnerAdress);
                 // clientClass.start();
-
 
                 //Wenn das Gerät ein Client ist, wird die Server IP und der String "client" an den GC weiter gegeben
 
@@ -215,7 +216,7 @@ public class ConnectionScreen extends AppCompatActivity {
                 //Intent i = new Intent(getBaseContext(), GameViewProt.class);
 
                 // Intent i = new Intent(getBaseContext(),Player.class);
-               // i.putExtra("mode", "client");
+                // i.putExtra("mode", "client");
                 //i.putExtra("adress", groupOwnerAdress.getHostAddress());
                 //startActivity(i);
 
@@ -230,7 +231,7 @@ public class ConnectionScreen extends AppCompatActivity {
 
                         i.putExtra("mode", "client");
                         i.putExtra("adress", groupOwnerAdress.getHostAddress());
-                        i.putExtra("numofclients",getNUMConnectedDevices());
+                        i.putExtra("numofclients", getNUMConnectedDevices());
                         startActivity(i);
                     }
                 });
@@ -282,7 +283,7 @@ public class ConnectionScreen extends AppCompatActivity {
                         Intent i = new Intent(ConnectionScreen.this, GameViewProt.class);
                         i.putExtra("mode", "server");
                         i.putExtra("adress", groupOwnerAdressHost);
-                        i.putExtra("numofclients",getNUMConnectedDevices());
+                        i.putExtra("numofclients", countDevicesconnected);
 
                         i.putExtra("HotDrop", hotDrop);
                         i.putExtra("SpinCard", spinCard);
@@ -355,14 +356,13 @@ public class ConnectionScreen extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Wifi enabled", Toast.LENGTH_SHORT).show();
 
 
-
         }
 
         settingupName(playername);
 
     }
 
-    public void settingupName (final String playername) {
+    public void settingupName(final String playername) {
         try {
             Method m = mManager.getClass().getMethod(
                     "setDeviceName",
@@ -415,10 +415,11 @@ public class ConnectionScreen extends AppCompatActivity {
         }
     };
 
-    public ArrayList<String> getConnectedDevices (){
+    public ArrayList<String> getConnectedDevices() {
         return connectedDevices;
     }
-    public int  getNUMConnectedDevices (){
+
+    public int getNUMConnectedDevices() {
         return connectedDevices.size();
     }
 }

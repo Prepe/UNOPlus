@@ -288,14 +288,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             tempPlayers.add(player);
             playerCount = numClients;
 
-            while (NIOmanager.isNotReady()) {
-                NIOmanager.open();
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
             Log.d("HOST", "NumPlayers: " + playerCount);
             NIOmanager.writeGameaction(new GameActions(GameActions.actions.INIT_PLAYER, 0, 0, false));
 
@@ -313,7 +305,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 }
             }
 
-            player = new Player((int) (tempID * 1000));
+            player = new Player((int) (tempID * 100000));
             player.setGV(this);
             Log.d("CLIENT", "tempID: " + player.getID());
         }
@@ -358,7 +350,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         NIOmanager.writeGameaction(tempA);
         Log.d("PLAYER_SETUP", "Added new Player: " + temp.getID());
 
-        if (nextID == playerCount) {
+        if (nextID == playerCount-1) {
             PlayerList pl = new PlayerList();
             pl.setPlayers(tempPlayers);
 
