@@ -12,21 +12,27 @@ public class GameLogic {
     Deck deck;                  //reference to the Deck that is used
     Player activePlayer;        //well active player (its his turn)
     CardEffects effects;        //used to call CardEffects
+    Card.values lastCardValue;  //The value of the card that is on top of the discard pile
+    Card.colors lastCardColor;  //The color of the card that is on top of the discard pile
+    GameController controller;  //reference to the GC
     int cardDrawCount = 1;      //the amount the next Player has to draw from the deck
     boolean reverse = false;    //is the game currently reversed or not
     boolean skip = false;       //is the next Player suspended or not
-    Card.values lastCardValue;  //The value of the card that is on top of the discard pile
-    Card.colors lastCardColor;  //The color of the card that is on top of the discard pile
-    GameController controller;
+    boolean quickPlayAllowed;
+    boolean counterAllowed;     //can player counter +2/4
 
-    public GameLogic(PlayerList pL, Deck gameDeck, GameController gc) {
+    public GameLogic(PlayerList pL, Deck gameDeck, GameController gc, boolean quickPlayAllowed, boolean counterAllowed) {
         controller = gc;
         effects = new CardEffects(this, gc);
         playerList = pL;
         deck = gameDeck;
+        this.quickPlayAllowed = quickPlayAllowed;
+        this.counterAllowed = counterAllowed;
 
         activePlayer = playerList.getFirst();
+    }
 
+    public GameLogic() {
     }
 
     //Basic GameLogic should only be called when the card is good to play or player has to draw a card (card == null)
@@ -70,7 +76,7 @@ public class GameLogic {
     * */
     public Player nextPlayer(Player player) {
         if (player == null) {
-            return null;
+            player = activePlayer;
         }
 
         if (reverse) {
@@ -89,7 +95,7 @@ public class GameLogic {
             }
         }
 
-        controller.gA = new GameActions(GameActions.actions.UPDATE,activePlayer.getID(),new Card(lastCardColor,lastCardValue));
+        controller.gA = new GameActions(GameActions.actions.UPDATE, activePlayer.getID(), new Card(lastCardColor, lastCardValue));
         controller.update();
 
         return activePlayer;
@@ -115,6 +121,11 @@ public class GameLogic {
                 if (card.value == Card.values.PLUS_TWO && checkColor(card)) {
                     return true;
                 }
+                if (counterAllowed) {
+                    if (card.color == lastCardColor) {
+                        if (card.value == Card.values.SKIP || card.value == Card.values.TURN) ;
+                    }
+                }
             } else {
                 //Check card for right Value
                 if (checkValue(card)) {
@@ -125,9 +136,11 @@ public class GameLogic {
                     return true;
                 }
             }
-        } else if (checkValue(card) && checkColor(card)) {
-            activePlayer = player;
-            return true;
+        } else if (quickPlayAllowed) {
+            if (checkValue(card) && checkColor(card)) {
+                activePlayer = player;
+                return true;
+            }
         }
 
         // If all checks fail return Card cannot be played
@@ -177,7 +190,7 @@ public class GameLogic {
         effects.cardEffect(null, topCard);
     }
 
-    //Tels the game to skip the next player
+    //Tells the game to skip the next player
     public void skipNext() {
         skip = true;
     }
@@ -196,4 +209,31 @@ public class GameLogic {
         lastCardColor = colorWish;
         lastCardValue = Card.values.CHOOSE_COLOR;
     }
+
+    public PlayerList getPlayerList() {
+        return playerList;
+    }
+
+    public boolean checkifreversed() {
+
+
+        return reverse;
+    }
+
+    public void setLastCardValue(Card.values lastCardValue) {
+        this.lastCardValue = lastCardValue;
+    }
+
+    public void setLastCardColor(Card.colors lastCardColor) {
+        this.lastCardColor = lastCardColor;
+    }
+
+    public Card.colors getLastCardColor() {
+        return lastCardColor;
+    }
+
+    public Card.values getLastCardValue() {
+        return lastCardValue;
+    }
+
 }

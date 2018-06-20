@@ -20,4 +20,12 @@
     <string name="connection_status">Connection Status</string>
     <string name="discover">discover</string>
     <string name="title_activity_game_view_prot">GameViewProt</string>
+    <string name="eingabe_spielername">Gib hier deinen Spielernamen ein:</string>
+    <string name="name">Name</string>
+    <string name="zurück">Zurück</string>
+    <string name="weiter">Weiter</string>
+    <string name="waiting">Bitte warte bis alle Optionen ausgewählt wurden.</string>
+    <string name="start">Start</string>
+
+    <color name="UserWhite">#FFFFFF</color>
 </resources>

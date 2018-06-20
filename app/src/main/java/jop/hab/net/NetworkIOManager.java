@@ -15,6 +15,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.LinkedList;
 
 /**
  * Created by jopihabich on 15.04.18.
@@ -44,60 +45,58 @@ public class NetworkIOManager {
 
     String testText;
     GameActions gameAction;
+    LinkedList<GameActions> actions = new LinkedList<>();
     int countready = 0;
     int numclients;
-
+    boolean isReady = false;
 
     public NetworkIOManager(ObserverInterface observerInterface) {
         this.observerInterface = observerInterface;
-
-
     }
 
     public void setMode(String mode) {
-
         if (mode.equals("server")) {
             MODE_IS_SERVER = true;
         } else {
             MODE_IS_SERVER = false;
         }
-
     }
 
     public void setHostAdress(String hostAdress) {
         this.hostAdress = hostAdress;
     }
-    public void setNumclients(int numclients){this.numclients = numclients;}
+
+    public void setNumclients(int numclients) {
+        this.numclients = numclients;
+    }
 
     public String getTestText() {
         return testText;
     }
 
-    public GameActions getGameAction() {
-        return gameAction;
+    public LinkedList<GameActions> getGameAction() {
+        return actions;
     }
 
     public void open() {
-
         if (MODE_IS_SERVER) {
-
-            serverClass = new ServerClass();
-            serverClass.start();
+            if (serverClass == null) {
+                serverClass = new ServerClass();
+                serverClass.start();
+                serverClass.ready = true;
+            } else {
+                serverClass.fixState();
+            }
             Log.d("@mode", MODE_IS_SERVER + "");
         } else {
             clientClass = new ClientClass(hostAdress);
             clientClass.start();
             Log.d("@mode", MODE_IS_SERVER + "");
-
         }
-
-
     }
 
 
     public void writeGameaction(GameActions gameAction) {
-
-
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setLenient();
         Gson gson = gsonBuilder.create();
@@ -105,46 +104,53 @@ public class NetworkIOManager {
         String GameActionString = gson.toJson(gameAction);
 
         Log.d("GSON Senden", GameActionString);
-
         sendReceive.write(GameActionString.getBytes());
-
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-
-        }
     }
 
-    public GameActions receiveGameaction(String gameActionString) {
+    public LinkedList<GameActions> receiveGameaction(String gameActionString) {
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setLenient();
         Gson gson = gsonBuilder.create();
+        LinkedList<String> gameactions = new LinkedList<>();
 
+        Log.d("split", "Splitting1");
+        int helper = 0;
+        for (int i = 0; i < gameActionString.length() - 1; i++) {
+            char char1 = gameActionString.charAt(i);
+            char char2 = gameActionString.charAt(i + 1);
+            if ('}' == char1 && '{' == char2) {
+                Log.d("split", "Splitting2");
+                gameactions.add(gameActionString.substring(helper, i + 1));
+                helper = i + 1;
+            }
+        }
+        gameactions.add(gameActionString.substring(helper));
 
-        try {
-
-            gameAction = gson.fromJson(gameActionString, GameActions.class);
-            Log.d("GAMEACTION", gameAction.action.toString());
-
-
-        } catch (Exception e) {
-
-            Log.e("JSon error", "error");
+        for (int i = 0; i < gameactions.size(); i++) {
+            Log.d("Action", gameactions.get(i));
+            try {
+                actions.add(gson.fromJson(gameactions.get(i), GameActions.class));
+                Log.d("GAMEACTION", gameAction.action.toString());
+            } catch (Exception e) {
+                Log.e("JSon error", "error");
+            }
         }
 
-        return gameAction;
+        return actions;
     }
-    public void writeReady (){
 
+    public void updatesProcessed() {
+        actions = new LinkedList<>();
+    }
+
+    public void writeReady() {
         String ready = "ready";
-        sendReceive.write(ready.getBytes());
-
+        //sendReceive.write(ready.getBytes());
     }
 
-    public boolean waitforClientsreadyingup (){
-        while (countready!= numclients){
+    public boolean waitforClientsreadyingup() {
+        while (countready != numclients) {
             try {
                 Thread.sleep(20);
             } catch (InterruptedException e) {
@@ -155,91 +161,83 @@ public class NetworkIOManager {
         return true;
     }
 
+    public boolean isNotReady() {
+        if (serverClass == null) {
+            return true;
+        } else if (sendReceive == null) {
+            return  true;
+        }
+        return !(sendReceive.ready && serverClass.ready);
+    }
+
 
     Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-
-
-
             switch (msg.what) {
-
                 case MESSAGE_READ:
                     byte[] readBuffer = (byte[]) msg.obj;
                     String tmpmsg = new String(readBuffer, 0, msg.arg1);
-
-                    if (!tmpmsg.equals("ready")){
-
-                    Log.d("JSon Empfangen", tmpmsg);
-
-                    gameAction = receiveGameaction(tmpmsg);
-
-
-                    //versteh ich nicht:
-//                       callGameController(gameAction);
-
-
-                    //wenn Daten über den handler empfangen werden, wird Observer informiert.
-                    observerInterface.dataChanged();}
-
-                    else{
+                    if (!tmpmsg.equals("ready")) {
+                        Log.d("JSon Empfangen", tmpmsg);
+                        actions = receiveGameaction(tmpmsg);
+                        observerInterface.dataChanged();
+                    } else {
                         countready++;
-
-
                     }
-
-
                     break;
             }
-
             return true;
         }
     });
 
 
     public class ServerClass extends Thread {
-
         Socket socket;
         ServerSocket serverSocket;
+        boolean ready = false;
 
         @Override
         public void run() {
-
-
             Log.d("@serverclass", "Serverclass running");
-
             try {
 //                    Log.d("socket",serverSocket.toString());
                 serverSocket = new ServerSocket(8888);
                 socket = serverSocket.accept();
-
-
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.d("@error", "sc catched");
             }
 
             sendReceive = new SendReceive(socket);
-
             sendReceive.start();
+            sendReceive.ready = true;
+        }
 
-
-
-
+        public void fixState() {
+            if (serverSocket == null) {
+                run();
+            } else if (socket == null){
+                try {
+                    socket = serverSocket.accept();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                sendReceive = new SendReceive(socket);
+                sendReceive.start();
+                sendReceive.ready = true;
+            }
         }
     }
 
     private class SendReceive extends Thread {
-
-
         private Socket socket;
         private InputStream inputStream;
         private OutputStream outputStream;
-
+        boolean ready = false;
 
         public SendReceive(Socket socket) {
-
-
             this.socket = socket;
 
             try {
@@ -251,7 +249,6 @@ public class NetworkIOManager {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
 
 
@@ -272,34 +269,30 @@ public class NetworkIOManager {
             int bytes;
 
             while (socket != null) {
-
-                try {
-                    bytes = inputStream.read(buffer);
-                    if (bytes > 0) {
-
-                        handler.obtainMessage(MESSAGE_READ, bytes, -1, buffer).sendToTarget();
-
-
+                if (inputStream != null) {
+                    try {
+                        bytes = inputStream.read(buffer);
+                        if (bytes > 0) {
+                            handler.obtainMessage(MESSAGE_READ, bytes, -1, buffer).sendToTarget();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
-
-
             }
-
-
         }
 
-
         public void write(byte[] bytes) {
-
             try {
-
                 Log.d("@write", bytes.toString());
-
                 outputStream.write(bytes);
             } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                sleep(10);
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }

@@ -11,10 +11,10 @@ import com.example.marti.unoplus.Screens.GameViewProt;
  * Created by ekzhu on 30.04.2018.
  */
 
-public class PlayedCardView {
+public class  PlayedCardView {
 
-    Card card = null;
-    ImageView view;
+    private Card card = null;
+    private ImageView view;
 
     public void updateCard(Card card) {
         this.card = card;
@@ -234,6 +234,15 @@ public class PlayedCardView {
                     break;
                 case CHOOSE_COLOR:
                     pic = this.view.getResources().getDrawable(R.drawable.all_all);
+                    break;
+                case HOT_DROP:
+                    pic = this.view.getResources().getDrawable(R.drawable.hotspot);
+                    break;
+                case DUEL:
+                    pic = this.view.getResources().getDrawable(R.drawable.duel);
+                    break;
+                case CARD_SPIN:
+                    pic = this.view.getResources().getDrawable(R.drawable.spin);
                     break;
                 default:
                     pic = this.view.getResources().getDrawable(R.drawable.card_back);

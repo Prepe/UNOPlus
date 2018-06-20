@@ -14,9 +14,9 @@ public class HandCardDragListener implements View.OnDragListener {
     // Drawable enterShape = getResources().getDrawable(R.drawable.all_blue);
     //Drawable normalShape = getResources().getDrawable(R.drawable.all_red);
 
-    public GameViewProt gamescreen = null;
+    private GameViewProt gamescreen = null;
 
-    public HandCardDragListener(GameViewProt screen)
+    HandCardDragListener(GameViewProt screen)
     {
         this.gamescreen = screen;
     }
