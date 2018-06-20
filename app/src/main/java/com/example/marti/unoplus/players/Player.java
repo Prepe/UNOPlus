@@ -177,7 +177,6 @@ public class Player {
             case GOT_Hand:
                 GameActions ga = new GameActions(GameActions.actions.DO_CardSpin, ID);
                 gameViewProt.writeNetMessage(ga);
-                hand.removeHand();
                 break;
             case GET_NEWHand:
                 setNewHand(action.playerID, (LinkedList) action.cards);
