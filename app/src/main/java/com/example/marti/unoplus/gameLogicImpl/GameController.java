@@ -145,6 +145,9 @@ public class GameController {
             case CARD_SPIN:
                 cardSpin(action);
                 break;
+            case BLAME_SB:
+                blamePlayer(action.playerID, action.nextPlayerID);
+                break;
         }
     }
 
@@ -373,7 +376,7 @@ public class GameController {
         }
     }
 
-    void accusePlayer(int accusingPlayerID, int accusedPlayerID) {
+    void blamePlayer(int accusingPlayerID, int accusedPlayerID) {
         if (droppedCard[accusedPlayerID] || tradedCard[accusedPlayerID]) {
             droppedCard[accusedPlayerID] = false;
             tradedCard[accusedPlayerID] = false;

@@ -588,12 +588,16 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                     public void onClick(DialogInterface dlg, int position) {
                         if (position == 0) {
                             dlg.cancel();
+                            writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 0));
                         } else if (position == 1) {
                             dlg.cancel();
+                            writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 1));
                         } else if (position == 2) {
                             dlg.cancel();
+                            writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 2));
                         } else if (position == 3) {
                             dlg.cancel();
+                            writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 3));
                         }
                     }
                 })
