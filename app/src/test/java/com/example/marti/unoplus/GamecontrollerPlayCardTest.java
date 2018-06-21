@@ -26,7 +26,7 @@ import static org.mockito.Mockito.mock;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Log.class})
-public class PlayCardTest {
+public class GamecontrollerPlayCardTest {
 
     @Mock
     GameViewProt gameViewProt;
