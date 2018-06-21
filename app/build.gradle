@@ -34,7 +34,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
 
     sourceDirectories = files(mainSrc)
     classDirectories = files([debugTree])
-    executionData = fiels("${buildDir}/jacoco/testDebugUnitTest.exec")
+    executionData = files("${buildDir}/jacoco/testDebugUnitTest.exec")
 }
 
 dependencies {
