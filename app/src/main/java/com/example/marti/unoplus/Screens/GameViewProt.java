@@ -160,6 +160,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 Toast.makeText(getApplicationContext(), "ZEIT VORBEI! Karte gezogen", Toast.LENGTH_LONG).show();
                 timer.cancel();
                 player.drawCard();
+                player.drawCard();
             }
 
             @Override
@@ -184,8 +185,8 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
         for (int i = 0; i < actionsToProcess.size(); i++) {
             recievedGA = actionsToProcess.get(i);
-            TextView tv = (TextView) findViewById(R.id.netmessage);
-            tv.setText(recievedGA.action.toString());
+            //TextView tv = (TextView) findViewById(R.id.netmessage);
+            //tv.setText(recievedGA.action.toString());
             Log.d("GCP_Action", recievedGA.action.toString());
             //TODO change placeholder player ID
             if (specialUpdate(recievedGA)) {
@@ -305,6 +306,8 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 if (action.playerID.equals(player.getID())) {
                     if (action.nextPlayerID > 0) {
                         Log.d("CLIENT", "Setting new ID");
+                        TextView tv = findViewById(R.id.netmessage);
+                        tv.setText("Player " + action.nextPlayerID+1);
                         player.setID(action.nextPlayerID);
                         return;
                     }
