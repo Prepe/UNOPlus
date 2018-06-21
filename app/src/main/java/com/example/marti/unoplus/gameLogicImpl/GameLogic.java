@@ -63,17 +63,17 @@ public class GameLogic {
     }
 
     /*
-    * But the lastCard into the discard Pile that gets reused when Deck is empty
-    * Make the played card the lastCard and trigger its effect on the game
-    * */
+     * But the lastCard into the discard Pile that gets reused when Deck is empty
+     * Make the played card the lastCard and trigger its effect on the game
+     * */
     private void playCard(Card card) {
         lastCardValue = card.value;
         lastCardColor = card.color;
     }
 
     /*
-    * Return the next Player after checking the direction of the game
-    * */
+     * Return the next Player after checking the direction of the game
+     * */
     public Player nextPlayer(Player player) {
         if (player == null) {
             player = activePlayer;
@@ -102,8 +102,8 @@ public class GameLogic {
     }
 
     /*
-    * Checks what Player wants to play a card and if he is allowed to play it
-    * */
+     * Checks what Player wants to play a card and if he is allowed to play it
+     * */
     public boolean checkCard(Card card, Player player) {
         //Check if the player is the active player
         if (player.equals(activePlayer)) {
@@ -123,7 +123,9 @@ public class GameLogic {
                 }
                 if (counterAllowed) {
                     if (card.color == lastCardColor) {
-                        if (card.value == Card.values.SKIP || card.value == Card.values.TURN) ;
+                        if (card.value == Card.values.SKIP || card.value == Card.values.TURN) {
+                            return true;
+                        }
                     }
                 }
             } else {
@@ -150,22 +152,22 @@ public class GameLogic {
     //Check for the colour of the card
     private boolean checkColor(Card card) {
         /*
-        * Check for wild Card
-        * Wild Cards should be playable no matter what
-        * */
+         * Check for wild Card
+         * Wild Cards should be playable no matter what
+         * */
         if (card.getColor() == Card.colors.WILD) {
             return true;
         }
         /*
-        * Check for matching Colour
-        * */
+         * Check for matching Colour
+         * */
         if (card.getColor() == lastCardColor) {
             return true;
         }
 
         /*
-        * If the last Card was a Wild Card (Card.color == WILD) any Card can be played
-        * */
+         * If the last Card was a Wild Card (Card.color == WILD) any Card can be played
+         * */
         if (lastCardColor == Card.colors.WILD) {
             return true;
         }

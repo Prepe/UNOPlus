@@ -140,9 +140,6 @@ public class Player {
             case UPDATE:
                 updateGame(action.playerID, action.card);
                 break;
-            case NEXT_PLAYER:
-                //TODO ipml
-                break;
             case WISH_COLOR:
                 if (action.playerID == this.ID) {
                     this.gameViewProt.chooseColor();
@@ -172,14 +169,6 @@ public class Player {
                 break;
             case CARD_SPIN:
                 cardSpin(action);
-                //giveHand();
-                break;
-            case GOT_Hand:
-                GameActions ga = new GameActions(GameActions.actions.DO_CardSpin, ID);
-                gameViewProt.writeNetMessage(ga);
-                break;
-            case GET_NEWHand:
-                setNewHand(action.playerID, (LinkedList) action.cards);
                 break;
         }
     }
