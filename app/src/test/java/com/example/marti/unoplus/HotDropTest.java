@@ -65,15 +65,14 @@ public class HotDropTest {
 
         GameActions testGameActionPlayer1 = new GameActions(GameActions.actions.HOT_DROP, 0,timestamps[0]);
         GameActions testGameActionPlayer2 = new GameActions(GameActions.actions.HOT_DROP, 1, timestamps[1]);
-        GameActions expectedPlayer1 = new GameActions(GameActions.actions.NEXT_PLAYER, 1);
-        GameActions expectedPlayer2 = new GameActions(GameActions.actions.UPDATE, 1, cards);
+        GameActions expectedPlayer = new GameActions(GameActions.actions.UPDATE, 1, cards);
 
         gameController.callGameController(testGameActionPlayer1);
 
-        Assert.assertEquals(expectedPlayer1.action, gameController.gA.action);
+        Assert.assertEquals(expectedPlayer.action, gameController.gA.action);
 
         gameController.callGameController(testGameActionPlayer2);
 
-        Assert.assertEquals(expectedPlayer2.action, gameController.gA.action);
+        Assert.assertEquals(expectedPlayer.action, gameController.gA.action);
     }
 }
