@@ -25,7 +25,7 @@ android {
 task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
     reports {
         xml.enabled = true
-        hatml.enabled = true
+        html.enabled = true
     }
 
     def fileFilter = ['**/R.class','**/R$.class','**/BuildConfig.*','**/Manifest*.*','**/*Test*.*','android/**/*.*']
