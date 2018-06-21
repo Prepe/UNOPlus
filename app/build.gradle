@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 
+apply plugin: 'jacoco'
+
 android {
     compileSdkVersion 27
     defaultConfig {
@@ -20,6 +22,21 @@ android {
     }
 }
 
+task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
+    reports {
+        xml.enabled = true
+        hatml.enabled = true
+    }
+
+    def fileFilter = ['**/R.class','**/R$.class','**/BuildConfig.*','**/Manifest*.*','**/*Test*.*','android/**/*.*']
+    def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/debug", excludes: fileFilter)
+    def mainSrc = "${project.projectDir}/src/main/java"
+
+    sourceDirectories = files(dir: 'libs', include: ['*.jar'])
+    classDirectories = files([debugTree])
+    executionData = fiels("${buildDir}/jacoco/testDenugUnitTest.exec")
+}
+
 dependencies {
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:support-v4:27.1.0'
@@ -37,4 +54,6 @@ dependencies {
     testCompile 'org.powermock:powermock-module-junit4-rule-agent:1.6.2'
     testCompile 'org.powermock:powermock-module-junit4-rule:1.6.2'
     testCompile 'org.powermock:powermock-module-junit4:1.6.2'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
 }
