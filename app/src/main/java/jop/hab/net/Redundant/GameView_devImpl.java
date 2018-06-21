@@ -1,4 +1,4 @@
-package jop.hab.net.Redundant;
+/*package jop.hab.net.Redundant;
 
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -67,15 +67,15 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
         Deck deck = new Deck();
         GameLogic GL = new GameLogic(PL, deck);
         GameController GC = new GameController();
-        GC.setUpGame();*/
+        GC.setUpGame();
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
+                StrictMode.setThreadPolicy(policy);
 
-        setContentView(R.layout.game_screen);
+                setContentView(R.layout.game_screen);
 
-        String[] players = {"Player 1", "Player2", "Player3", "Player4"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),  android.R.layout.simple_list_item_1, players);
+                String[] players = {"Player 1", "Player2", "Player3", "Player4"};
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),  android.R.layout.simple_list_item_1, players);
 
         ListView lv = (ListView)findViewById(R.id.list);
         lv.setAdapter(adapter);
@@ -112,18 +112,16 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
 
 
             }
-        });*/
-
-        btnUnoUno.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //networkIOManager.writeMsg("unouno");
-
-            }
         });
 
-       /* btnr8.setOnClickListener(new View.OnClickListener() {
+
+
+        //networkIOManager.writeMsg("unouno");
+
+        }
+        });
+
+        btnr8.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -156,42 +154,42 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
             }
         });
 
-        */
+
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                final TextView mTextView = (TextView)view;
-                switch (position) {
-                    case 0:
-                        //Toast.makeText(getApplicationContext(), "Player 1", Toast.LENGTH_SHORT).show();
-                        //TO DO
-                        if(true){
-                            //TODO
-                        }
-                        break;
-                    case 1:
-                        Toast.makeText(getApplicationContext(), "Player 2", Toast.LENGTH_SHORT).show();
-                        //TO DO
-                        break;
-                    case 2:
-                        Toast.makeText(getApplicationContext(), "Player 3", Toast.LENGTH_SHORT).show();
-                        //TO DO
-                        break;
-                    case 3:
-                        Toast.makeText(getApplicationContext(), "Player 4", Toast.LENGTH_SHORT).show();
-                        //TO DO
-                        break;
-                    default:
-                        // Nothing do!
-                }
+public void onItemClick(AdapterView<?> parent, View view,
+        int position, long id) {
+final TextView mTextView = (TextView)view;
+        switch (position) {
+        case 0:
+        //Toast.makeText(getApplicationContext(), "Player 1", Toast.LENGTH_SHORT).show();
+        //TO DO
+        if(true){
+        //TODO
+        }
+        break;
+        case 1:
+        Toast.makeText(getApplicationContext(), "Player 2", Toast.LENGTH_SHORT).show();
+        //TO DO
+        break;
+        case 2:
+        Toast.makeText(getApplicationContext(), "Player 3", Toast.LENGTH_SHORT).show();
+        //TO DO
+        break;
+        case 3:
+        Toast.makeText(getApplicationContext(), "Player 4", Toast.LENGTH_SHORT).show();
+        //TO DO
+        break;
+default:
+        // Nothing do!
+        }
 
-            }
+        }
         });
-    }
+        }
 
 
-    @Override
-    public void dataChanged() {
+@Override
+public void dataChanged() {
 
         textView.setText(networkIOManager.getTestText());
         setCard(networkIOManager.getTestText());
@@ -201,31 +199,32 @@ public class GameView_devImpl extends AppCompatActivity implements ObserverInter
         //card = networkIOManager.getCard();
 
 
-    }
-
-    @Override
-    public void NIOReady() {
-
-    }
-
-    public void sayUno(String unoUno) {
-        if (unoUno.equals("unouno")) {
-            Toast.makeText(getApplicationContext(), "UNOOO", Toast.LENGTH_SHORT).show();
         }
-    }
 
-    // nur für Demo Zwecke
-    public void setCard(String cardID) {
+@Override
+public void NIOReady() {
+
+        }
+
+public void sayUno(String unoUno) {
+        if (unoUno.equals("unouno")) {
+        Toast.makeText(getApplicationContext(), "UNOOO", Toast.LENGTH_SHORT).show();
+        }
+        }
+
+// nur für Demo Zwecke
+public void setCard(String cardID) {
 
         if (cardID.equals("r8")) {
-            playCard.setImageResource(R.drawable.red_8);
+        playCard.setImageResource(R.drawable.red_8);
         } else if (cardID.equals("g7")) {
-            playCard.setImageResource(R.drawable.green_7);
+        playCard.setImageResource(R.drawable.green_7);
         } else if (cardID.equals("b3")) {
-            playCard.setImageResource(R.drawable.blue_3);
+        playCard.setImageResource(R.drawable.blue_3);
 
         }
 
-    }
+        }
 
-}
+        }
+        */

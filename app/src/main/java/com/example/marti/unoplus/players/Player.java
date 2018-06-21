@@ -27,9 +27,9 @@ public class Player {
     private boolean cardSpinStart = false;
 
     //Variables needed for the Hot-Drop-Feature
-    int seconds = 0;
-    boolean startRun = true;
-    int millsecs = 0;
+    private int seconds = 0;
+    private boolean startRun = true;
+    private int millsecs = 0;
 
     public Player(Integer id) {
         ID = id;
