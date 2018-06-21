@@ -53,10 +53,6 @@ public class CardEffects {
                 startDuel(player);
                 break;
         }
-
-        gameController.gA = new GameActions(GameActions.actions.NEXT_PLAYER, gameLogic.getActivePlayer().getID());
-        gameController.update();
-
     }
 
     //TakeTwo Card effect method

@@ -3,14 +3,11 @@ package com.example.marti.unoplus;
 import android.util.Log;
 
 import com.example.marti.unoplus.Screens.GameViewProt;
-import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.gameLogicImpl.GameController;
-import com.example.marti.unoplus.gameLogicImpl.GameLogic;
 import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.players.PlayerList;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,23 +23,23 @@ import static org.mockito.Mockito.mock;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Log.class})
-public class HotDropTest {
+public class PlayerListTest {
 
     @Mock
     GameViewProt gameViewProt;
     GameController gameController;
-    GameLogic gameLogic;
+    PlayerList playerList;
 
     @Before
     public void setup() {
         gameController = new GameController(gameViewProt);
         gameViewProt = mock(GameViewProt.class);
-        gameLogic = new GameLogic();
     }
 
     @Test
-    public void hotDropTest(){
+    public void playerListTest() {
         PowerMockito.mockStatic(Log.class);
+
 
         Player player1 = new Player(0);
         Player player2 = new Player(1);
@@ -54,25 +51,12 @@ public class HotDropTest {
         gameController.setPlayerList(playerList);
         gameController.setUpGame();
 
-        long[] timestamps = {(long) 147, (long)587};
+        Assert.assertEquals(player1, playerList.getFirst());
+        Assert.assertEquals(player1, playerList.getPlayer(0));
+        Assert.assertEquals(list, playerList.getPlayers());
+        Assert.assertEquals(player2, playerList.getNext(player1));
+        Assert.assertEquals(player1, playerList.getPrevious(player2));
+        Assert.assertEquals(2, playerList.playerCount());
 
-        LinkedList<Card> cards = new LinkedList<>();
-        Card card1 = new Card(Card.colors.RED, Card.values.FIVE);
-        Card card2 = new Card(Card.colors.YELLOW, Card.values.ONE);
-
-        cards.add(card1);
-        cards.add(card2);
-
-        GameActions testGameActionPlayer1 = new GameActions(GameActions.actions.HOT_DROP, 0,timestamps[0]);
-        GameActions testGameActionPlayer2 = new GameActions(GameActions.actions.HOT_DROP, 1, timestamps[1]);
-        GameActions expectedPlayer = new GameActions(GameActions.actions.UPDATE, 1, cards);
-
-        gameController.callGameController(testGameActionPlayer1);
-
-        Assert.assertEquals(expectedPlayer.action, gameController.gA.action);
-
-        gameController.callGameController(testGameActionPlayer2);
-
-        Assert.assertEquals(expectedPlayer.action, gameController.gA.action);
     }
 }

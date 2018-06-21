@@ -122,7 +122,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         for (int i = 1; i <= 2; i++) {
             playersInListView.add("Player " + i);
         }
-
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_items, playersInListView);
 
         ListView lv = findViewById(R.id.list);
@@ -134,21 +133,16 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 final TextView mTextView = (TextView) view;
                 switch (position) {
                     case 0:
-                        Toast.makeText(getApplicationContext(), "Player 1", Toast.LENGTH_SHORT).show();
-                        //TO DO
-
+                        blamePlayers();
                         break;
                     case 1:
-                        Toast.makeText(getApplicationContext(), "Player 2", Toast.LENGTH_SHORT).show();
-                        //TO DO
+                        blamePlayers();
                         break;
                     case 2:
-                        Toast.makeText(getApplicationContext(), "Player 3", Toast.LENGTH_SHORT).show();
-                        //TO DO
+                        blamePlayers();
                         break;
                     case 3:
-                        Toast.makeText(getApplicationContext(), "Plöayer 4", Toast.LENGTH_SHORT).show();
-                        //TO DO
+                        blamePlayers();
                         break;
                     default:
                         // Nothing do!
@@ -165,6 +159,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             public void onFinish() {
                 Toast.makeText(getApplicationContext(), "ZEIT VORBEI! Karte gezogen", Toast.LENGTH_LONG).show();
                 timer.cancel();
+                player.drawCard();
                 player.drawCard();
             }
 
@@ -190,8 +185,8 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
         for (int i = 0; i < actionsToProcess.size(); i++) {
             recievedGA = actionsToProcess.get(i);
-            TextView tv = (TextView) findViewById(R.id.netmessage);
-            tv.setText(recievedGA.action.toString());
+            //TextView tv = (TextView) findViewById(R.id.netmessage);
+            //tv.setText(recievedGA.action.toString());
             Log.d("GCP_Action", recievedGA.action.toString());
             //TODO change placeholder player ID
             if (specialUpdate(recievedGA)) {
@@ -311,6 +306,8 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 if (action.playerID.equals(player.getID())) {
                     if (action.nextPlayerID > 0) {
                         Log.d("CLIENT", "Setting new ID");
+                        TextView tv = findViewById(R.id.netmessage);
+                        tv.setText("Player " + action.nextPlayerID+1);
                         player.setID(action.nextPlayerID);
                         return;
                     }
@@ -578,6 +575,32 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                         } else if (position == 3) {
                             dlg.cancel();
                             writeNetMessage(new GameActions(GameActions.actions.DUEL_OPPONENT, player.getID(), Card.colors.GREEN));
+                        }
+                    }
+                })
+                .create();
+        d.setCanceledOnTouchOutside(true);
+        d.show();
+    }
+
+    public void blamePlayers() {
+        Dialog d = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
+                .setTitle("Beschuldigen wegen ")
+                .setItems(new String[]{"Trade Card Cheat", "Kein UNO gesagt", "Drop Card Cheat", "Für nichts"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dlg, int position) {
+                        if (position == 0) {
+                            dlg.cancel();
+                            writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 0));
+                        } else if (position == 1) {
+                            dlg.cancel();
+                            writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 1));
+                        } else if (position == 2) {
+                            dlg.cancel();
+                            writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 2));
+                        } else if (position == 3) {
+                            dlg.cancel();
+                            writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 3));
                         }
                     }
                 })
