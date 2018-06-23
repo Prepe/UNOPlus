@@ -91,16 +91,8 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         playerTurn = (TextView) findViewById(R.id.playerTurn);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
-        //Hier werden die IP und der Modus über den Intent aus der ConnectionScreen abgefragt
-        hostAdress = getIntent().getStringExtra("adress");
-        mode = getIntent().getStringExtra("mode");
-        numClients = getIntent().getIntExtra("numofclients", 1);
-
-        NIOmanager = new NetworkIOManager(this);
-        NIOmanager.setMode(mode);
-        NIOmanager.setHostAdress(hostAdress);
-        NIOmanager.setNumclients(numClients);
-        NIOmanager.open();
+        NIOmanager = GameStatics.NIOManager;
+        NIOmanager.setObserverInterface(this);
 
         GameStatics.currentActivity = this;
         GameStatics.Initialize(true);
@@ -171,75 +163,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     }
 
     @Override
-    public void dataChanged() {
-        LinkedList<GameActions> actionsToProcess = NIOmanager.getGameAction();
-        if (actionsToProcess == null) {
-            Log.e("GVP", "Reseved Actions where NULL");
-            return;
-        }
-
-        if (actionsToProcess.size() == 0) {
-            Log.e("GVP", "Reseved Actions where 0");
-            return;
-        }
-
-        for (int i = 0; i < actionsToProcess.size(); i++) {
-            recievedGA = actionsToProcess.get(i);
-            //TextView tv = (TextView) findViewById(R.id.netmessage);
-            //tv.setText(recievedGA.action.toString());
-            Log.d("GCP_Action", recievedGA.action.toString());
-            //TODO change placeholder player ID
-            if (specialUpdate(recievedGA)) {
-                Log.d("GCP_Action", recievedGA.action.toString());
-            } else {
-                handleUpdate(recievedGA);
-            }
-            recievedGA = null;
-            NIOmanager.updatesProcessed();
-        }
-    }
-
-    boolean specialUpdate(GameActions action) {
-        Log.d("GVP_UPDATE", "specialUpdate: " + action.action.name());
-        if (action.action.equals(GameActions.actions.INIT_PLAYER)) {
-            initPlayer(action);
-            return true;
-        }
-        if (action.action.equals(GameActions.actions.GAME_FINISH)) {
-            toastGameFinished(action.playerID);
-            return true;
-        }
-
-        return false;
-    }
-
-    @Override
-    public void NIOReady() {
-
-    }
-
-    //Method to Update all Players after GC and GL have finished
-    public void updateAllConnected(GameActions gA) {
-
-        Log.d("Time", "updateAllPLayrs will schon was vom NIO");
-
-        NIOmanager.writeGameaction(gA);
-        handleUpdate(gA);
-    }
-
-    //distripiutung game actions
-    void handleUpdate(GameActions action) {
-
-        if (!action.gcSend && isGameController) {
-            gameController.callGameController(action);
-        } else if (action.gcSend) {
-            Log.d("player", "callplayer");
-            player.callPlayer(action);
-        }
-    }
-
-
-    @Override
     public void onStart() {
         super.onStart();
 
@@ -257,15 +180,15 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         this.tradeCardView = new TradeCardView(this.getApplicationContext(), this);
 
         if (mode.equals("server")) {
-
             try {
-                Thread.sleep(2000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
             isGameController = true;
-            gameController = new GameController(this);
+            boolean[] options = {GameStatics.duel,GameStatics.hotDrop,GameStatics.cardSpin,GameStatics.dropCard,GameStatics.tradeCard,GameStatics.cunterPlay,GameStatics.quickPlay};
+            gameController = new GameController(this, options);
 
             tempPlayers = new LinkedList<>();
             player = new Player(0);
@@ -358,6 +281,11 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         gameController.setUpGame();
     }
 
+    @Override
+    public void NIOReady() {
+
+    }
+
     public int playerCountTest(int sizePL) {
         return sizePL;
     }
@@ -377,8 +305,68 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         }
     };
 
-    public boolean getButtonPressed() {
-        return this.buttonPressed;
+    //Observer Communication
+    @Override
+    public void dataChanged() {
+        LinkedList<GameActions> actionsToProcess = NIOmanager.getGameAction();
+        if (actionsToProcess == null) {
+            Log.e("GVP", "Reseved Actions where NULL");
+            return;
+        }
+
+        if (actionsToProcess.size() == 0) {
+            Log.e("GVP", "Reseved Actions where 0");
+            return;
+        }
+
+        for (int i = 0; i < actionsToProcess.size(); i++) {
+            recievedGA = actionsToProcess.get(i);
+            //TextView tv = (TextView) findViewById(R.id.netmessage);
+            //tv.setText(recievedGA.action.toString());
+            Log.d("GCP_Action", recievedGA.action.toString());
+            //TODO change placeholder player ID
+            if (specialUpdate(recievedGA)) {
+                Log.d("GCP_Action", recievedGA.action.toString());
+            } else {
+                handleUpdate(recievedGA);
+            }
+            recievedGA = null;
+        }
+        NIOmanager.updatesProcessed();
+    }
+
+    boolean specialUpdate(GameActions action) {
+        Log.d("GVP_UPDATE", "specialUpdate: " + action.action.name());
+        if (action.action.equals(GameActions.actions.INIT_PLAYER)) {
+            initPlayer(action);
+            return true;
+        }
+        if (action.action.equals(GameActions.actions.GAME_FINISH)) {
+            toastGameFinished(action.playerID);
+            return true;
+        }
+
+        return false;
+    }
+
+
+    //Method to Update all Players after GC and GL have finished
+    public void updateAllConnected(GameActions gA) {
+
+        Log.d("Time", "updateAllPLayrs will schon was vom NIO");
+
+        NIOmanager.writeGameaction(gA);
+        handleUpdate(gA);
+    }
+
+    //distripiutung game actions
+    void handleUpdate(GameActions action) {
+        if (!action.gcSend && isGameController) {
+            gameController.callGameController(action);
+        } else if (action.gcSend) {
+            Log.d("player", "callplayer");
+            player.callPlayer(action);
+        }
     }
 
     //<--------- View Updates --------->
@@ -612,7 +600,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     void finishTradeOffer(int playerToTrade, Card c) {
         if (playerToTrade != player.getID()) {
             player.tradeCard(playerToTrade, c);
-            ;
         } else {
             toastTradeError();
         }

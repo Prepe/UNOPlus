@@ -27,9 +27,6 @@ import java.util.LinkedList;
 
 
 public class NetworkIOManager {
-    GameController GC;
-//wird nie instanziert und wird auch nicht benötigt
-
     ObserverInterface observerInterface;
 
     ServerClass serverClass;
@@ -52,6 +49,10 @@ public class NetworkIOManager {
 
     public NetworkIOManager(ObserverInterface observerInterface) {
         this.observerInterface = observerInterface;
+    }
+
+    public void setObserverInterface(ObserverInterface oInterface) {
+        this.observerInterface = oInterface;
     }
 
     public void setMode(String mode) {

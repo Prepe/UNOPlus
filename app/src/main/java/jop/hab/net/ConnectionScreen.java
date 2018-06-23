@@ -14,6 +14,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -21,52 +23,105 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.marti.unoplus.GameActions;
+import com.example.marti.unoplus.GameStatics;
 import com.example.marti.unoplus.R;
 import com.example.marti.unoplus.Screens.GameViewProt;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
-public class ConnectionScreen extends AppCompatActivity {
+public class ConnectionScreen extends AppCompatActivity implements ObserverInterface {
 
     Button btnOnOff, btnDiscover, btnStart;
     ListView listView;
     TextView ConnectionStatus;
-    WifiManager wifiManager;
 
-    WifiP2pManager mManager;
-    WifiP2pManager.Channel mChannel;
-    BroadcastReceiver mReceiver;
-    IntentFilter mIntentFilter;
+    WifiManager wifiManager;
 
     List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();
     String[] deviceNameArray;
     WifiP2pDevice[] deviceArray;
     public  ArrayList<String> connectedDevices = new ArrayList<>();
 
+    IntentFilter intentFilter;
+    WifiP2pManager.Channel mChannel;
+    WifiP2pManager mManager;
+    BroadcastReceiver mReceiver;
+    String hostDeviceAddress;
 
-    static final int MESSAGE_READ = 1;
+    NetworkIOManager NIOManager;
+    boolean ready = false;
 
-
-//Hier wird die Verbindung zwischen den geräten hergstellt. Dann wird die IP Adresse des Hosts und der Mode ("host oder server)
+    //Hier wird die Verbindung zwischen den geräten hergstellt. Dann wird die IP Adresse des Hosts und der Mode ("host oder server)
     //des aktuellen gerätes über einen Intent an den GameController weiter gegben.
     //siehe weiter unten Zeile 196/212
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.test_activity_layout);
+        updateGameStatics();
+        setUpGameView();
 
-        initialWork();
+        setUpIntentFilter();
+        setUpWiFi();
+
         exqListener();
-
     }
 
+    void updateGameStatics() {
+        GameStatics.currentActivity = this;
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        setContentView(R.layout.test_activity_layout);
+    }
+
+    void setUpGameView() {
+        btnOnOff = (Button) findViewById(R.id.onOff);
+        btnDiscover = (Button) findViewById(R.id.discover);
+        btnStart = (Button) findViewById(R.id.start);
+
+        listView = (ListView) findViewById(R.id.peerListView);
+
+        ConnectionStatus = (TextView) findViewById(R.id.connectionStatus);
+    }
+
+    void setUpIntentFilter() {
+        intentFilter = new IntentFilter();
+
+        // Indicates a change in the Wi-Fi P2P status.
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
+
+        // Indicates a change in the list of available peers.
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
+
+        // Indicates the state of Wi-Fi P2P connectivity has changed.
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
+
+        // Indicates this device's details have changed.
+        intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+    }
+
+    void setUpWiFi() {
+        GameStatics.wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if (GameStatics.wifiManager.isWifiEnabled()) {
+            GameStatics.wifiManager.setWifiEnabled(false);
+            GameStatics.wifiManager.setWifiEnabled(true);
+        } else {
+            GameStatics.wifiManager.setWifiEnabled(true);
+        }
+        btnOnOff.setText("On");
+
+        mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+        mChannel = mManager.initialize(this, getMainLooper(), null);
+        mReceiver = new WifiDirectBroadcastReceiver(mManager, mChannel, this);
+    }
 
     private void exqListener() {
-
         btnOnOff.setOnClickListener(new View.OnClickListener() {
 
 
@@ -74,38 +129,29 @@ public class ConnectionScreen extends AppCompatActivity {
             public void onClick(View v) {
 
                 if (wifiManager.isWifiEnabled()) {
-
                     wifiManager.setWifiEnabled(false);
                     btnOnOff.setText("On");
                     Log.d("WIFI", "WIFI SET ON");
-
                 } else {
                     wifiManager.setWifiEnabled(true);
                     btnOnOff.setText("Off");
                     Log.d("WIFI", "WIFI SET OFF");
-
-
                 }
-
             }
         });
 
         btnDiscover.setOnClickListener(new View.OnClickListener() {
-
-
             @Override
             public void onClick(View v) {
                 mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
                     @Override
                     public void onSuccess() {
                         ConnectionStatus.setText("Discover Started");
-
                     }
 
                     @Override
                     public void onFailure(int reason) {
                         ConnectionStatus.setText("Discover Starting Failed");
-
                     }
                 });
             }
@@ -114,181 +160,65 @@ public class ConnectionScreen extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 final WifiP2pDevice device = deviceArray[position];
                 WifiP2pConfig config = new WifiP2pConfig();
                 config.deviceAddress = device.deviceAddress;
-
-
 
                 mManager.connect(mChannel, config, new WifiP2pManager.ActionListener() {
                     @Override
                     public void onSuccess() {
                         Toast.makeText(getApplicationContext(), "Connected to " + device.deviceName, Toast.LENGTH_SHORT).show();
                         connectedDevices.add(device.deviceName);
-
                     }
 
                     @Override
                     public void onFailure(int reason) {
                         Toast.makeText(getApplicationContext(), "not connected", Toast.LENGTH_SHORT).show();
-                        ;
-
                     }
                 });
             }
         });
-
-
-      /*  btnSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                String msg = writeMsg.getText().toString();
-                sendReceive.write(msg.getBytes());
-
-
-            }
-        });*/
     }
 
     WifiP2pManager.ConnectionInfoListener connectionInfoListener = new WifiP2pManager.ConnectionInfoListener() {
         @Override
         public void onConnectionInfoAvailable(WifiP2pInfo info) {
+            InetAddress groupOwnerAdress = info.groupOwnerAddress;
+            hostDeviceAddress = groupOwnerAdress.getHostAddress();
 
-            final InetAddress groupOwnerAdress = info.groupOwnerAddress;
-
-            if (info.groupFormed && info.isGroupOwner) {
-
-                ConnectionStatus.setText("Host");
-                //  serverClass = new ServerClass();
-                //serverClass.start();
-
-                //Wenn das Gerät ein Server ist, wird die eigene IP und der String "server" an den GC weiter gegeben
-                //GC wird gestartet, intent sollte jedem klar sein
-                //Weiter im GC
-
+            if (info.groupFormed) {
+                ConnectionStatus.setText("Connected");
+                startNIO();
+                NIOManager.setHostAdress(hostDeviceAddress);
+                NIOManager.open();
 
                 btnStart.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i = new Intent(getBaseContext(), GameViewProt.class);
-                        i.putExtra("mode", "server");
-                        i.putExtra("adress", groupOwnerAdress.getHostAddress());
-                        startActivity(i);
+                        NIOManager.writeGameaction(new GameActions(GameActions.actions.INIT_PLAYER,0,true));
+                        ready = true;
                     }
                 });
-
-
-            } else if (info.groupFormed) {
-
-                ConnectionStatus.setText("Client");
-                //   clientClass = new ClientClass(groupOwnerAdress);
-                // clientClass.start();
-
-
-                //Wenn das Gerät ein Client ist, wird die Server IP und der String "client" an den GC weiter gegeben
-
-                //GC wird gestartet, intent sollte jedem klar sein
-                //Weiter im GC
-                //Intent i = new Intent(getBaseContext(), GameViewProt.class);
-
-                // Intent i = new Intent(getBaseContext(),Player.class);
-               // i.putExtra("mode", "client");
-                //i.putExtra("adress", groupOwnerAdress.getHostAddress());
-                //startActivity(i);
-
-                //da hamm de serveradresse
-                //Serveradresse is eigentlich das wichtige
-                //gemma weiter ins game
-
-                btnStart.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent i = new Intent(getBaseContext(), GameViewProt.class);
-
-
-
-                        i.putExtra("mode", "client");
-                        i.putExtra("adress", groupOwnerAdress.getHostAddress());
-                        i.putExtra("numofclients",getNUMConnectedDevices());
-                        startActivity(i);
-                    }
-                });
-
-
             }
-
         }
     };
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
-        registerReceiver(mReceiver, mIntentFilter);
+        registerReceiver(mReceiver, intentFilter);
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         unregisterReceiver(mReceiver);
     }
-
-    private void initialWork() {
-
-        btnOnOff = (Button) findViewById(R.id.onOff);
-        btnDiscover = (Button) findViewById(R.id.discover);
-        btnStart = (Button) findViewById(R.id.start);
-
-
-        listView = (ListView) findViewById(R.id.peerListView);
-
-        ConnectionStatus = (TextView) findViewById(R.id.connectionStatus);
-        wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        //Für WLAN ON / OFF
-
-        mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
-        mChannel = mManager.initialize(this, getMainLooper(), null);
-        mReceiver = new WifiDirectBroadcastReceiver(mManager, mChannel, this);
-
-        mIntentFilter = new IntentFilter();
-
-
-        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
-        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
-        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
-        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
-
-        if (wifiManager.isWifiEnabled()) {
-
-            wifiManager.setWifiEnabled(false);
-            wifiManager.setWifiEnabled(true);
-
-            Log.d("WIFI", "WIFI reset");
-            Toast.makeText(getApplicationContext(), "Wifi enabled", Toast.LENGTH_SHORT).show();
-
-
-        } else {
-            wifiManager.setWifiEnabled(true);
-            wifiManager.setWifiEnabled(false);
-            wifiManager.setWifiEnabled(true);
-
-            Log.d("WIFI", "WIFI reset");
-            Toast.makeText(getApplicationContext(), "Wifi enabled", Toast.LENGTH_SHORT).show();
-
-
-
-        }
-
-
-    }
-
 
     WifiP2pManager.PeerListListener peerListListener = new WifiP2pManager.PeerListListener() {
         @Override
         public void onPeersAvailable(WifiP2pDeviceList peerList) {
             if (!peerList.getDeviceList().equals(peers)) {
-
                 peers.clear();
                 peers.addAll(peerList.getDeviceList());
 
@@ -308,19 +238,49 @@ public class ConnectionScreen extends AppCompatActivity {
             }
 
             if (peers.size() == 0) {
-
                 Toast.makeText(getApplicationContext(), "No Devices Found", Toast.LENGTH_SHORT).show();
                 return;
             }
-
         }
     };
 
-    public ArrayList<String> getConnectedDevices (){
-        return connectedDevices;
-    }
     public int  getNUMConnectedDevices (){
         return connectedDevices.size();
+    }
+
+    void startNIO() {
+        NIOManager = new NetworkIOManager(this);
+        NIOManager.setMode("client");
+    }
+
+    public void dataChanged() {
+        LinkedList<GameActions> actionsToProcess = NIOManager.getGameAction();
+        if (actionsToProcess == null) {
+            Log.e("GVP", "Reseved Actions where NULL");
+            return;
+        }
+
+        if (actionsToProcess.size() == 0) {
+            Log.e("GVP", "Reseved Actions where 0");
+            return;
+        }
+
+        for (int i = 0; i < actionsToProcess.size(); i++) {
+            GameActions recievedGA = actionsToProcess.get(i);
+            handleUpdate(recievedGA);
+        }
+        NIOManager.updatesProcessed();
+    }
+
+    public void NIOReady() {
+
+    }
+
+    void handleUpdate(GameActions action) {
+        if (action.action == GameActions.actions.INIT_GAME) {
+            Intent i = new Intent(getBaseContext(), GameViewProt.class);
+            startActivity(i);
+        }
     }
 }
 
