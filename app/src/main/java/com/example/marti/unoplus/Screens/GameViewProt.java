@@ -66,6 +66,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     private boolean isGameController = false;
     public CountDownTimer timer;
     private boolean buttonPressed = false;
+    private boolean endGame = false;
 
 
 

@@ -1,13 +1,10 @@
 package com.example.marti.unoplus.players;
 
-import com.example.marti.unoplus.Screens.GameViewProt;
-
 import java.util.LinkedList;
 
 public class PlayerList {
-    LinkedList<Player> players;
+    private LinkedList<Player> players;
 
-    //String[] player1 = new String[players.size()];
     public void setPlayers(LinkedList<Player> players){
         this.players = players;
     }
@@ -21,7 +18,6 @@ public class PlayerList {
         }
 
         return players.get(i+1);
-
     }
 
     //returns the previous player
@@ -35,6 +31,7 @@ public class PlayerList {
         return players.get(i-1);
     }
 
+    //return current player
     public Player getPlayer (int ID) {
         for (Player player : players) {
             if (player.getID() == ID) {
