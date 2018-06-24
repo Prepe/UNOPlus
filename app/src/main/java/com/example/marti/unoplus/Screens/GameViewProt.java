@@ -161,6 +161,11 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 Toast.makeText(getApplicationContext(), "ZEIT VORBEI! Karte gezogen", Toast.LENGTH_LONG).show();
                 timer.cancel();
                 player.drawCard();
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 player.drawCard();
             }
 
