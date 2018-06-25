@@ -76,6 +76,13 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
         setContentView(R.layout.lobby_screen);
 
         startGame = findViewById(R.id.verbindenbutton);
+        duelCheck = findViewById(R.id.duelCheck);
+        hotDropCheck = findViewById(R.id.hotDropCheck);
+        cardSpinCheck = findViewById(R.id.cardSpinCheck);
+        dropCardCheck = findViewById(R.id.dropCardCheck);
+        tradeCardCheck = findViewById(R.id.tradeCardCheck);
+        conterPlayCheck = findViewById(R.id.conterPlayCheck);
+        quickPlayCheck = findViewById(R.id.quickPlayCheck);
     }
 
     void setUpIntentFilter() {

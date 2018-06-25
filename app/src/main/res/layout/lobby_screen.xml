@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/gamebg">
 
     <Button
         android:id="@+id/onOff2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="55dp"
-        android:layout_x="156dp"
-        android:layout_y="15dp"
+        android:layout_marginStart="145dp"
+        android:layout_marginLeft="145dp"
         android:text="Wifi On"
         android:visibility="visible" />
 
@@ -20,9 +21,10 @@
         android:id="@+id/connectionStatus2"
         android:layout_width="239dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="39dp"
-        android:layout_x="348dp"
-        android:layout_y="29dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="32dp"
         android:text="@string/connection_status"
         android:textAlignment="center"
         android:textColor="@android:color/holo_blue_dark"
@@ -34,8 +36,8 @@
         android:id="@+id/discover2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="250dp"
-        android:layout_y="16dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:text="@string/discover"
         android:visibility="visible" />
 
@@ -43,10 +45,9 @@
         android:id="@+id/peerListView"
         android:layout_width="485dp"
         android:layout_height="92dp"
-        android:layout_marginTop="25dp"
-        android:layout_x="47dp"
-        android:layout_y="61dp"
-        android:background="@android:color/holo_orange_light" >
+        android:layout_below="@+id/connectionStatus2"
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/holo_orange_light">
 
     </ListView>
 
@@ -54,85 +55,123 @@
         android:id="@+id/imageView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="0dp"
-        android:layout_y="0dp"
         android:scaleType="fitXY"
         app:srcCompat="@drawable/gamebg"
-        tools:layout_editor_absoluteX="206dp"
-        tools:layout_editor_absoluteY="159dp"
         android:contentDescription="@string/dummy_content" />
 
     <TextView
         android:id="@+id/Spieler"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="48dp"
-        android:layout_y="19dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="26dp"
+        android:layout_marginLeft="26dp"
         android:text="@string/spieler"
         android:textColor="@android:color/white"
         android:textSize="30sp"
-        android:textStyle="bold"
-        tools:layout_editor_absoluteX="42dp"
-        tools:layout_editor_absoluteY="17dp" />
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/Optionen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="51dp"
-        android:layout_y="176dp"
+        android:layout_alignStart="@+id/Spieler"
+        android:layout_alignLeft="@+id/Spieler"
+        android:layout_centerVertical="true"
         android:text="@string/optionen"
         android:textColor="@android:color/white"
         android:textSize="30sp"
         android:textStyle="bold"
-        android:visibility="visible"
-        tools:layout_editor_absoluteX="42dp"
-        tools:layout_editor_absoluteY="17dp" />
+        android:visibility="visible" />
 
     <CheckBox
-        android:id="@+id/kartentauschen"
+        android:id="@+id/duelCheck"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="50dp"
-        android:layout_y="248dp"
-        android:text="@string/karten_tauschen"
+        android:layout_alignStart="@+id/Spieler"
+        android:layout_alignLeft="@+id/Spieler"
+        android:layout_below="@+id/cardSpinCheck"
+        android:text="Duel Karte"
         android:textColor="@android:color/white"
-        android:textSize="24sp"
-        tools:layout_editor_absoluteX="68dp"
-        tools:layout_editor_absoluteY="203dp" />
+        android:textSize="14sp" />
 
     <CheckBox
-        android:id="@+id/kartenwegwerfen"
-        android:layout_width="wrap_content"
+        android:id="@+id/dropCardCheck"
+        android:layout_width="148dp"
         android:layout_height="wrap_content"
-        android:layout_x="50dp"
-        android:layout_y="280dp"
-        android:text="@string/karten_wegwerfen"
+        android:layout_above="@+id/duelCheck"
+        android:layout_alignEnd="@+id/discover2"
+        android:layout_alignRight="@+id/discover2"
+        android:text="Drop Card Cheat"
         android:textColor="@android:color/white"
-        android:textSize="24sp"
-        tools:layout_editor_absoluteX="68dp"
-        tools:layout_editor_absoluteY="203dp" />
+        android:textSize="14sp" />
 
     <CheckBox
-        android:id="@+id/tischteufel"
+        android:id="@+id/tradeCardCheck"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="50dp"
-        android:layout_y="217dp"
-        android:text="@string/tischteufel"
+        android:layout_alignStart="@+id/Optionen"
+        android:layout_alignLeft="@+id/Optionen"
+        android:layout_below="@+id/Optionen"
+        android:text="Trade Card Cheat"
         android:textColor="@android:color/white"
-        android:textSize="24sp"
-        tools:layout_editor_absoluteX="68dp"
-        tools:layout_editor_absoluteY="203dp" />
+        android:textSize="14sp" />
+
+    <CheckBox
+        android:id="@+id/conterPlayCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/Spieler"
+        android:layout_alignLeft="@+id/Spieler"
+        android:layout_below="@+id/duelCheck"
+        android:text="Conter +2/+4"
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
+
+    <CheckBox
+        android:id="@+id/quickPlayCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/dropCardCheck"
+        android:layout_alignLeft="@+id/dropCardCheck"
+        android:layout_alignTop="@+id/duelCheck"
+        android:text="Quick Play"
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
+
+    <CheckBox
+        android:id="@+id/hotDropCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/dropCardCheck"
+        android:layout_alignLeft="@+id/dropCardCheck"
+        android:layout_below="@+id/Optionen"
+        android:text="Hotdrop"
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
+
+    <CheckBox
+        android:id="@+id/cardSpinCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/Spieler"
+        android:layout_alignLeft="@+id/Spieler"
+        android:layout_below="@+id/tradeCardCheck"
+        android:text="Cardspin Karte"
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
 
     <Button
         android:id="@+id/verbindenbutton"
-        android:layout_width="277dp"
-        android:layout_height="80dp"
-        android:layout_x="309dp"
-        android:layout_y="256dp"
-        android:background="@drawable/verbindenbutton"
-        tools:layout_editor_absoluteX="307dp"
-        tools:layout_editor_absoluteY="264dp" />
+        android:layout_width="220dp"
+        android:layout_height="71dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="45dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/spielstartenbutton" />
 
-</AbsoluteLayout>
+</RelativeLayout>
