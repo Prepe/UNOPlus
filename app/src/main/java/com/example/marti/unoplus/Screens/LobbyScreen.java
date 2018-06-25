@@ -36,6 +36,7 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
     WifiP2pManager mManager;
     BroadcastReceiver mReceiver;
     String deviceAddress;
+    int failCounter = 0;
 
     NetworkIOManager NIOManager;
     int playerCount = 1;
@@ -108,6 +109,7 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
         long temp = System.currentTimeMillis();
         while (System.currentTimeMillis() - temp < 500);
 
+        failCounter = 0;
         createGroup();
     }
 
@@ -126,12 +128,15 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
             public void onFailure(int reasonCode) {
                 // Code for when the discovery initiation fails goes here.
                 // Alert the user that something went wrong.
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                long temp = System.currentTimeMillis();
+                while (System.currentTimeMillis() - temp < 500);
+
+                if (failCounter < 10) {
+                    failCounter++;
+                    startDiscover();
+                } else {
+                    Toast.makeText(getApplicationContext(),"ERROR! No Network",Toast.LENGTH_SHORT).show();
                 }
-                startDiscover();
             }
         });
     }
@@ -146,13 +151,15 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
 
             @Override
             public void onFailure(int reason) {
-                Toast.makeText(getApplicationContext(), "P2P group creation failed. Retry.", Toast.LENGTH_SHORT).show();
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                long temp = System.currentTimeMillis();
+                while (System.currentTimeMillis() - temp < 500);
+
+                if (failCounter < 10) {
+                    failCounter++;
+                    createGroup();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Could not Create P2P Group", Toast.LENGTH_SHORT).show();
                 }
-                createGroup();
             }
         });
     }
