@@ -48,7 +48,7 @@ public class MainMenu extends AppCompatActivity {
 
         findViewById(R.id.spielerstellen).setOnClickListener(handler);
         findViewById(R.id.spielbeitreten).setOnClickListener(handler);
-        findViewById(R.id.einstellungen).setOnClickListener(handler);
+        findViewById(R.id.anleitung).setOnClickListener(handler);
         findViewById(R.id.exitbutton).setOnClickListener(handler);
 
 
@@ -74,7 +74,7 @@ public class MainMenu extends AppCompatActivity {
                     startActivity(new Intent(MainMenu.this, ConnectionScreen.class));
                     break;
 
-                case R.id.einstellungen:
+                case R.id.anleitung:
                     startActivity(new Intent(MainMenu.this, Settings.class));
                     break;
 

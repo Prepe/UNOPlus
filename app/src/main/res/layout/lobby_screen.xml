@@ -131,7 +131,7 @@
         android:layout_height="80dp"
         android:layout_x="309dp"
         android:layout_y="256dp"
-        android:background="@drawable/verbindenbutton"
+        android:background="@drawable/spielstartenbutton"
         tools:layout_editor_absoluteX="307dp"
         tools:layout_editor_absoluteY="264dp" />
 

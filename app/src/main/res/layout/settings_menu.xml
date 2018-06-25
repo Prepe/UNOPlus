@@ -123,4 +123,12 @@
         android:text="@string/counterPossibility"
         android:textColor="@color/UserWhite" />
 
+    <Button
+        android:id="@+id/spielAnleitung"
+        android:layout_width="236dp"
+        android:layout_height="38dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="Spielanleitung" />
+
 </RelativeLayout>
