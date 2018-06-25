@@ -106,6 +106,9 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
 
         startDiscover();
 
+        long temp = System.currentTimeMillis();
+        while (System.currentTimeMillis() - temp < 2);
+
         createGroup();
     }
 
@@ -145,6 +148,11 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
             @Override
             public void onFailure(int reason) {
                 Toast.makeText(getApplicationContext(), "P2P group creation failed. Retry.", Toast.LENGTH_SHORT).show();
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 createGroup();
             }
         });
