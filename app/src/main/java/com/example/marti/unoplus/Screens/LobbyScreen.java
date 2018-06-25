@@ -52,7 +52,11 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
     CheckBox quickPlayCheck;
 
     public LobbyScreen() {
-        startNetwork();
+        if (failCounter < 10) {
+            startNetwork();
+            failCounter = 0;
+            createGroup();
+        }
     }
 
     @Override
@@ -108,9 +112,6 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
 
         long temp = System.currentTimeMillis();
         while (System.currentTimeMillis() - temp < 500);
-
-        failCounter = 0;
-        createGroup();
     }
 
     void startDiscover() {
