@@ -93,11 +93,10 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
 
     void setUpWiFi() {
         GameStatics.wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        if (GameStatics.wifiManager.isWifiEnabled()) {
-            GameStatics.wifiManager.setWifiEnabled(false);
+        if (!GameStatics.wifiManager.isWifiEnabled()) {
             GameStatics.wifiManager.setWifiEnabled(true);
-        } else {
-            GameStatics.wifiManager.setWifiEnabled(true);
+            long temp = System.currentTimeMillis();
+            while (System.currentTimeMillis() - temp < 10000);
         }
 
         mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
@@ -107,7 +106,7 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
         startDiscover();
 
         long temp = System.currentTimeMillis();
-        while (System.currentTimeMillis() - temp < 2);
+        while (System.currentTimeMillis() - temp < 500);
 
         createGroup();
     }
@@ -120,7 +119,7 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
                 // No services have actually been discovered yet, so this method
                 // can often be left blank. Code for peer discovery goes in the
                 // onReceive method, detailed below.
-                Toast.makeText(getApplicationContext(),"Creating Lobby",Toast.LENGTH_SHORT);
+                Toast.makeText(getApplicationContext(),"Creating Lobby",Toast.LENGTH_SHORT).show();
             }
 
             @Override

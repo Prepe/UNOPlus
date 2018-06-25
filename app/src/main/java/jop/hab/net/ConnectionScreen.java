@@ -108,11 +108,10 @@ public class ConnectionScreen extends AppCompatActivity implements ObserverInter
 
     void setUpWiFi() {
         GameStatics.wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        if (GameStatics.wifiManager.isWifiEnabled()) {
-            GameStatics.wifiManager.setWifiEnabled(false);
+        if (!GameStatics.wifiManager.isWifiEnabled()) {
             GameStatics.wifiManager.setWifiEnabled(true);
-        } else {
-            GameStatics.wifiManager.setWifiEnabled(true);
+            long temp = System.currentTimeMillis();
+            while (System.currentTimeMillis()-temp<10000);
         }
         btnOnOff.setText("On");
 
