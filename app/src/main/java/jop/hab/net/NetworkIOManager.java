@@ -15,6 +15,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -81,7 +82,7 @@ public class NetworkIOManager {
 
     public void open() {
         if (MODE_IS_SERVER) {
-            serverClass = new ServerClass(hostAdress);
+            serverClass = new ServerClass();
             serverClass.start();
             serverClass.ready = true;
             Log.d("@mode", MODE_IS_SERVER + "");
@@ -193,34 +194,39 @@ public class NetworkIOManager {
         Socket socket;
         ServerSocket serverSocket;
         boolean ready = false;
-        String hostAdd;
-
-        public ServerClass(String host) {
-            this.hostAdd = host;
-            socket = new Socket();
-        }
 
         @Override
         public void run() {
             Log.d("@serverclass", "Serverclass running");
             try {
                 serverSocket = new ServerSocket(8888);
-                socket.connect(new InetSocketAddress(hostAdd, 8888),500);
+
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.d("@error", "sc catched");
             }
 
-            sendReceive = new SendReceive(socket);
+            sendReceive = new SendReceive();
             sendReceive.start();
             sendReceive.ready = true;
+        }
+
+        public void addClient() {
+            try {
+                socket = serverSocket.accept();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (socket != null) {
+                sendReceive.addClient(socket);
+            }
         }
     }
 
     private class SendReceive extends Thread {
         private Socket socket;
-        private InputStream inputStream;
-        private OutputStream outputStream;
+        private ArrayList<InputStream> inputStream = new ArrayList<>();
+        private ArrayList<OutputStream> outputStream = new ArrayList<>();
         boolean ready = false;
 
         public SendReceive(Socket socket) {
@@ -229,14 +235,31 @@ public class NetworkIOManager {
             try {
                 Log.d("@sendreceive", "sr created2");
 
-                this.inputStream = socket.getInputStream();
-                this.outputStream = socket.getOutputStream();
+                this.inputStream.add(socket.getInputStream());
+                this.outputStream.add(socket.getOutputStream());
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
+        public SendReceive() {
+
+        }
+
+        public void addClient(Socket socket) {
+            this.socket = socket;
+
+            try {
+                Log.d("@sendreceive", "sr created2");
+
+                this.inputStream.add(socket.getInputStream());
+                this.outputStream.add(socket.getOutputStream());
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         @Override
         public void run() {
@@ -256,26 +279,28 @@ public class NetworkIOManager {
 
             while (socket != null) {
                 if (inputStream != null) {
-                    try {
-                        bytes = inputStream.read(buffer);
-                        if (bytes > 0) {
-                            handler.obtainMessage(MESSAGE_READ, bytes, -1, buffer).sendToTarget();
+                    for (InputStream input : inputStream) {
+                        try {
+                            bytes = input.read(buffer);
+                            if (bytes > 0) {
+                                handler.obtainMessage(MESSAGE_READ, bytes, -1, buffer).sendToTarget();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     }
                 }
             }
         }
 
         public void write(byte[] bytes) {
-            try {
-                Log.d("@write", bytes.toString());
-                outputStream.write(bytes);
-            } catch (IOException e) {
-                e.printStackTrace();
+            for (OutputStream output : outputStream) {
+                try {
+                    output.write(bytes);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-
             try {
                 sleep(10);
             } catch (InterruptedException e) {

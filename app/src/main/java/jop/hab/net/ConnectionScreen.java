@@ -194,8 +194,10 @@ public class ConnectionScreen extends AppCompatActivity implements ObserverInter
                 btnStart.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        NIOManager.writeGameaction(new GameActions(GameActions.actions.INIT_PLAYER,0,true));
-                        ready = true;
+                        if (!ready) {
+                            NIOManager.writeGameaction(new GameActions(GameActions.actions.INIT_PLAYER, 0, true));
+                            ready = true;
+                        }
                     }
                 });
             }
