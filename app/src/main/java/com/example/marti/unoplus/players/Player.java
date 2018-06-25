@@ -224,6 +224,10 @@ public class Player {
         }
     }
 
+    public boolean hasCard(Card card) {
+        return this.hand.getHand().contains(card);
+    }
+
     // Card which will be dropped can now be dropped
     private void canDropCard(int playerID, Boolean canDrop) {
         if (canDrop == null) {
