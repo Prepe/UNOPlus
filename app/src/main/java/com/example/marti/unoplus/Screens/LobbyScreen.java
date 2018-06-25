@@ -102,6 +102,12 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
         mChannel = mManager.initialize(this, getMainLooper(), null);
         mReceiver = new WifiDirectBroadcastReceiver(mManager, mChannel, this);
 
+        startDiscover();
+
+        createGroup();
+    }
+
+    void startDiscover() {
         mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
@@ -109,15 +115,24 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
                 // No services have actually been discovered yet, so this method
                 // can often be left blank. Code for peer discovery goes in the
                 // onReceive method, detailed below.
+                Toast.makeText(getApplicationContext(),"Creating Lobby",Toast.LENGTH_SHORT);
             }
 
             @Override
             public void onFailure(int reasonCode) {
                 // Code for when the discovery initiation fails goes here.
                 // Alert the user that something went wrong.
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                startDiscover();
             }
         });
+    }
 
+    void createGroup() {
         mManager.createGroup(mChannel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
@@ -128,6 +143,7 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
             @Override
             public void onFailure(int reason) {
                 Toast.makeText(getApplicationContext(), "P2P group creation failed. Retry.", Toast.LENGTH_SHORT).show();
+                createGroup();
             }
         });
     }

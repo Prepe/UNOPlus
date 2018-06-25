@@ -15,8 +15,6 @@ import android.widget.Toast;
 import com.example.marti.unoplus.R;
 import com.example.marti.unoplus.Screens.LobbyScreen;
 
-import static sun.text.bidi.BidiBase.R;
-
 /**
  * Created by jopihabich on 13.04.18.
  */
