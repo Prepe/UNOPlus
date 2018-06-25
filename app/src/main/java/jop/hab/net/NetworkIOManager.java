@@ -81,13 +81,9 @@ public class NetworkIOManager {
 
     public void open() {
         if (MODE_IS_SERVER) {
-            if (serverClass == null) {
-                serverClass = new ServerClass();
-                serverClass.start();
-                serverClass.ready = true;
-            } else {
-                serverClass.fixState();
-            }
+            serverClass = new ServerClass(hostAdress);
+            serverClass.start();
+            serverClass.ready = true;
             Log.d("@mode", MODE_IS_SERVER + "");
         } else {
             clientClass = new ClientClass(hostAdress);
@@ -166,7 +162,7 @@ public class NetworkIOManager {
         if (serverClass == null) {
             return true;
         } else if (sendReceive == null) {
-            return  true;
+            return true;
         }
         return !(sendReceive.ready && serverClass.ready);
     }
@@ -197,14 +193,19 @@ public class NetworkIOManager {
         Socket socket;
         ServerSocket serverSocket;
         boolean ready = false;
+        String hostAdd;
+
+        public ServerClass(String host) {
+            this.hostAdd = host;
+            socket = new Socket();
+        }
 
         @Override
         public void run() {
             Log.d("@serverclass", "Serverclass running");
             try {
-//                    Log.d("socket",serverSocket.toString());
                 serverSocket = new ServerSocket(8888);
-                socket = serverSocket.accept();
+                socket.connect(new InetSocketAddress(hostAdd, 8888),500);
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.d("@error", "sc catched");
@@ -213,22 +214,6 @@ public class NetworkIOManager {
             sendReceive = new SendReceive(socket);
             sendReceive.start();
             sendReceive.ready = true;
-        }
-
-        public void fixState() {
-            if (serverSocket == null) {
-                run();
-            } else if (socket == null){
-                try {
-                    socket = serverSocket.accept();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                sendReceive = new SendReceive(socket);
-                sendReceive.start();
-                sendReceive.ready = true;
-            }
         }
     }
 
