@@ -241,10 +241,12 @@ public class NetworkIOManager {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setLenient();
         Gson gson = gsonBuilder.create();
-        LinkedList<String> gameactions = new LinkedList<>();
+
+
+       /*  LinkedList<String> gameactions = new LinkedList<>();
 
                                                                                                     Log.d("split", "Splitting1");
-        int helper = 0;
+       int helper = 0;
         for (int i = 0; i < gameActionString.length() - 1; i++) {
             char char1 = gameActionString.charAt(i);
             char char2 = gameActionString.charAt(i + 1);
@@ -256,6 +258,7 @@ public class NetworkIOManager {
         }
         gameactions.add(gameActionString.substring(helper));
 
+
         for (int i = 0; i < gameactions.size(); i++) {
                                                                                                     Log.d("Action", gameactions.get(i));
             try {
@@ -265,6 +268,8 @@ public class NetworkIOManager {
                                                                                                     Log.e("JSon error", "error");
             }
         }
+*/
+        actions.add(gson.fromJson(gameActionString, GameActions.class));
 
         return actions;
     }
