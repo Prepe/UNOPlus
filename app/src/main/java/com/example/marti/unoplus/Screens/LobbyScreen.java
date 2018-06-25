@@ -51,14 +51,6 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
     CheckBox conterPlayCheck;
     CheckBox quickPlayCheck;
 
-    public LobbyScreen() {
-        if (failCounter < 10) {
-            startNetwork();
-            failCounter = 0;
-            createGroup();
-        }
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +59,12 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
         setUpIntentFilter();
 
         setUpWiFi();
+
+        if (failCounter < 10) {
+            startNetwork();
+            failCounter = 0;
+            createGroup();
+        }
     }
 
     void updateGameStatics() {
