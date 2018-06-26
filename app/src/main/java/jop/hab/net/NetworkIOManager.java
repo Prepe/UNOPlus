@@ -243,7 +243,7 @@ public class NetworkIOManager {
         Gson gson = gsonBuilder.create();
 
 
-       /*  LinkedList<String> gameactions = new LinkedList<>();
+        LinkedList<String> gameactions = new LinkedList<>();
 
                                                                                                     Log.d("split", "Splitting1");
        int helper = 0;
@@ -268,8 +268,7 @@ public class NetworkIOManager {
                                                                                                     Log.e("JSon error", "error");
             }
         }
-*/
-        actions.add(gson.fromJson(gameActionString, GameActions.class));
+
 
         return actions;
     }
