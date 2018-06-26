@@ -45,7 +45,7 @@ public class NetworkIOManager {
     GameActions gameAction;
     LinkedList<GameActions> actions = new LinkedList<>();
     int countready = 0;
-    int numclients;
+    public int numclients;
     boolean isReady = false;
 
     public NetworkIOManager(ObserverInterface observerInterface) {

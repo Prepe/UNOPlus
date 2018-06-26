@@ -196,7 +196,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
             tempPlayers.add(player);
 
-            playerCount = numClients;
+            playerCount = NIOmanager.numclients;
 
             Log.d("HOST", "NumPlayers: " + playerCount);
             NIOmanager.writeGameaction(new GameActions(GameActions.actions.INIT_PLAYER, 0, 0, false));
@@ -324,7 +324,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             //TextView tv = (TextView) findViewById(R.id.netmessage);
             //tv.setText(recievedGA.action.toString());
             Log.d("GCP_Action", recievedGA.action.toString());
-            //TODO change placeholder player ID
             if (specialUpdate(recievedGA)) {
                 Log.d("GCP_Action", recievedGA.action.toString());
             } else {
