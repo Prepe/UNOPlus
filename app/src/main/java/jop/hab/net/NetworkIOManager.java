@@ -30,7 +30,7 @@ import java.util.LinkedList;
 public class NetworkIOManager {
     ObserverInterface observerInterface;
 
-    ServerClass serverClass;
+    public ServerClass serverClass;
     ClientClass clientClass;
     SendReceive sendReceive;
 
@@ -200,7 +200,6 @@ public class NetworkIOManager {
             Log.d("@serverclass", "Serverclass running");
             try {
                 serverSocket = new ServerSocket(8888);
-
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.d("@error", "sc catched");
@@ -211,15 +210,21 @@ public class NetworkIOManager {
             sendReceive.ready = true;
         }
 
-        public void addClient() {
+        public boolean addClient() {
             try {
+                Log.d("addClient", "Waiting for connection");
                 socket = serverSocket.accept();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
             if (socket != null) {
+                Log.d("addClient", "add client");
                 sendReceive.addClient(socket);
+                return true;
             }
+            Log.d("addClient", "No one connectet");
+            return false;
         }
     }
 

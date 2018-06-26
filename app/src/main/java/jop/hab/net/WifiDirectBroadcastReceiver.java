@@ -56,8 +56,6 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
         String action = intent.getAction();
 
         if (WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION.equals(action)) {
-            Toast.makeText(context, "State Changed Action", Toast.LENGTH_SHORT).show();
-
             int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
 
             if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
@@ -69,15 +67,11 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
             }
 
         } else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
-            Toast.makeText(context, "Peers Changed Actoion", Toast.LENGTH_SHORT).show();
-
             if (mManager != null) {
                 mManager.requestPeers(mChannel, mCActivity.peerListListener);
             }
 
         } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
-            Toast.makeText(context, "Connection Changed Action", Toast.LENGTH_SHORT).show();
-
             if (mManager == null) {
                 return;
             }
@@ -91,7 +85,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
             }
 
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
-            Toast.makeText(context, "Device Changed Action", Toast.LENGTH_SHORT).show();
+
         }
     }
 

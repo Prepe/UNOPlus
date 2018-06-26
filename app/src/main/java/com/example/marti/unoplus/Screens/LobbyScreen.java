@@ -106,7 +106,7 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
         if (!GameStatics.wifiManager.isWifiEnabled()) {
             GameStatics.wifiManager.setWifiEnabled(true);
             long temp = System.currentTimeMillis();
-            while (System.currentTimeMillis() - temp < 10000);
+            while (System.currentTimeMillis() - temp < 10000) ;
         }
 
         mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
@@ -116,7 +116,7 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
         startDiscover();
 
         long temp = System.currentTimeMillis();
-        while (System.currentTimeMillis() - temp < 500);
+        while (System.currentTimeMillis() - temp < 500) ;
     }
 
     void startDiscover() {
@@ -127,7 +127,7 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
                 // No services have actually been discovered yet, so this method
                 // can often be left blank. Code for peer discovery goes in the
                 // onReceive method, detailed below.
-                Toast.makeText(getApplicationContext(),"Creating Lobby",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Creating Lobby", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -135,13 +135,13 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
                 // Code for when the discovery initiation fails goes here.
                 // Alert the user that something went wrong.
                 long temp = System.currentTimeMillis();
-                while (System.currentTimeMillis() - temp < 500);
+                while (System.currentTimeMillis() - temp < 500) ;
 
                 if (failCounter < 10) {
                     failCounter++;
                     startDiscover();
                 } else {
-                    Toast.makeText(getApplicationContext(),"ERROR! No Network",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "ERROR! No Network", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -158,7 +158,7 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
             @Override
             public void onFailure(int reason) {
                 long temp = System.currentTimeMillis();
-                while (System.currentTimeMillis() - temp < 500);
+                while (System.currentTimeMillis() - temp < 500) ;
 
                 if (failCounter < 10) {
                     failCounter++;
@@ -171,6 +171,7 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
     }
 
     void startNetwork() {
+        Toast.makeText(getApplicationContext(), "Starting NIOM", Toast.LENGTH_SHORT).show();
         NIOManager = new NetworkIOManager(this);
         NIOManager.setMode("server");
     }
@@ -191,13 +192,25 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
                         NIOManager.setNumclients(playerCount);
                         Intent i = new Intent(getBaseContext(), GameViewProt.class);
                         GameStatics.NIOManager = NIOManager;
-                        NIOManager.writeGameaction(new GameActions(GameActions.actions.INIT_GAME,0,true));
+                        NIOManager.writeGameaction(new GameActions(GameActions.actions.INIT_GAME, 0, true));
                         startActivity(i);
                     }
                 });
             }
         }
     };
+
+    void openSocket() {
+        if (NIOManager.serverClass.addClient()) {
+            Log.d("openSocket", "A Player connected");
+            playerCount++;
+            if (playerCount < 5) {
+                openSocket();
+            } else {
+                Log.d("openSocket", "Max Players");
+            }
+        }
+    }
 
     @Override
     public void onResume() {
