@@ -145,6 +145,9 @@ public class GameController {
             case CARD_SPIN:
                 cardSpin(action);
                 break;
+            case BLAME_SB:
+                blamePlayer(action.playerID, action.nextPlayerID);
+                break;
         }
     }
 
@@ -373,14 +376,14 @@ public class GameController {
         }
     }
 
-    void accusePlayer(int accusingPlayerID, int accusedPlayerID) {
+    void blamePlayer(int accusingPlayerID, int accusedPlayerID) {
         if (droppedCard[accusedPlayerID] || tradedCard[accusedPlayerID]) {
             droppedCard[accusedPlayerID] = false;
             tradedCard[accusedPlayerID] = false;
 
             int amount = logic.getCardDrawCount();
             logic.changeCardDrawCount(dropCardPunishment);
-            drawCard(accusedPlayerID);
+            forcedCardDraw(accusedPlayerID);
             logic.changeCardDrawCount(amount);
             return;
         }
@@ -389,14 +392,14 @@ public class GameController {
 
             int amount = logic.getCardDrawCount();
             logic.changeCardDrawCount(tradeCardPunishment);
-            drawCard(accusedPlayerID);
+            forcedCardDraw(accusedPlayerID);
             logic.changeCardDrawCount(amount);
             return;
         }
 
         int amount = logic.getCardDrawCount();
         logic.changeCardDrawCount(accusingPunishment);
-        drawCard(accusingPlayerID);
+        forcedCardDraw(accusingPlayerID);
         logic.changeCardDrawCount(amount);
     }
 

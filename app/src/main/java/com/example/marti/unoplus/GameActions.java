@@ -30,7 +30,8 @@ public class GameActions {
         GET_NEWHand(16),
         GOT_Hand(17),
         DO_CardSpin(18),
-        INIT_PLAYER(19);
+        INIT_PLAYER(19),
+        BLAME_SB(20);
 
         private int value;
         actions(int value){this.value = value;}
