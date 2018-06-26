@@ -201,8 +201,6 @@ public class GameController {
 
         gA = new GameActions(GameActions.actions.DRAW_CARD, loserID, cards);
         update();
-
-        logic.nextPlayer(logic.getActivePlayer());
     }
 
     //Method for playing cards
@@ -251,15 +249,17 @@ public class GameController {
 
     //Method to call Uno
     void callUno(int player) {
-        if (!mustCallUNO[player]) {
-            mustCallUNO[player] = true;
+        if (mustCallUNO[player]) {
+            mustCallUNO[player] = false;
             Log.d("CALLUNO", player + " hat UNO gecalled");
             gA = new GameActions(GameActions.actions.CALL_UNO, player, true);
             update();
         } else {
             gA = new GameActions(GameActions.actions.CALL_UNO, player, false);
             update();
-            drawCard(player);
+            int amount = logic.getCardDrawCount();
+            forcedCardDraw(player);
+            logic.changeCardDrawCount(amount);
         }
 
     }
@@ -321,7 +321,7 @@ public class GameController {
         this.duelData = null;
         logic.changeCardDrawCount(duelPunishment);
         forcedCardDraw(loserID);
-
+        logic.nextPlayer(logic.getActivePlayer());
     }
 
     void cardSpin(GameActions action) {
