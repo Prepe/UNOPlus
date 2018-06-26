@@ -4,32 +4,29 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.example.marti.unoplus.GameActions;
-import com.example.marti.unoplus.GameStatics;
 import com.example.marti.unoplus.Screens.GameViewProt;
 import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.cards.HandCardList;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Player {
-    GameViewProt gameViewProt;
-    Card lastCard;
-    LinkedList<Card> handcards; //Hand
-    Card dropCard;
+    private GameViewProt gameViewProt;
+    private Card lastCard;
+    private LinkedList<Card> handcards; //Hand
+    private Card dropCard;
     private String playerName;
     private Integer ID;
     private int[] handcardcounter;
-    public HandCardList hand;
     private int tradedwith;
     private boolean activeTrade;
     private boolean cardSpinStart = false;
+    public HandCardList hand;
 
     //Variables needed for the Hot-Drop-Feature
-    int seconds = 0;
-    boolean startRun = true;
-    int millsecs = 0;
+    private int seconds = 0;
+    private int millsecs = 0;
 
     public Player(Integer id) {
         ID = id;
@@ -44,10 +41,6 @@ public class Player {
         ID = id;
     }
 
-    public LinkedList<Card> getHand() {
-        return this.handcards;
-    }
-
     public void setHand(LinkedList<Card> cards) {
         handcards = cards;
     }
@@ -56,20 +49,28 @@ public class Player {
         return getHand().size();
     }
 
-    public String getName() {
-        return this.playerName;
+    public int[] getHandcardcounter() {
+        return handcardcounter;
     }
 
     public Integer getID() {
         return ID;
     }
 
-    public void initialsiedHandCardCounters(int size) {
-        handcardcounter = new int[size];
+    public String getName() {
+        return this.playerName;
     }
 
-    public int[] getHandcardcounter() {
-        return handcardcounter;
+    public LinkedList<Card> getHand() {
+        return this.handcards;
+    }
+
+    public int getMillSecs() {
+        return this.millsecs;
+    }
+
+    private void initialsiedHandCardCounters(int size) {
+        handcardcounter = new int[size];
     }
 
 
@@ -90,13 +91,11 @@ public class Player {
         } else {
             action.check = false;
         }
-        Log.d("GameDebug", "Player playCard :" + c.value.toString() + " " + c.color.toString());
         this.gameViewProt.writeNetMessage(action);
     }
 
     //Tell what card has to be dropped
     public void dropCard(Card card) {
-        Log.d("GameDebug", "Player threw Card away :" + card.value.toString() + " " + card.color.toString());
         dropCard = card;
         GameActions tam = new GameActions(GameActions.actions.DROP_CARD, ID);
         gameViewProt.writeNetMessage(tam);
@@ -104,8 +103,6 @@ public class Player {
 
     //Tell which player called uno
     public void callUno(int player) {
-        Log.d("UNOUNO", "CALL UNO UNo");
-
         GameActions action = new GameActions(GameActions.actions.CALL_UNO, player);
         gameViewProt.writeNetMessage(action);
     }
@@ -116,7 +113,6 @@ public class Player {
         gameViewProt.removeCardFromHand(tradedCard);
         activeTrade = true;
         tradedwith = tradeTargetID;
-        Log.d("GameDebug", "Player wants to trade card :" + tradedCard.value.toString() + " " + tradedCard.color.toString() + "with Player ..");
         GameActions action = new GameActions(GameActions.actions.TRADE_CARD, ID, tradeTargetID, tradedCard, false);
         gameViewProt.writeNetMessage(action);
     }
@@ -174,30 +170,28 @@ public class Player {
     }
 
     //Check if the GA is for you
-    boolean checkID(int pID) {
+    private boolean checkID(int pID) {
         return pID == this.ID;
     }
 
     //Update Game Screen (last played Card, etc.)
-    void updateGame(int nextPID, Card card) {
+    private void updateGame(int nextPID, Card card) {
         updateLastCard(card);
         if (ID == nextPID) {
             gameViewProt.toastYourTurn();
         }
     }
 
-    void updateLastCard(Card lastCard) {
+    private void updateLastCard(Card lastCard) {
         this.lastCard = lastCard;
         this.gameViewProt.updateCurrentPlayCard(this.lastCard);
     }
 
     //Add given Cards to your handcards
-    void gotCard(int pID, List<Card> cards) {
+    private void gotCard(int pID, List<Card> cards) {
         if (checkID(pID)) {
             for (Card c : cards) {
-                //this.handcards.add(c);
                 this.hand.addCard(c);
-                //this.gameViewProt.addCardToHand(c);
                 this.gameViewProt.handChanged(hand.getHand());
             }
             updateHandCardCounter(cards.size(), pID);
@@ -207,7 +201,7 @@ public class Player {
     }
 
     //Your intended Card was played so now you can remove it
-    void cardPlayed(int ID, Card card) {
+    private void cardPlayed(int ID, Card card) {
         if (checkID(ID)) {
             this.hand.removeCard(card);
             this.gameViewProt.removeCardFromHand(card);
@@ -224,7 +218,7 @@ public class Player {
     }
 
     //Your intended Card couldn't be played
-    void wrongCard(int pID) {
+    private void wrongCard(int pID) {
         if (checkID(pID)) {
             gameViewProt.toastWrongCard();
         }
@@ -235,7 +229,7 @@ public class Player {
     }
 
     // Card which will be dropped can now be dropped
-    void canDropCard(int playerID, Boolean canDrop) {
+    private void canDropCard(int playerID, Boolean canDrop) {
         if (canDrop == null) {
             return;
         }
@@ -253,7 +247,7 @@ public class Player {
     }
 
     // if accepeted card will be traded if not card wont be traded
-    void gotCardTrade(int traderID, int tradeTargetID, boolean accepted, Card tradedCard) {
+    private void gotCardTrade(int traderID, int tradeTargetID, boolean accepted, Card tradedCard) {
         if (accepted) {
             if (activeTrade && traderID == this.ID && tradedwith == tradeTargetID) {
                 activeTrade = false;
@@ -263,12 +257,10 @@ public class Player {
                     gameViewProt.toastAlreadyTraded();
                 }
             }
-            //updateHandCardCounter(1, traderID);
             LinkedList<Card> temp = new LinkedList<>();
             temp.add(tradedCard);
             gotCard(traderID, temp);
         } else {
-            Log.d("TRADE_CARRD", "Player " + traderID + " wasnts to trade with Player " + tradeTargetID);
             updateHandCardCounter(-1, traderID);
             if (traderID == tradedwith && activeTrade) {
                 acceptTrade(tradeTargetID, tradedCard);
@@ -278,7 +270,8 @@ public class Player {
         }
     }
 
-    void canSayUno(int playerID, Boolean canSayUno) {
+    //Check if player can say Uno
+    private void canSayUno(int playerID, Boolean canSayUno) {
         if (canSayUno == null) {
             return;
         }
@@ -308,55 +301,27 @@ public class Player {
         });
     }
 
-    public void resetTimer() {
-        startRun = true;
-        seconds = 0;
-    }
-
-    public int getMillSecs() {
-        return this.millsecs;
-    }
-
-    public void lostHotDrop() {
-        gameViewProt.toastEndHotDropLooser();
-    }
-
-    public void playerTime() {
-        gameViewProt.toastPlayersTime();
-    }
-
     //<---------- Misc ---------->
-    public void createDummyCards() {
-        List<Card> list = new ArrayList<Card>();
-        for (int i = 0; i < 7; i++) {
-            Card.colors rndcolor = GameStatics.randomEnum(Card.colors.class);
-            Card.values rndvalue = GameStatics.randomEnum(Card.values.class);
-            Card card = new Card(rndcolor, rndvalue);
-            list.add(card);
-        }
-        this.gotCard(this.getID(), list);
-    }
-
-    public void drawCardIfTimesUp() {
-        drawCard();
-    }
-
-    void updateHandCardCounter(int count, int ID) {
+    //Update the handcard counter of players
+    private void updateHandCardCounter(int count, int ID) {
         handcardcounter[ID] += count;
         gameViewProt.updateCountersInView();
     }
 
-    void winGame() {
+    //called if player wins
+    private void winGame() {
         GameActions win = new GameActions(GameActions.actions.GAME_FINISH, ID, true);
         gameViewProt.writeNetMessage(win);
         gameViewProt.toastGameFinished(ID);
     }
 
+    //Called if player accepts trade Card Cheat
     public void acceptTrade(int tradeTargetID, Card tradedCard) {
         GameActions trade = new GameActions(GameActions.actions.TRADE_CARD, ID, tradeTargetID, tradedCard, true);
         gameViewProt.writeNetMessage(trade);
     }
 
+    //Called if player cancel trade Card Cheat offer
     public void declineTrade(int traderID, Card tradedCard) {
         GameActions trade = new GameActions(GameActions.actions.TRADE_CARD, traderID, ID, tradedCard, true);
         gameViewProt.writeNetMessage(trade);
@@ -368,16 +333,14 @@ public class Player {
     }
 
     public void setNewHand(int id, LinkedList<Card> cards) {
-
         if (id == ID) {
-
             for (Card card : cards) {
                 hand.addCard(card);
             }
         }
     }
 
-    void cardSpin(GameActions action) {
+    private void cardSpin(GameActions action) {
         if (action.playerID == ID) {
             Log.d("PLAYER", "Called CardSpin");
             LinkedList<Card> temp = new LinkedList<>();

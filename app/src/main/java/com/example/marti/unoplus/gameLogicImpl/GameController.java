@@ -383,7 +383,7 @@ public class GameController {
 
             int amount = logic.getCardDrawCount();
             logic.changeCardDrawCount(dropCardPunishment);
-            drawCard(accusedPlayerID);
+            forcedCardDraw(accusedPlayerID);
             logic.changeCardDrawCount(amount);
             return;
         }
@@ -392,14 +392,14 @@ public class GameController {
 
             int amount = logic.getCardDrawCount();
             logic.changeCardDrawCount(tradeCardPunishment);
-            drawCard(accusedPlayerID);
+            forcedCardDraw(accusedPlayerID);
             logic.changeCardDrawCount(amount);
             return;
         }
 
         int amount = logic.getCardDrawCount();
         logic.changeCardDrawCount(accusingPunishment);
-        drawCard(accusingPlayerID);
+        forcedCardDraw(accusingPlayerID);
         logic.changeCardDrawCount(amount);
     }
 

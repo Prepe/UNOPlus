@@ -66,7 +66,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     private boolean isGameController = false;
     public CountDownTimer timer;
     private boolean buttonPressed = false;
-
+    private boolean endGame = false;
 
 
     public GameViewProt() {
@@ -133,10 +133,10 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 final TextView mTextView = (TextView) view;
                 switch (position) {
                     case 0:
-                        blamePlayers();
+                        writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 0));
                         break;
                     case 1:
-                        blamePlayers();
+                        writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 1));
                         break;
                     case 2:
                         blamePlayers();
@@ -160,6 +160,11 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 Toast.makeText(getApplicationContext(), "ZEIT VORBEI! Karte gezogen", Toast.LENGTH_LONG).show();
                 timer.cancel();
                 player.drawCard();
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 player.drawCard();
             }
 
@@ -168,6 +173,12 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 myCounter.setText("Verbleibende Zeit: " + String.valueOf(millisUntilFinished / 1000));
             }
         };
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        endGame();
     }
 
     @Override
@@ -299,6 +310,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     }
 
     void initPlayer(GameActions action) {
+        TextView tv = findViewById(R.id.netmessage);
         if (!isGameController) {
             if (action.check) {
                 Log.d("CLIENT", "playerID: " + player.getID());
@@ -306,8 +318,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 if (action.playerID.equals(player.getID())) {
                     if (action.nextPlayerID > 0) {
                         Log.d("CLIENT", "Setting new ID");
-                        TextView tv = findViewById(R.id.netmessage);
-                        tv.setText("Player " + action.nextPlayerID+1);
+                        tv.setText("Player " + (action.nextPlayerID + 1));
                         player.setID(action.nextPlayerID);
                         return;
                     }
@@ -324,6 +335,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         } else if (action.playerID != 0 && action.nextPlayerID == 0 && !action.gcSend) {
             Log.d("HOST", "Give Player (ID: " + action.playerID + ") a new ID");
             gameInit(action.playerID);
+            tv.setText("Player " + (action.nextPlayerID + 1));
             return;
         }
         Log.d("INIT_PLAYER", "FIX ME");
@@ -586,7 +598,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     public void blamePlayers() {
         Dialog d = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
                 .setTitle("Beschuldigen wegen ")
-                .setItems(new String[]{"Trade Card Cheat", "Kein UNO gesagt", "Drop Card Cheat", "Für nichts"}, new DialogInterface.OnClickListener() {
+                .setItems(new String[]{"Cheaten", "Kein UNO gesagt"}, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dlg, int position) {
                         if (position == 0) {
@@ -595,12 +607,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                         } else if (position == 1) {
                             dlg.cancel();
                             writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 1));
-                        } else if (position == 2) {
-                            dlg.cancel();
-                            writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 2));
-                        } else if (position == 3) {
-                            dlg.cancel();
-                            writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 3));
                         }
                     }
                 })
@@ -638,7 +644,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         Toast.makeText(getApplicationContext(), "Du bist am Zug", Toast.LENGTH_SHORT).show();
         vibrator.vibrate(500);
         timer.start();
-        playerTurn.setText("An der Reihe: Player " + (this.player.getID()+1));
+        playerTurn.setText("An der Reihe: Player " + (this.player.getID() + 1));
     }
 
     public void toastWrongCard() {
@@ -688,6 +694,27 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                             dlg.cancel();
                         } else if (position == 1) {
                             player.declineTrade(traderID, tradedCard);
+                            dlg.cancel();
+                        }
+                    }
+                })
+                .create();
+        d.setCanceledOnTouchOutside(false);
+        d.show();
+    }
+
+    public void endGame() {
+        Dialog d = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
+                .setTitle("Willst du das Spiel beenden?")
+                .setItems(new String[]{"JA", "NEIN"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dlg, int position) {
+                        if (position == 0) {
+                            timer.cancel();
+                            startActivity(new Intent(GameViewProt.this, MainMenu.class));
+                            dlg.cancel();
+                        } else if (position == 1) {
+                            Toast.makeText(getApplicationContext(), "Spiel wird fortgesetzt", Toast.LENGTH_SHORT).show();
                             dlg.cancel();
                         }
                     }
