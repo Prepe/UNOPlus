@@ -30,9 +30,9 @@
         android:id="@+id/tradeCard"
         android:layout_width="46dp"
         android:layout_height="55dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginEnd="84dp"
+        android:layout_alignLeft="@+id/buttongetcard"
+        android:layout_alignStart="@+id/buttongetcard"
+        android:layout_alignTop="@+id/numCards2"
         android:background="@android:drawable/ic_menu_directions" />
 
     <ListView

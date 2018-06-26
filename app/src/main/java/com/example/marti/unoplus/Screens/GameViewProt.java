@@ -69,7 +69,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     private boolean endGame = false;
 
 
-
     public GameViewProt() {
         super();
         this.handCards = new ArrayList<>();
@@ -134,10 +133,10 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 final TextView mTextView = (TextView) view;
                 switch (position) {
                     case 0:
-                        blamePlayers();
+                        writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 0));
                         break;
                     case 1:
-                        blamePlayers();
+                        writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 1));
                         break;
                     case 2:
                         blamePlayers();
@@ -319,7 +318,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 if (action.playerID.equals(player.getID())) {
                     if (action.nextPlayerID > 0) {
                         Log.d("CLIENT", "Setting new ID");
-                        tv.setText("Player " + (action.nextPlayerID+1));
+                        tv.setText("Player " + (action.nextPlayerID + 1));
                         player.setID(action.nextPlayerID);
                         return;
                     }
@@ -336,7 +335,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         } else if (action.playerID != 0 && action.nextPlayerID == 0 && !action.gcSend) {
             Log.d("HOST", "Give Player (ID: " + action.playerID + ") a new ID");
             gameInit(action.playerID);
-            tv.setText("Player " + (action.nextPlayerID+1));
+            tv.setText("Player " + (action.nextPlayerID + 1));
             return;
         }
         Log.d("INIT_PLAYER", "FIX ME");
@@ -645,7 +644,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         Toast.makeText(getApplicationContext(), "Du bist am Zug", Toast.LENGTH_SHORT).show();
         vibrator.vibrate(500);
         timer.start();
-        playerTurn.setText("An der Reihe: Player " + (this.player.getID()+1));
+        playerTurn.setText("An der Reihe: Player " + (this.player.getID() + 1));
     }
 
     public void toastWrongCard() {
