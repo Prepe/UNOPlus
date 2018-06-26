@@ -11,9 +11,9 @@ import com.example.marti.unoplus.Screens.GameViewProt;
  */
 
 public class ThrowAwayDragListener implements View.OnDragListener{
-    public GameViewProt gamescreen = null;
+    private GameViewProt gamescreen = null;
 
-    public ThrowAwayDragListener(GameViewProt screen)
+    ThrowAwayDragListener(GameViewProt screen)
     {
         this.gamescreen = screen;
     }

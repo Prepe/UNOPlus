@@ -20,11 +20,27 @@
     <string name="connection_status">Connection Status</string>
     <string name="discover">discover</string>
     <string name="title_activity_game_view_prot">GameViewProt</string>
+<<<<<<< HEAD
     <color name="UserWhite">#FFFFFF</color>
+=======
+>>>>>>> testFeatuers
     <string name="eingabe_spielername">Gib hier deinen Spielernamen ein:</string>
     <string name="name">Name</string>
     <string name="zurück">Zurück</string>
     <string name="weiter">Weiter</string>
     <string name="waiting">Bitte warte bis alle Optionen ausgewählt wurden.</string>
     <string name="start">Start</string>
+<<<<<<< HEAD
+=======
+    <string name="hotDropCard">Wer als Letztes auf dem Bildschirm drückt hat verloren — Bestrafung 1 Karte ziehen</string>
+    <string name="cardSpinCard">CardSpin — Such dir einen Player mit dem du deine Handkarten tauschen willst</string>
+    <string name="tradeCardFeature">Trade Card Feature — Tausche eine Karte mit einem Spieler während zu nicht dran bist CHEATFUNKTION</string>
+    <string name="duelCard">Wähle eine Farbe und einen Player der diese Farbe bei einem Duel erraten soll — Verlierer zieht 2 Karten</string>
+    <string name="dropCardCheat">DROP CARD CHEATFUNKTION — Während du nicht dran bist, Karte auf den rechten oberen Rand des Game Screens ablegen</string>
+    <string name="blamePlayer">ACHTUNG PLAYER DIE CHEATEN ODER KEIN UNO SAGEN KÖNNEN ENTTARNT UND BESTRAFT WERDEN!!</string>
+    <string name="counterPossibility">TIPP: +2/+4 können noch mit anderen Karten gekontert werden</string>
+    <string name="gameDesc">Zu Beginn einer Runde werden jedem Spieler sieben Karten ausgeteilt, der Rest kommt auf einen verdeckten Stapel in die Mitte. Eine Karte kann nur gelegt werden, wenn die vorherige Karte dieselbe Nummer oder dieselbe Farbe hat. Für die schwarzen Aktionskarten gelten besondere Regeln. Wer keine passende Karte hat, muss eine vom Stapel nehmen und darf diese sofort wieder runterlegen. Sofern diese passt. Wer die vorletzte Karte ablegt, muss vorher „Uno!“ rufen. Gewinner der Runde ist, wer zuerst seine letzte Karte ablegt hat. </string>
+
+    <color name="UserWhite">#ffffff</color>
+>>>>>>> testFeatuers
 </resources>

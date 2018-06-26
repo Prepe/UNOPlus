@@ -46,9 +46,9 @@ public class MainMenu extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.main_menu);
 
-        findViewById(R.id.spielerstellen).setOnClickListener(handler);
+        //findViewById(R.id.spielerstellen).setOnClickListener(handler);
         findViewById(R.id.spielbeitreten).setOnClickListener(handler);
-        findViewById(R.id.einstellungen).setOnClickListener(handler);
+        findViewById(R.id.anleitung).setOnClickListener(handler);
         findViewById(R.id.exitbutton).setOnClickListener(handler);
 
 
@@ -63,18 +63,18 @@ public class MainMenu extends AppCompatActivity {
         public void onClick(View v) {
 
             switch (v.getId()) {
-
+                /*
                 case R.id.spielerstellen:
                     soundManager.playSound(Sounds.THEMESTOP);
                     startActivity(new Intent(MainMenu.this, LobbyScreen.class));
                     break;
-
+*/
                 case R.id.spielbeitreten:
                     soundManager.playSound(Sounds.THEMESTOP);
                     startActivity(new Intent(MainMenu.this, NameScreen.class));
                     break;
 
-                case R.id.einstellungen:
+                case R.id.anleitung:
                     startActivity(new Intent(MainMenu.this, Settings.class));
                     break;
 

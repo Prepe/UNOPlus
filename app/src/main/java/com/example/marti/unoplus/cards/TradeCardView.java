@@ -11,7 +11,7 @@ import com.example.marti.unoplus.Screens.GameViewProt;
  */
 
 public class TradeCardView {
-    ImageView view;
+    private ImageView view;
 
     public TradeCardView(Context context, GameViewProt screen) {
         this.view = (ImageView) screen.findViewById(R.id.tradeCard);

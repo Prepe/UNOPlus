@@ -5,7 +5,6 @@ import android.os.Message;
 import android.util.Log;
 
 import com.example.marti.unoplus.GameActions;
-import com.example.marti.unoplus.gameLogicImpl.GameController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -27,41 +26,22 @@ import java.util.LinkedList;
 
 
 public class NetworkIOManager {
-    GameController GC;
-//wird nie instanziert und wird auch nicht benötigt
+    private ObserverInterface observerInterface;
 
-    ObserverInterface observerInterface;
-
-    ServerClass serverClass;
-    ClientClass clientClass;
-    SendReceive sendReceive;
-
-
-    String hostAdress;
-
-
-    boolean MODE_IS_SERVER = false;
-    static final int MESSAGE_READ = 1;
-
-    String testText;
-    GameActions gameAction;
-    LinkedList<GameActions> actions = new LinkedList<>();
-    int countready = 0;
-    int numclients;
-    boolean isReady = false;
+    private ServerClass serverClass;
+    private ClientClass clientClass;
+    private SendReceive sendReceive;
+    private String hostAdress;
+    private boolean MODE_IS_SERVER = false;
+    private static final int MESSAGE_READ = 1;
+    private GameActions gameAction;
+    private LinkedList<GameActions> actions = new LinkedList<>();
+    private int countready = 0;
+    private int numclients;
 
     public NetworkIOManager(ObserverInterface observerInterface) {
         this.observerInterface = observerInterface;
     }
-
-    public void setMode(String mode) {
-        if (mode.equals("server")) {
-            MODE_IS_SERVER = true;
-        } else {
-            MODE_IS_SERVER = false;
-        }
-    }
-
     public void setHostAdress(String hostAdress) {
         this.hostAdress = hostAdress;
     }
@@ -70,12 +50,16 @@ public class NetworkIOManager {
         this.numclients = numclients;
     }
 
-    public String getTestText() {
-        return testText;
-    }
-
     public LinkedList<GameActions> getGameAction() {
         return actions;
+    }
+
+    public void setMode(String mode) {
+        if (mode.equals("server")) {
+            MODE_IS_SERVER = true;
+        } else {
+            MODE_IS_SERVER = false;
+        }
     }
 
     public void open() {
@@ -87,110 +71,13 @@ public class NetworkIOManager {
             } else {
                 serverClass.fixState();
             }
-            Log.d("@mode", MODE_IS_SERVER + "");
+                                                                                                    Log.d("@mode", MODE_IS_SERVER + "");
         } else {
             clientClass = new ClientClass(hostAdress);
             clientClass.start();
-            Log.d("@mode", MODE_IS_SERVER + "");
+                                                                                                    Log.d("@mode", MODE_IS_SERVER + "");
         }
     }
-
-
-    public void writeGameaction(GameActions gameAction) {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setLenient();
-        Gson gson = gsonBuilder.create();
-
-        String GameActionString = gson.toJson(gameAction);
-
-        Log.d("GSON Senden", GameActionString);
-        sendReceive.write(GameActionString.getBytes());
-    }
-
-    public LinkedList<GameActions> receiveGameaction(String gameActionString) {
-
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setLenient();
-        Gson gson = gsonBuilder.create();
-        LinkedList<String> gameactions = new LinkedList<>();
-
-        Log.d("split", "Splitting1");
-        int helper = 0;
-        for (int i = 0; i < gameActionString.length() - 1; i++) {
-            char char1 = gameActionString.charAt(i);
-            char char2 = gameActionString.charAt(i + 1);
-            if ('}' == char1 && '{' == char2) {
-                Log.d("split", "Splitting2");
-                gameactions.add(gameActionString.substring(helper, i + 1));
-                helper = i + 1;
-            }
-        }
-        gameactions.add(gameActionString.substring(helper));
-
-        for (int i = 0; i < gameactions.size(); i++) {
-            Log.d("Action", gameactions.get(i));
-            try {
-                actions.add(gson.fromJson(gameactions.get(i), GameActions.class));
-                Log.d("GAMEACTION", gameAction.action.toString());
-            } catch (Exception e) {
-                Log.e("JSon error", "error");
-            }
-        }
-
-        return actions;
-    }
-
-    public void updatesProcessed() {
-        actions = new LinkedList<>();
-    }
-
-    public void writeReady() {
-        String ready = "ready";
-        //sendReceive.write(ready.getBytes());
-    }
-
-    public boolean waitforClientsreadyingup() {
-        while (countready != numclients) {
-            try {
-                Thread.sleep(20);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return true;
-    }
-
-    public boolean isNotReady() {
-        if (serverClass == null) {
-            return true;
-        } else if (sendReceive == null) {
-            return  true;
-        }
-        return !(sendReceive.ready && serverClass.ready);
-    }
-
-
-    Handler handler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            switch (msg.what) {
-                case MESSAGE_READ:
-                    byte[] readBuffer = (byte[]) msg.obj;
-                    String tmpmsg = new String(readBuffer, 0, msg.arg1);
-                    if (!tmpmsg.equals("ready")) {
-                        Log.d("JSon Empfangen", tmpmsg);
-                        actions = receiveGameaction(tmpmsg);
-                        observerInterface.dataChanged();
-                    } else {
-                        countready++;
-                    }
-                    break;
-            }
-            return true;
-        }
-    });
-
 
     public class ServerClass extends Thread {
         Socket socket;
@@ -199,14 +86,13 @@ public class NetworkIOManager {
 
         @Override
         public void run() {
-            Log.d("@serverclass", "Serverclass running");
+                                                                                                    Log.d("@serverclass", "Serverclass running");
             try {
-//                    Log.d("socket",serverSocket.toString());
                 serverSocket = new ServerSocket(8888);
                 socket = serverSocket.accept();
             } catch (IOException e) {
                 e.printStackTrace();
-                Log.d("@error", "sc catched");
+                                                                                                    Log.d("@error", "sc catched");
             }
 
             sendReceive = new SendReceive(socket);
@@ -214,10 +100,10 @@ public class NetworkIOManager {
             sendReceive.ready = true;
         }
 
-        public void fixState() {
+        void fixState() {
             if (serverSocket == null) {
                 run();
-            } else if (socket == null){
+            } else if (socket == null) {
                 try {
                     socket = serverSocket.accept();
                 } catch (IOException e) {
@@ -231,82 +117,14 @@ public class NetworkIOManager {
         }
     }
 
-    private class SendReceive extends Thread {
-        private Socket socket;
-        private InputStream inputStream;
-        private OutputStream outputStream;
-        boolean ready = false;
-
-        public SendReceive(Socket socket) {
-            this.socket = socket;
-
-            try {
-                Log.d("@sendreceive", "sr created2");
-
-                this.inputStream = socket.getInputStream();
-                this.outputStream = socket.getOutputStream();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-
-        @Override
-        public void run() {
-
-            Log.d("@sendreceive", "sr running2");
-
-            Log.d("Time", "SendRecieveist jetzt gestartet");
-
-
-            //Jz is alles bereit... des bedeutet GC kann auf NIO zugreifen.. deshalb INterface Callen
-            //observerInterface.NIOReady();
-
-
-            byte[] buffer = new byte[1024];
-
-            int bytes;
-
-            while (socket != null) {
-                if (inputStream != null) {
-                    try {
-                        bytes = inputStream.read(buffer);
-                        if (bytes > 0) {
-                            handler.obtainMessage(MESSAGE_READ, bytes, -1, buffer).sendToTarget();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-
-        public void write(byte[] bytes) {
-            try {
-                Log.d("@write", bytes.toString());
-                outputStream.write(bytes);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-
     public class ClientClass extends Thread {
 
         Socket socket;
         String hostAdd;
 
-        public ClientClass(String hostAddress) {
+        ClientClass(String hostAddress) {
 
-            Log.d("@clientclass", hostAddress);
+                                                                                                    Log.d("@clientclass", hostAddress);
             hostAdd = hostAddress;
             socket = new Socket();
         }
@@ -316,20 +134,147 @@ public class NetworkIOManager {
             super.run();
             try {
 
-                Log.d("socket", socket.toString());
+                                                                                                    Log.d("socket", socket.toString());
                 socket.connect(new InetSocketAddress(hostAdd, 8888), 500);
-
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             sendReceive = new SendReceive(socket);
             sendReceive.start();
 
-            writeReady();
         }
     }
 
+    class SendReceive extends Thread {
+        private Socket socket;
+        private InputStream inputStream;
+        private OutputStream outputStream;
+        boolean ready = false;
+
+        SendReceive(Socket socket) {
+            this.socket = socket;
+
+            try {
+                                                                                                    Log.d("@sendreceive", "sr created2");
+                this.inputStream = socket.getInputStream();
+                this.outputStream = socket.getOutputStream();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+                    @Override
+                    public void run() {
+                                                                                                    Log.d("@sendreceive", "sr running2");
+                                                                                                    Log.d("Time", "SendRecieveist jetzt gestartet");
+
+                        //Jz is alles bereit... des bedeutet GC kann auf NIO zugreifen.. deshalb INterface Callen
+                        byte[] buffer = new byte[1024];
+
+                        int bytes;
+
+                        while (socket != null) {
+                            if (inputStream != null) {
+                                try {
+                                    bytes = inputStream.read(buffer);
+                                    if (bytes > 0) {
+                                        handler.obtainMessage(MESSAGE_READ, bytes, -1, buffer).sendToTarget();
+                                    }
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }
+
+                    void write(byte[] bytes) {
+                        try {
+                                                                                                    Log.d("@write", bytes.toString());
+                            outputStream.write(bytes);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            sleep(10);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+    }
+
+    Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what) {
+                case MESSAGE_READ:
+                    byte[] readBuffer = (byte[]) msg.obj;
+                    String tmpmsg = new String(readBuffer, 0, msg.arg1);
+                    if (!tmpmsg.equals("ready")) {
+                                                                                                    Log.d("JSon Empfangen", tmpmsg);
+                        actions = receiveGameaction(tmpmsg);
+                        observerInterface.dataChanged();
+                    } else {
+                        countready++;
+                    }
+                    break;
+            }
+            return true;
+        }
+    });
+
+    public void writeGameaction(GameActions gameAction) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setLenient();
+        Gson gson = gsonBuilder.create();
+
+        String GameActionString = gson.toJson(gameAction);
+
+                                                                                                    Log.d("GSON Senden", GameActionString);
+        sendReceive.write(GameActionString.getBytes());
+    }
+
+    private LinkedList<GameActions> receiveGameaction(String gameActionString) {
+
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setLenient();
+        Gson gson = gsonBuilder.create();
+
+
+        LinkedList<String> gameactions = new LinkedList<>();
+
+                                                                                                    Log.d("split", "Splitting1");
+       int helper = 0;
+        for (int i = 0; i < gameActionString.length() - 1; i++) {
+            char char1 = gameActionString.charAt(i);
+            char char2 = gameActionString.charAt(i + 1);
+            if ('}' == char1 && '{' == char2) {
+                                                                                                    Log.d("split", "Splitting2");
+                gameactions.add(gameActionString.substring(helper, i + 1));
+                helper = i + 1;
+            }
+        }
+        gameactions.add(gameActionString.substring(helper));
+
+
+        for (int i = 0; i < gameactions.size(); i++) {
+                                                                                                    Log.d("Action", gameactions.get(i));
+            try {
+                actions.add(gson.fromJson(gameactions.get(i), GameActions.class));
+                                                                                                    Log.d("GAMEACTION", gameAction.action.toString());
+            } catch (Exception e) {
+                                                                                                    Log.e("JSon error", "error");
+            }
+        }
+
+
+        return actions;
+    }
+
+    public void updatesProcessed() {
+        actions = new LinkedList<>();
+    }
 
 }

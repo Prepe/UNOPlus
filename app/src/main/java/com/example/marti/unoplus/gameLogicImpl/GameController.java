@@ -11,8 +11,6 @@ import com.example.marti.unoplus.players.PlayerList;
 
 import java.util.LinkedList;
 
-import jop.hab.net.ConnectionScreen;
-
 //import com.example.marti.unoplus.Screens.CardViewTest;
 
 /**
@@ -27,7 +25,6 @@ public class GameController {
     PlayerList players;     //reference to all Players in the Game
     Deck deck;              //reference to the Deck that is used
     public GameLogic logic; //reference to the GameLogic
-    ConnectionScreen cS;
 
     //In Game Data Variables
     int startingHand = 7;   //Amount of Cards every Player gets at the start of the Game
@@ -40,17 +37,17 @@ public class GameController {
     public DuelData duelData; // holds information about a duel
 
     //<OPTIONS>
-    boolean dropCardAllowed;     //enables players to drop cards
+    boolean dropCardAllowed = true;     //enables players to drop cards
     int dropCardPunishment = 2;         //how many cards a player draws when punished
-    boolean tradeCardAllowed;    //enables players to trade cards
+    boolean tradeCardAllowed = true;    //enables players to trade cards
     int tradeCardPunishment = 2;        //how many cards a player draws when punished
-    boolean quickPlayAllowed;    //enables players to play cards anytime turn
+    boolean quickPlayAllowed = true;    //enables players to play cards anytime turn
     boolean counterAllowed = true;      //enables players to counter +2/4
-    boolean hotDropEnabled;      //enables the HotDop Card
+    boolean hotDropEnabled = true;      //enables the HotDop Card
     int hotDropPunishment = 2;          //HotDrop looser draw amount
-    boolean duelEnabled;         //enables the Duel Card
+    boolean duelEnabled = true;         //enables the Duel Card
     int duelPunishment = 2;             //Duel looser draw amount
-    boolean cardSpinEnabled;     //enables CardSpin Card
+    boolean cardSpinEnabled = true;     //enables CardSpin Card
     int accusingPunishment = 1;          //amount of cards a player gets for wrong Call
 
     //Test Variables?
@@ -59,7 +56,6 @@ public class GameController {
     //<---------- Method for setting up the Game ---------->
     public GameController(GameViewProt gvp) {
         this.gvp = gvp;
-
         this.quickPlayAllowed = gvp.getBooleanQuickPlay();
         this.tradeCardAllowed = gvp.getBooleanTradeCard();
         this.dropCardAllowed = gvp.getBooleanDropCard();
@@ -155,6 +151,9 @@ public class GameController {
                 break;
             case CARD_SPIN:
                 cardSpin(action);
+                break;
+            case BLAME_SB:
+                blamePlayer(action.playerID, action.nextPlayerID);
                 break;
         }
     }
@@ -329,7 +328,6 @@ public class GameController {
         this.duelData = null;
         logic.changeCardDrawCount(duelPunishment);
         forcedCardDraw(loserID);
-
     }
 
     void cardSpin(GameActions action) {
@@ -384,14 +382,14 @@ public class GameController {
         }
     }
 
-    void accusePlayer(int accusingPlayerID, int accusedPlayerID) {
+    void blamePlayer(int accusingPlayerID, int accusedPlayerID) {
         if (droppedCard[accusedPlayerID] || tradedCard[accusedPlayerID]) {
             droppedCard[accusedPlayerID] = false;
             tradedCard[accusedPlayerID] = false;
 
             int amount = logic.getCardDrawCount();
             logic.changeCardDrawCount(dropCardPunishment);
-            drawCard(accusedPlayerID);
+            forcedCardDraw(accusedPlayerID);
             logic.changeCardDrawCount(amount);
             return;
         }
@@ -400,14 +398,14 @@ public class GameController {
 
             int amount = logic.getCardDrawCount();
             logic.changeCardDrawCount(tradeCardPunishment);
-            drawCard(accusedPlayerID);
+            forcedCardDraw(accusedPlayerID);
             logic.changeCardDrawCount(amount);
             return;
         }
 
         int amount = logic.getCardDrawCount();
         logic.changeCardDrawCount(accusingPunishment);
-        drawCard(accusingPlayerID);
+        forcedCardDraw(accusingPlayerID);
         logic.changeCardDrawCount(amount);
     }
 

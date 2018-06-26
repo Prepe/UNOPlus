@@ -11,10 +11,10 @@ import com.example.marti.unoplus.Screens.GameViewProt;
  * Created by ekzhu on 30.04.2018.
  */
 
-public class PlayedCardView {
+public class  PlayedCardView {
 
-    Card card = null;
-    ImageView view;
+    private Card card = null;
+    private ImageView view;
 
     public void updateCard(Card card) {
         this.card = card;

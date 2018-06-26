@@ -10,6 +10,9 @@ public class DuelData {
     private int duelStarterID;
     private int opponentID;
     private Card.colors starterColor;
+    private int loserIDfortests;
+
+
 
     public DuelData(int duelStarterID, int opponentID, Card.colors starterColor) {
         this.duelStarterID = duelStarterID;
@@ -17,11 +20,15 @@ public class DuelData {
         this.starterColor = starterColor;
     }
 
+
     public int getDuelLoserID(Card.colors opponentColor) {
         if (opponentColor.equals(starterColor)){
             return duelStarterID;
         } else {
             return opponentID;
         }
+    }
+    public void setLoserIDfortests(int loserIDfortests) {
+        this.loserIDfortests = loserIDfortests;
     }
 }

@@ -11,7 +11,7 @@ import com.example.marti.unoplus.Screens.GameViewProt;
  */
 
 public class ThrowAwayView {
-    ImageView view;
+    private ImageView view;
 
     public ThrowAwayView(Context context, GameViewProt screen) {
         this.view = (ImageView) screen.findViewById(R.id.throwaway);

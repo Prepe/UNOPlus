@@ -1,24 +1,17 @@
 package com.example.marti.unoplus.cards;
 
-import android.content.Intent;
-
 import com.example.marti.unoplus.GameActions;
-import com.example.marti.unoplus.Screens.GameViewProt;
 import com.example.marti.unoplus.gameLogicImpl.GameController;
 import com.example.marti.unoplus.gameLogicImpl.GameLogic;
 import com.example.marti.unoplus.players.Player;
-import com.example.marti.unoplus.players.PlayerList;
-
-import java.lang.reflect.Array;
-import java.util.LinkedList;
 
 /**
  * Created by marti on 10.04.2018.
  */
 
 public class CardEffects {
-    GameLogic gameLogic;
-    GameController gameController;
+    private GameLogic gameLogic;
+    private GameController gameController;
 
     public CardEffects(GameLogic gL, GameController gC) {
         gameLogic = gL;
@@ -37,8 +30,7 @@ public class CardEffects {
                 gameLogic.nextPlayer(player);
                 break;
             case TURN:
-                reverse();
-                gameLogic.nextPlayer(player);
+                reverse(player);
                 break;
             case PLUS_TWO:
                 takeTwo();
@@ -61,9 +53,6 @@ public class CardEffects {
                 startDuel(player);
                 break;
         }
-
-        gameController.gA = new GameActions(GameActions.actions.NEXT_PLAYER, gameLogic.getActivePlayer().getID());
-        gameController.update();
     }
 
     //TakeTwo Card effect method
@@ -85,13 +74,24 @@ public class CardEffects {
     }
 
     //Reverse Card effect method
-    private void reverse() {
-        gameLogic.toggleReverse();
+    private void reverse(Player player) {
+        int cardDrawCount = gameLogic.getCardDrawCount();
+        if (cardDrawCount > 1) {
+            gameLogic.changeCardDrawCount(cardDrawCount);
+            gameLogic.toggleReverse();
+            gameLogic.nextPlayer(player);
+            gameLogic.toggleReverse();
+        } else {
+            gameLogic.toggleReverse();
+            gameLogic.nextPlayer(player);
+        }
     }
 
     //Suspend Card effect method
     private void skip() {
-        gameLogic.skipNext();
+        if (gameLogic.getCardDrawCount() == 1) {
+            gameLogic.skipNext();
+        }
     }
 
     //Hot Drop Card effect method
@@ -99,7 +99,6 @@ public class CardEffects {
         gameController.gA = new GameActions(GameActions.actions.HOT_DROP, 0, true);
         gameController.update();
     }
-
 
     private void startDuel(Player player){
         if (player != null) {

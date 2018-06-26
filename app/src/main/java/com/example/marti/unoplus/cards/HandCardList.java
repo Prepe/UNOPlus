@@ -9,7 +9,11 @@ import java.util.LinkedList;
 public class HandCardList {
     HandCardNode first;
     HandCardNode last;
-    int nextIndex = 0;
+    private int nextIndex = 0;
+
+    public HandCardNode getFirst() {
+        return first;
+    }
 
     public int getCount() {
         return nextIndex;
@@ -93,10 +97,5 @@ public class HandCardList {
         if (pointer == first) {
             first = pointer.getPrev();
         }
-    }
-
-    public void removeHand (){
-        first = null;
-        last = null;
     }
 }

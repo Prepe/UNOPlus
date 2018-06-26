@@ -3,7 +3,6 @@ package com.example.marti.unoplus;
 import com.example.marti.unoplus.cards.Card;
 
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Created by marti on 25.04.2018.
@@ -31,7 +30,8 @@ public class GameActions {
         GET_NEWHand(16),
         GOT_Hand(17),
         DO_CardSpin(18),
-        INIT_PLAYER(19);
+        INIT_PLAYER(19),
+        BLAME_SB(20);
 
         private int value;
         actions(int value){this.value = value;}
@@ -40,7 +40,7 @@ public class GameActions {
     public actions action;
     public Integer playerID;
     public Integer nextPlayerID;
-    public String countCards;
+    private String countCards;
     public Card card;
     public LinkedList<Card> cards;
     public Boolean check;

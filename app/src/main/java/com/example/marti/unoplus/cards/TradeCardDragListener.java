@@ -5,18 +5,16 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.example.marti.unoplus.Screens.GameViewProt;
-import com.example.marti.unoplus.gameLogicImpl.GameLogic;
-import com.example.marti.unoplus.players.Player;
 
 /**
  * Created by sebit on 09.06.2018.
  */
 
 public class TradeCardDragListener implements View.OnDragListener {
-    public GameViewProt gamescreen = null;
+    private GameViewProt gamescreen = null;
 
 
-    public TradeCardDragListener(GameViewProt screen)
+    TradeCardDragListener(GameViewProt screen)
     {
         this.gamescreen = screen;
     }

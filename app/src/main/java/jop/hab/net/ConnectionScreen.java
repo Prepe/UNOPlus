@@ -48,7 +48,7 @@ public class ConnectionScreen extends AppCompatActivity {
     BroadcastReceiver mReceiver;
     IntentFilter mIntentFilter;
 
-    List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();
+    List<WifiP2pDevice> peers = new ArrayList<>();
     String[] deviceNameArray;
     WifiP2pDevice[] deviceArray;
     public ArrayList<String> connectedDevices = new ArrayList<>();
@@ -79,9 +79,7 @@ public class ConnectionScreen extends AppCompatActivity {
 
         initialWork();
         exqListener();
-
     }
-
 
     private void exqListener() {
 
@@ -149,24 +147,12 @@ public class ConnectionScreen extends AppCompatActivity {
                     @Override
                     public void onFailure(int reason) {
                         Toast.makeText(getApplicationContext(), "not connected", Toast.LENGTH_SHORT).show();
-                        ;
+
 
                     }
                 });
             }
         });
-
-
-      /*  btnSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                String msg = writeMsg.getText().toString();
-                sendReceive.write(msg.getBytes());
-
-
-            }
-        });*/
     }
 
     String groupOwnerAdressHost;
@@ -187,7 +173,6 @@ public class ConnectionScreen extends AppCompatActivity {
                 //GC wird gestartet, intent sollte jedem klar sein
                 //Weiter im GC
 
-
                 btnStart.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -205,14 +190,13 @@ public class ConnectionScreen extends AppCompatActivity {
             } else if (info.groupFormed) {
 
                 ConnectionStatus.setText("Client");
-
                 //   clientClass = new ClientClass(groupOwnerAdress);
                 // clientClass.start();
 
                 //Wenn das Gerät ein Client ist, wird die Server IP und der String "client" an den GC weiter gegeben
-
                 //GC wird gestartet, intent sollte jedem klar sein
                 //Weiter im GC
+
                 //Intent i = new Intent(getBaseContext(), GameViewProt.class);
 
                 // Intent i = new Intent(getBaseContext(),Player.class);
@@ -228,7 +212,6 @@ public class ConnectionScreen extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent i = new Intent(getBaseContext(), GameViewProt.class);
-
                         i.putExtra("mode", "client");
                         i.putExtra("adress", groupOwnerAdress.getHostAddress());
                         i.putExtra("numofclients", getNUMConnectedDevices());
@@ -317,9 +300,6 @@ public class ConnectionScreen extends AppCompatActivity {
         btnDiscover = (Button) findViewById(R.id.discover);
         btnStart = (Button) findViewById(R.id.start);
 
-        textViewplayername = (TextView) findViewById(R.id.playerName);
-        textViewplayername.setText(playername);
-
         listView = (ListView) findViewById(R.id.peerListView);
 
         ConnectionStatus = (TextView) findViewById(R.id.connectionStatus);
@@ -331,8 +311,7 @@ public class ConnectionScreen extends AppCompatActivity {
         mReceiver = new WifiDirectBroadcastReceiver(mManager, mChannel, this);
 
         mIntentFilter = new IntentFilter();
-
-
+        
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
@@ -382,7 +361,6 @@ public class ConnectionScreen extends AppCompatActivity {
         }
     }
 
-
     WifiP2pManager.PeerListListener peerListListener = new WifiP2pManager.PeerListListener() {
         @Override
         public void onPeersAvailable(WifiP2pDeviceList peerList) {
@@ -402,14 +380,14 @@ public class ConnectionScreen extends AppCompatActivity {
                 }
 
                 //Erzeug Array Adapter aus deviceNameArray für ListView
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, deviceNameArray);
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, deviceNameArray);
                 listView.setAdapter(adapter);
             }
 
             if (peers.size() == 0) {
 
                 Toast.makeText(getApplicationContext(), "No Devices Found", Toast.LENGTH_SHORT).show();
-                return;
+
             }
 
         }

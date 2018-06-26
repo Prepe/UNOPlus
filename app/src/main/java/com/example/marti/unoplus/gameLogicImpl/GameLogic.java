@@ -123,7 +123,9 @@ public class GameLogic {
                 }
                 if (counterAllowed) {
                     if (card.color == lastCardColor) {
-                        if (card.value == Card.values.SKIP || card.value == Card.values.TURN) ;
+                        if (card.value == Card.values.SKIP || card.value == Card.values.TURN) {
+                            return true;
+                        }
                     }
                 }
             } else {
@@ -235,5 +237,5 @@ public class GameLogic {
     public Card.values getLastCardValue() {
         return lastCardValue;
     }
-
 }
+

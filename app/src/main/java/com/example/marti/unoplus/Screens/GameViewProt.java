@@ -50,7 +50,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     int numClients;
     boolean isGameController = false;
     GameController gameController;
-    public Player player;
     GameActions recievedGA;
     ArrayList<HandCardView> handCards;
     PlayedCardView playedCardView;
@@ -63,8 +62,12 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     Vibrator vibrator;
     ArrayList<String> playersInListView = new ArrayList<>();
     boolean buttonPressed = false;
+    SoundManager soundManager;
     LinkedList<Player> tempPlayers;
-    int playerCount;
+    public Player player;
+    private TextView playerTurn;
+    private int playerCount;
+    private boolean endGame = false;
 
     boolean hotDrop;
     boolean spinCard;
@@ -93,6 +96,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
         numCards = (TextView) findViewById(R.id.numCards1);
         numCards2 = (TextView) findViewById(R.id.numCards2);
+        playerTurn = (TextView) findViewById(R.id.playerTurn);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
         //Hier werden die IP und der Modus über den Intent aus der ConnectionScreen abgefragt
@@ -126,7 +130,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         for (int i = 1; i <= 2; i++) {
             playersInListView.add("Player " + i);
         }
-
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_items, playersInListView);
 
         ListView lv = findViewById(R.id.list);
@@ -138,21 +141,16 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 final TextView mTextView = (TextView) view;
                 switch (position) {
                     case 0:
-                        Toast.makeText(getApplicationContext(), "Player 1", Toast.LENGTH_SHORT).show();
-                        //TO DO
-
+                        writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 0));
                         break;
                     case 1:
-                        Toast.makeText(getApplicationContext(), "Player 2", Toast.LENGTH_SHORT).show();
-                        //TO DO
+                        writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 1));
                         break;
                     case 2:
-                        Toast.makeText(getApplicationContext(), "Player 3", Toast.LENGTH_SHORT).show();
-                        //TO DO
+                        blamePlayers();
                         break;
                     case 3:
-                        Toast.makeText(getApplicationContext(), "Player 4", Toast.LENGTH_SHORT).show();
-                        //TO DO
+                        blamePlayers();
                         break;
                     default:
                         // Nothing do!
@@ -161,6 +159,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             }
         });
 
+        //Timer for players run
         final TextView myCounter = findViewById(R.id.countdown);
         timer = new CountDownTimer(20000, 1000) {
 
@@ -169,6 +168,12 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 Toast.makeText(getApplicationContext(), "ZEIT VORBEI! Karte gezogen", Toast.LENGTH_LONG).show();
                 timer.cancel();
                 player.drawCard();
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                player.drawCard();
             }
 
             @Override
@@ -176,6 +181,12 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 myCounter.setText("Verbleibende Zeit: " + String.valueOf(millisUntilFinished / 1000));
             }
         };
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        endGame();
     }
 
     @Override
@@ -193,8 +204,8 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
         for (int i = 0; i < actionsToProcess.size(); i++) {
             recievedGA = actionsToProcess.get(i);
-            TextView tv = (TextView) findViewById(R.id.netmessage);
-            tv.setText(recievedGA.action.toString());
+            //TextView tv = (TextView) findViewById(R.id.netmessage);
+            //tv.setText(recievedGA.action.toString());
             Log.d("GCP_Action", recievedGA.action.toString());
             //TODO change placeholder player ID
             if (specialUpdate(recievedGA)) {
@@ -221,7 +232,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         return false;
     }
 
-    @Override
+
     public void NIOReady() {
 
     }
@@ -312,6 +323,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     }
 
     void initPlayer(GameActions action) {
+        TextView tv = findViewById(R.id.netmessage);
         if (!isGameController) {
             if (action.check) {
                 Log.d("CLIENT", "playerID: " + player.getID());
@@ -319,6 +331,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 if (action.playerID.equals(player.getID())) {
                     if (action.nextPlayerID > 0) {
                         Log.d("CLIENT", "Setting new ID");
+                        tv.setText("Player " + (action.nextPlayerID + 1));
                         player.setID(action.nextPlayerID);
                         return;
                     }
@@ -335,6 +348,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         } else if (action.playerID != 0 && action.nextPlayerID == 0 && !action.gcSend) {
             Log.d("HOST", "Give Player (ID: " + action.playerID + ") a new ID");
             gameInit(action.playerID);
+            tv.setText("Player " + (action.nextPlayerID + 1));
             return;
         }
         Log.d("INIT_PLAYER", "FIX ME");
@@ -377,6 +391,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             switch (v.getId()) {
                 case R.id.buttongetcard:
                     player.drawCard();
+                    playerTurn.setText("");
                     break;
 
                 case R.id.unounobutton:
@@ -445,7 +460,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         if (GameStatics.devMode) {
             Log.d("GameDebug", "Gamescreen tries to remove following card from hand :" + card.value.toString() + " " + card.color.toString());
         }
-
+        playerTurn.setText("");
         LinearLayout handBox = findViewById(R.id.playerHandLayout);
         for (HandCardView c : this.handCards) {
             if (c.card.hasSameCardValueAs(card)) {
@@ -597,6 +612,26 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         d.show();
     }
 
+    public void blamePlayers() {
+        Dialog d = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
+                .setTitle("Beschuldigen wegen ")
+                .setItems(new String[]{"Cheaten", "Kein UNO gesagt"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dlg, int position) {
+                        if (position == 0) {
+                            dlg.cancel();
+                            writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 0));
+                        } else if (position == 1) {
+                            dlg.cancel();
+                            writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 1));
+                        }
+                    }
+                })
+                .create();
+        d.setCanceledOnTouchOutside(true);
+        d.show();
+    }
+
     void finishTradeOffer(int playerToTrade, Card c) {
         if (playerToTrade != player.getID()) {
             player.tradeCard(playerToTrade, c);
@@ -621,15 +656,12 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         d.show();
     }
 
-    void endGame() {
-        startActivity(new Intent(this, MainMenu.class));
-    }
-
     //<---------- Toasts ---------->
     public void toastYourTurn() {
         Toast.makeText(getApplicationContext(), "Du bist am Zug", Toast.LENGTH_SHORT).show();
         vibrator.vibrate(500);
         timer.start();
+        playerTurn.setText("An der Reihe: Player " + (this.player.getID() + 1));
     }
 
     public void toastWrongCard() {
@@ -656,10 +688,12 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         Log.d("GAME_END", "Sieger ist Spieler " + (pID + 1) + " mit der ID: " + pID);
 
         if (player.getID() == pID) {
+            timer.cancel();
             Intent intent = new Intent(getApplicationContext(), WinnerScreen.class);
             intent.putExtra("pID", pID + 1);
             startActivity(intent);
         } else {
+            timer.cancel();
             Intent intent = new Intent(getApplicationContext(), LosingScreen.class);
             intent.putExtra("pID", pID + 1);
             startActivity(intent);
@@ -677,6 +711,27 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                             dlg.cancel();
                         } else if (position == 1) {
                             player.declineTrade(traderID, tradedCard);
+                            dlg.cancel();
+                        }
+                    }
+                })
+                .create();
+        d.setCanceledOnTouchOutside(false);
+        d.show();
+    }
+
+    public void endGame() {
+        Dialog d = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
+                .setTitle("Willst du das Spiel beenden?")
+                .setItems(new String[]{"JA", "NEIN"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dlg, int position) {
+                        if (position == 0) {
+                            timer.cancel();
+                            startActivity(new Intent(GameViewProt.this, MainMenu.class));
+                            dlg.cancel();
+                        } else if (position == 1) {
+                            Toast.makeText(getApplicationContext(), "Spiel wird fortgesetzt", Toast.LENGTH_SHORT).show();
                             dlg.cancel();
                         }
                     }
