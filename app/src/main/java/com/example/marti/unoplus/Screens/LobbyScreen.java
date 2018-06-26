@@ -52,6 +52,7 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
     CheckBox quickPlayCheck;
 
     Thread socketThread;
+    boolean stated = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +70,7 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
 
             socketThread = new Thread() {
                 public void run()  {
-                    while (playerCount < 4){
+                    while (playerCount < 4 || !stated){
                         openSocket();
                     }
                 }
@@ -200,6 +201,7 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
                 startGame.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        stated = true;
                         socketThread.interrupt();
                         NIOManager.setNumclients(playerCount);
                         Intent i = new Intent(getBaseContext(), GameViewProt.class);
