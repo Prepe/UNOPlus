@@ -254,7 +254,8 @@ public class NetworkIOManager {
             this.socket = socket;
 
             try {
-                Log.d("@sendreceive", "sr created2");
+                Log.d("HOST", "addClient");
+                Log.d("HOST", socket.toString());
 
                 this.inputStream.add(socket.getInputStream());
                 this.outputStream.add(socket.getOutputStream());

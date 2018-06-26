@@ -71,7 +71,7 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
             socketThread = new Thread() {
                 public void run() {
                     Log.d("HOST", "Waitung for Players");
-                    while(playerCount < 4 && !started) {
+                    while(!started) {
                         if (openSocket()) {
                             Log.d("HOST", "Player Connected");
                         }

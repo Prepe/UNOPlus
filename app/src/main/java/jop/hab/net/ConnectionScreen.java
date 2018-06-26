@@ -39,8 +39,6 @@ public class ConnectionScreen extends AppCompatActivity implements ObserverInter
     ListView listView;
     TextView ConnectionStatus;
 
-    WifiManager wifiManager;
-
     List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();
     String[] deviceNameArray;
     WifiP2pDevice[] deviceArray;
@@ -107,7 +105,6 @@ public class ConnectionScreen extends AppCompatActivity implements ObserverInter
     }
 
     void setUpWiFi() {
-        GameStatics.wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (!GameStatics.wifiManager.isWifiEnabled()) {
             GameStatics.wifiManager.setWifiEnabled(true);
             long temp = System.currentTimeMillis();
@@ -127,13 +124,13 @@ public class ConnectionScreen extends AppCompatActivity implements ObserverInter
             @Override
             public void onClick(View v) {
 
-                if (wifiManager.isWifiEnabled()) {
-                    wifiManager.setWifiEnabled(false);
-                    btnOnOff.setText("On");
+                if (GameStatics.wifiManager.isWifiEnabled()) {
+                    GameStatics.wifiManager.setWifiEnabled(false);
+                    btnOnOff.setText("OFF");
                     Log.d("WIFI", "WIFI SET ON");
                 } else {
-                    wifiManager.setWifiEnabled(true);
-                    btnOnOff.setText("Off");
+                    GameStatics.wifiManager.setWifiEnabled(true);
+                    btnOnOff.setText("ON");
                     Log.d("WIFI", "WIFI SET OFF");
                 }
             }
