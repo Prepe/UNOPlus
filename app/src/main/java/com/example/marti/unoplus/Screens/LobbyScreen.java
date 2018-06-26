@@ -64,6 +64,7 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
             startNetwork();
             failCounter = 0;
             createGroup();
+            while (!openSocket());
         }
     }
 
@@ -200,7 +201,15 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
         }
     };
 
-    void openSocket() {
+    boolean openSocket() {
+        if (NIOManager == null) {
+           return false;
+        }
+
+        if (NIOManager.serverClass == null) {
+            return false;
+        }
+
         if (NIOManager.serverClass.addClient()) {
             Log.d("openSocket", "A Player connected");
             playerCount++;
@@ -210,6 +219,8 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
                 Log.d("openSocket", "Max Players");
             }
         }
+
+        return true;
     }
 
     @Override
