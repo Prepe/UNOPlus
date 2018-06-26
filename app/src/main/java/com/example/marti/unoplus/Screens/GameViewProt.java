@@ -54,8 +54,10 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     LinkedList<Player> tempPlayers;
     ArrayList<String> playersInListView = new ArrayList<>();
     public Player player;
-    private TextView numCards;
-    private TextView numCards2;
+    private TextView numCardsP1;
+    private TextView numCardsP2;
+    private TextView numCardsP3;
+    private TextView numCardsP4;
     private TextView playerTurn;
     private Button unoButton;
     private Vibrator vibrator;
@@ -66,7 +68,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     private boolean isGameController = false;
     public CountDownTimer timer;
     private boolean buttonPressed = false;
-
 
 
     public GameViewProt() {
@@ -86,16 +87,16 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
         setContentView(R.layout.game_screen);
 
-        numCards = (TextView) findViewById(R.id.numCards1);
-        numCards2 = (TextView) findViewById(R.id.numCards2);
+        numCardsP1 = (TextView) findViewById(R.id.numCards1);
+        numCardsP2 = (TextView) findViewById(R.id.numCards2);
+        numCardsP3 = (TextView) findViewById(R.id.numCards3);
+        numCardsP4 = (TextView) findViewById(R.id.numCards4);
         playerTurn = (TextView) findViewById(R.id.playerTurn);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
-        if (NIOmanager == null) {
-            NIOmanager = GameStatics.NIOManager;
-            NIOmanager.setObserverInterface(this);
-            host = NIOmanager.MODE_IS_SERVER;
-        }
+        NIOmanager = GameStatics.NIOManager;
+        NIOmanager.setObserverInterface(this);
+        host = NIOmanager.MODE_IS_SERVER;
 
         GameStatics.currentActivity = this;
         GameStatics.Initialize(true);
@@ -112,9 +113,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
 
         //int playerSize = playerList.playerCount();
-        int plsize = 0;
-        plsize = playerCountTest(plsize);
-        for (int i = 1; i <= 2; i++) {
+        for (int i = 1; i <= NIOmanager.numclients; i++) {
             playersInListView.add("Player " + i);
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_items, playersInListView);
@@ -128,16 +127,16 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 final TextView mTextView = (TextView) view;
                 switch (position) {
                     case 0:
-                        blamePlayers();
+                        writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 0));
                         break;
                     case 1:
-                        blamePlayers();
+                        writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 1));
                         break;
                     case 2:
-                        blamePlayers();
+                        writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 2));
                         break;
                     case 3:
-                        blamePlayers();
+                        writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 3));
                         break;
                     default:
                         // Nothing do!
@@ -169,11 +168,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     public void onStart() {
         super.onStart();
 
-        if (NIOmanager == null){
-            NIOmanager = GameStatics.NIOManager;
-            NIOmanager.setObserverInterface(this);
-        }
-
         //Let the screen be always on.
         //No sleep mode during gameplay.
         ImageView screenOn = this.findViewById(R.id.unostack);
@@ -195,7 +189,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             }
 
             isGameController = true;
-            boolean[] options = {GameStatics.duel,GameStatics.hotDrop,GameStatics.cardSpin,GameStatics.dropCard,GameStatics.tradeCard,GameStatics.cunterPlay,GameStatics.quickPlay};
+            boolean[] options = {GameStatics.duel, GameStatics.hotDrop, GameStatics.cardSpin, GameStatics.dropCard, GameStatics.tradeCard, GameStatics.cunterPlay, GameStatics.quickPlay};
             gameController = new GameController(this, options);
 
             tempPlayers = new LinkedList<>();
@@ -238,7 +232,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                     if (action.nextPlayerID > 0) {
                         Log.d("CLIENT", "Setting new ID");
                         TextView tv = findViewById(R.id.netmessage);
-                        tv.setText("Player " + action.nextPlayerID+1);
+                        tv.setText("Player " + action.nextPlayerID + 1);
                         player.setID(action.nextPlayerID);
                         return;
                     }
@@ -394,8 +388,14 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     public void updateCountersInView() {
         int[] hcc = player.getHandcardcounter();
 
-        numCards.setText("( " + hcc[0] + " )");
-        numCards2.setText("( " + hcc[1] + " )");
+        numCardsP1.setText(hcc[0] + "");
+        numCardsP2.setText(hcc[1] + "");
+        if (hcc.length >= 2) {
+            numCardsP3.setText(hcc[2] + "");
+        }
+        if (hcc.length >= 3) {
+            numCardsP4.setText(hcc[3] + "");
+        }
     }
 
     public void updateForHotDrop() {
@@ -578,32 +578,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         d.show();
     }
 
-    public void blamePlayers() {
-        Dialog d = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
-                .setTitle("Beschuldigen wegen ")
-                .setItems(new String[]{"Trade Card Cheat", "Kein UNO gesagt", "Drop Card Cheat", "Für nichts"}, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dlg, int position) {
-                        if (position == 0) {
-                            dlg.cancel();
-                            writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 0));
-                        } else if (position == 1) {
-                            dlg.cancel();
-                            writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 1));
-                        } else if (position == 2) {
-                            dlg.cancel();
-                            writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 2));
-                        } else if (position == 3) {
-                            dlg.cancel();
-                            writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 3));
-                        }
-                    }
-                })
-                .create();
-        d.setCanceledOnTouchOutside(true);
-        d.show();
-    }
-
     void finishTradeOffer(int playerToTrade, Card c) {
         if (playerToTrade != player.getID()) {
             player.tradeCard(playerToTrade, c);
@@ -632,7 +606,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         Toast.makeText(getApplicationContext(), "Du bist am Zug", Toast.LENGTH_SHORT).show();
         vibrator.vibrate(500);
         timer.start();
-        playerTurn.setText("An der Reihe: Player " + (this.player.getID()+1));
+        playerTurn.setText("An der Reihe: Player " + (this.player.getID() + 1));
     }
 
     public void toastWrongCard() {

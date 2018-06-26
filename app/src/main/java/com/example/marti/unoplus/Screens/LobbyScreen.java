@@ -37,9 +37,10 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
     BroadcastReceiver mReceiver;
     String deviceAddress;
     int failCounter = 0;
+    boolean reset = false;
 
     NetworkIOManager NIOManager;
-    int playerCount = 1;
+    int playerCount = 0;
 
     //Buttons and Options Checkboxes
     Button startGame;
@@ -118,10 +119,11 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
 
     void setUpWiFi() {
         GameStatics.wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        if (!GameStatics.wifiManager.isWifiEnabled()) {
+        if (!GameStatics.wifiManager.isWifiEnabled() || GameStatics.reset) {
             GameStatics.wifiManager.setWifiEnabled(true);
+            GameStatics.reset = false;
             long temp = System.currentTimeMillis();
-            while (System.currentTimeMillis() - temp < 10000) ;
+            while (System.currentTimeMillis() - temp < 5000) ;
         }
 
         mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
@@ -180,6 +182,12 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
                     createGroup();
                 } else {
                     Toast.makeText(getApplicationContext(), "Could not Create P2P Group", Toast.LENGTH_SHORT).show();
+                    GameStatics.resetWiFi(true);
+                    Toast.makeText(getApplicationContext(), "WiFi and System Reset", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Try Again or Check Network", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getApplicationContext(), MainMenu.class);
+                    startActivity(intent);
+                    finish();
                 }
             }
         });
@@ -212,6 +220,7 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
                         NIOManager.setNumclients(playerCount);
                         Intent i = new Intent(getBaseContext(), GameViewProt.class);
                         GameStatics.NIOManager = NIOManager;
+                        GameStatics.reset = true;
                         NIOManager.writeGameaction(new GameActions(GameActions.actions.INIT_GAME, 0, true));
                         startActivity(i);
                     }

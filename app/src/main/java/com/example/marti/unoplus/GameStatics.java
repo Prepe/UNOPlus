@@ -4,7 +4,6 @@ import android.net.wifi.WifiManager;
 import android.support.v7.app.AppCompatActivity;
 
 
-
 import java.util.Random;
 
 import jop.hab.net.NetworkIOManager;
@@ -21,6 +20,7 @@ public class GameStatics {
 
     public static WifiManager wifiManager;
     public static NetworkIOManager NIOManager;
+    public static boolean reset = false;
 
     //Cards
     public static boolean duel = true;
@@ -48,7 +48,31 @@ public class GameStatics {
     public static Random random = null;
 
     public static <T extends Enum<?>> T randomEnum(Class<T> clazz) {
-        int x = GameStatics.random.nextInt(clazz.getEnumConstants().length-2);
+        int x = GameStatics.random.nextInt(clazz.getEnumConstants().length - 2);
         return clazz.getEnumConstants()[x];
     }
+
+    public static boolean resetWiFi(boolean force) {
+        if (GameStatics.wifiManager.isWifiEnabled() && GameStatics.NIOManager != null) {
+            wifiManager.setWifiEnabled(false);
+            NIOManager.close();
+            NIOManager = null;
+            long temp = System.currentTimeMillis();
+            while (System.currentTimeMillis() - temp < 500) ;
+            wifiManager.setWifiEnabled(true);
+            return true;
+        } else if (force) {
+            wifiManager.setWifiEnabled(false);
+            if (NIOManager != null) {
+                NIOManager.close();
+                NIOManager = null;
+            }
+            long temp = System.currentTimeMillis();
+            while (System.currentTimeMillis() - temp < 500) ;
+            wifiManager.setWifiEnabled(true);
+            return true;
+        }
+        return false;
+    }
+
 }

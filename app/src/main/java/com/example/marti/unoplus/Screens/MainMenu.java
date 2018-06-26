@@ -43,9 +43,7 @@ public class MainMenu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         GameStatics.wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        GameStatics.wifiManager.setWifiEnabled(false);
-        GameStatics.wifiManager.setWifiEnabled(true);
-
+        GameStatics.resetWiFi(false);
         GameStatics.currentActivity = this;
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -62,33 +60,27 @@ public class MainMenu extends AppCompatActivity {
         soundManager.playSound(Sounds.THEMESTART);
     }
 
-
-
-
     View.OnClickListener handler = new View.OnClickListener(){
         public void onClick(View v) {
-
             switch (v.getId()) {
-
                 case R.id.spielerstellen:
                     soundManager.playSound(Sounds.THEMESTOP);
+                    GameStatics.reset =  GameStatics.resetWiFi(false);
                     startActivity(new Intent(MainMenu.this, LobbyScreen.class));
                     break;
-
                 case R.id.spielbeitreten:
                     soundManager.playSound(Sounds.THEMESTOP);
+                    GameStatics.resetWiFi(false);
                     startActivity(new Intent(MainMenu.this, ConnectionScreen.class));
                     break;
-
                 case R.id.einstellungen:
                     startActivity(new Intent(MainMenu.this, Settings.class));
                     break;
-
                 case R.id.exitbutton:
                     soundManager.playSound(Sounds.THEMESTOP);
+                    GameStatics.resetWiFi(true);
                     System.exit(0);
                     break;
-
             }
         }
     };

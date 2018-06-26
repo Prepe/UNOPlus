@@ -106,9 +106,10 @@ public class ConnectionScreen extends AppCompatActivity implements ObserverInter
 
     void setUpWiFi() {
         if (!GameStatics.wifiManager.isWifiEnabled()) {
+            GameStatics.reset = false;
             GameStatics.wifiManager.setWifiEnabled(true);
             long temp = System.currentTimeMillis();
-            while (System.currentTimeMillis()-temp<10000);
+            while (System.currentTimeMillis()-temp<5000);
         }
         btnOnOff.setText("On");
 
@@ -276,7 +277,12 @@ public class ConnectionScreen extends AppCompatActivity implements ObserverInter
 
     void handleUpdate(GameActions action) {
         if (action.action == GameActions.actions.INIT_GAME) {
+            if (!ready) {
+                return;
+            }
+
             GameStatics.NIOManager = NIOManager;
+            GameStatics.reset = true;
             Intent i = new Intent(getBaseContext(), GameViewProt.class);
             startActivity(i);
         }
