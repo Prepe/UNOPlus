@@ -733,4 +733,14 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     public void toastPlayersTime() {
         Toast.makeText(getApplicationContext(), "Deine Zeit: " + player.getMillSecs() + " Millisekunden", Toast.LENGTH_SHORT).show();
     }
+
+    public void callUNO(int id, boolean check) {
+        if (check) {
+            if (id != player.getID()) {
+                Toast.makeText(getApplicationContext(), "Player " + (player.getID() + 1) + " called UNO", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(getApplicationContext(), "Player " + (player.getID() + 1) + " called UNO and has drawn a Card", Toast.LENGTH_SHORT).show();
+        }
+    }
 }
