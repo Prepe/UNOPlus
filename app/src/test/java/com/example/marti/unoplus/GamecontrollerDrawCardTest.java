@@ -31,7 +31,7 @@ import static org.mockito.Mockito.mock;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Log.class})
-public class DrawCardTest {
+public class GamecontrollerDrawCardTest {
 
     @Mock
     GameViewProt gameViewProt;

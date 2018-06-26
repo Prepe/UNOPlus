@@ -26,6 +26,8 @@ public class Player {
 
     //Variables needed for the Hot-Drop-Feature
     private int seconds = 0;
+    private boolean startRun = true;
+  
     private int millsecs = 0;
 
     public Player(Integer id) {

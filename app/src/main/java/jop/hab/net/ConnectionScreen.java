@@ -40,14 +40,10 @@ public class ConnectionScreen extends AppCompatActivity {
     BroadcastReceiver mReceiver;
     IntentFilter mIntentFilter;
 
-    List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();
+    List<WifiP2pDevice> peers = new ArrayList<>();
     String[] deviceNameArray;
     WifiP2pDevice[] deviceArray;
-    public  ArrayList<String> connectedDevices = new ArrayList<>();
-
-
-    static final int MESSAGE_READ = 1;
-
+    public ArrayList<String> connectedDevices = new ArrayList<>();
 
 //Hier wird die Verbindung zwischen den geräten hergstellt. Dann wird die IP Adresse des Hosts und der Mode ("host oder server)
     //des aktuellen gerätes über einen Intent an den GameController weiter gegben.
@@ -61,9 +57,53 @@ public class ConnectionScreen extends AppCompatActivity {
 
         initialWork();
         exqListener();
-
     }
 
+    private void initialWork() {
+
+        btnOnOff = findViewById(R.id.onOff);
+        btnDiscover = findViewById(R.id.discover);
+        btnStart = findViewById(R.id.start);
+
+
+        listView = findViewById(R.id.peerListView);
+
+        ConnectionStatus = findViewById(R.id.connectionStatus);
+        wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        //Für WLAN ON / OFF
+
+        mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+        mChannel = mManager.initialize(this, getMainLooper(), null);
+        mReceiver = new WifiDirectBroadcastReceiver(mManager, mChannel, this);
+
+        mIntentFilter = new IntentFilter();
+
+
+        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
+        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
+        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
+        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+
+        if (wifiManager.isWifiEnabled()) {
+
+            wifiManager.setWifiEnabled(false);
+            wifiManager.setWifiEnabled(true);
+
+            Log.d("WIFI", "WIFI reset");
+            Toast.makeText(getApplicationContext(), "Wifi enabled", Toast.LENGTH_SHORT).show();
+
+
+        } else {
+            wifiManager.setWifiEnabled(true);
+            wifiManager.setWifiEnabled(false);
+            wifiManager.setWifiEnabled(true);
+
+            Log.d("WIFI", "WIFI reset");
+            Toast.makeText(getApplicationContext(), "Wifi enabled", Toast.LENGTH_SHORT).show();
+
+
+        }
+    }
 
     private void exqListener() {
 
@@ -120,7 +160,6 @@ public class ConnectionScreen extends AppCompatActivity {
                 config.deviceAddress = device.deviceAddress;
 
 
-
                 mManager.connect(mChannel, config, new WifiP2pManager.ActionListener() {
                     @Override
                     public void onSuccess() {
@@ -132,24 +171,12 @@ public class ConnectionScreen extends AppCompatActivity {
                     @Override
                     public void onFailure(int reason) {
                         Toast.makeText(getApplicationContext(), "not connected", Toast.LENGTH_SHORT).show();
-                        ;
+
 
                     }
                 });
             }
         });
-
-
-      /*  btnSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                String msg = writeMsg.getText().toString();
-                sendReceive.write(msg.getBytes());
-
-
-            }
-        });*/
     }
 
     WifiP2pManager.ConnectionInfoListener connectionInfoListener = new WifiP2pManager.ConnectionInfoListener() {
@@ -161,13 +188,10 @@ public class ConnectionScreen extends AppCompatActivity {
             if (info.groupFormed && info.isGroupOwner) {
 
                 ConnectionStatus.setText("Host");
-                //  serverClass = new ServerClass();
-                //serverClass.start();
 
                 //Wenn das Gerät ein Server ist, wird die eigene IP und der String "server" an den GC weiter gegeben
                 //GC wird gestartet, intent sollte jedem klar sein
                 //Weiter im GC
-
 
                 btnStart.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -183,24 +207,9 @@ public class ConnectionScreen extends AppCompatActivity {
             } else if (info.groupFormed) {
 
                 ConnectionStatus.setText("Client");
-                //   clientClass = new ClientClass(groupOwnerAdress);
-                // clientClass.start();
-
-
                 //Wenn das Gerät ein Client ist, wird die Server IP und der String "client" an den GC weiter gegeben
-
                 //GC wird gestartet, intent sollte jedem klar sein
                 //Weiter im GC
-                //Intent i = new Intent(getBaseContext(), GameViewProt.class);
-
-                // Intent i = new Intent(getBaseContext(),Player.class);
-               // i.putExtra("mode", "client");
-                //i.putExtra("adress", groupOwnerAdress.getHostAddress());
-                //startActivity(i);
-
-                //da hamm de serveradresse
-                //Serveradresse is eigentlich das wichtige
-                //gemma weiter ins game
 
                 btnStart.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -208,10 +217,9 @@ public class ConnectionScreen extends AppCompatActivity {
                         Intent i = new Intent(getBaseContext(), GameViewProt.class);
 
 
-
                         i.putExtra("mode", "client");
                         i.putExtra("adress", groupOwnerAdress.getHostAddress());
-                        i.putExtra("numofclients",getNUMConnectedDevices());
+                        i.putExtra("numofclients", getNUMConnectedDevices());
                         startActivity(i);
                     }
                 });
@@ -234,56 +242,6 @@ public class ConnectionScreen extends AppCompatActivity {
         unregisterReceiver(mReceiver);
     }
 
-    private void initialWork() {
-
-        btnOnOff = (Button) findViewById(R.id.onOff);
-        btnDiscover = (Button) findViewById(R.id.discover);
-        btnStart = (Button) findViewById(R.id.start);
-
-
-        listView = (ListView) findViewById(R.id.peerListView);
-
-        ConnectionStatus = (TextView) findViewById(R.id.connectionStatus);
-        wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        //Für WLAN ON / OFF
-
-        mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
-        mChannel = mManager.initialize(this, getMainLooper(), null);
-        mReceiver = new WifiDirectBroadcastReceiver(mManager, mChannel, this);
-
-        mIntentFilter = new IntentFilter();
-
-
-        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
-        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
-        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
-        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
-
-        if (wifiManager.isWifiEnabled()) {
-
-            wifiManager.setWifiEnabled(false);
-            wifiManager.setWifiEnabled(true);
-
-            Log.d("WIFI", "WIFI reset");
-            Toast.makeText(getApplicationContext(), "Wifi enabled", Toast.LENGTH_SHORT).show();
-
-
-        } else {
-            wifiManager.setWifiEnabled(true);
-            wifiManager.setWifiEnabled(false);
-            wifiManager.setWifiEnabled(true);
-
-            Log.d("WIFI", "WIFI reset");
-            Toast.makeText(getApplicationContext(), "Wifi enabled", Toast.LENGTH_SHORT).show();
-
-
-
-        }
-
-
-    }
-
-
     WifiP2pManager.PeerListListener peerListListener = new WifiP2pManager.PeerListListener() {
         @Override
         public void onPeersAvailable(WifiP2pDeviceList peerList) {
@@ -303,23 +261,20 @@ public class ConnectionScreen extends AppCompatActivity {
                 }
 
                 //Erzeug Array Adapter aus deviceNameArray für ListView
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, deviceNameArray);
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, deviceNameArray);
                 listView.setAdapter(adapter);
             }
 
             if (peers.size() == 0) {
 
                 Toast.makeText(getApplicationContext(), "No Devices Found", Toast.LENGTH_SHORT).show();
-                return;
+
             }
 
         }
     };
 
-    public ArrayList<String> getConnectedDevices (){
-        return connectedDevices;
-    }
-    public int  getNUMConnectedDevices (){
+    public int getNUMConnectedDevices() {
         return connectedDevices.size();
     }
 }

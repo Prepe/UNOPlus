@@ -224,7 +224,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         return false;
     }
 
-    @Override
+
     public void NIOReady() {
 
     }
