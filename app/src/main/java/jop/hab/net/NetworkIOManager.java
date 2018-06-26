@@ -108,19 +108,51 @@ public class NetworkIOManager {
     }
 
     public LinkedList<GameActions> receiveGameaction(String gameActionString) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setLenient();
+        Gson gson = gsonBuilder.create();
 
+        try {
+            actions.add(gson.fromJson(gameActionString,GameActions.class));
+            Log.d("GAMEACTION", gameAction.action.toString());
+        } catch (Exception e) {
+            Log.e("JSon error", "Retry");
+            receiveGameactionRetry(gameActionString);
+        }
+
+        return actions;
+    }
+
+    void receiveGameactionRetry(String gameActionString) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setLenient();
+        Gson gson = gsonBuilder.create();
+
+        try {
+            actions.add(gson.fromJson(gameActionString,GameActions.class));
+        } catch (Exception e) {
+            Log.e("JSon error", "Splitting");
+            receiveGameactionSplitting(gameActionString);
+        }
+    }
+
+    void receiveGameactionSplitting(String gameActionString) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setLenient();
         Gson gson = gsonBuilder.create();
         LinkedList<String> gameactions = new LinkedList<>();
 
-        Log.d("split", "Splitting1");
+        Log.d("NIOM", "Splitting Start");
         int helper = 0;
         for (int i = 0; i < gameActionString.length() - 1; i++) {
             char char1 = gameActionString.charAt(i);
             char char2 = gameActionString.charAt(i + 1);
             if ('}' == char1 && '{' == char2) {
-                Log.d("split", "Splitting2");
+                Log.d("NIOM", "Splitting1");
+                gameactions.add(gameActionString.substring(helper, i + 1));
+                helper = i + 1;
+            } else if ('}' == char1 && !('{' == char2)) {
+                Log.d("NIOM", "Splitting2");
                 gameactions.add(gameActionString.substring(helper, i + 1));
                 helper = i + 1;
             }
@@ -133,11 +165,9 @@ public class NetworkIOManager {
                 actions.add(gson.fromJson(gameactions.get(i), GameActions.class));
                 Log.d("GAMEACTION", gameAction.action.toString());
             } catch (Exception e) {
-                Log.e("JSon error", "error");
+                Log.e("JSon error", "ERROR");
             }
         }
-
-        return actions;
     }
 
     public void updatesProcessed() {
