@@ -38,7 +38,7 @@ public class NetworkIOManager {
     String hostAdress;
 
 
-    boolean MODE_IS_SERVER = false;
+    public boolean MODE_IS_SERVER = false;
     static final int MESSAGE_READ = 1;
 
     String testText;
@@ -212,14 +212,12 @@ public class NetworkIOManager {
 
         public boolean addClient() {
             try {
-                Log.d("addClient", "Waiting for connection");
                 socket = serverSocket.accept();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             if (socket != null) {
-                Log.d("addClient", "add client");
                 sendReceive.addClient(socket);
                 return true;
             }
@@ -316,7 +314,6 @@ public class NetworkIOManager {
 
 
     public class ClientClass extends Thread {
-
         Socket socket;
         String hostAdd;
 
@@ -331,21 +328,15 @@ public class NetworkIOManager {
         public void run() {
             super.run();
             try {
-
                 Log.d("socket", socket.toString());
                 socket.connect(new InetSocketAddress(hostAdd, 8888), 500);
-
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
+            Log.d("socket", socket.toString());
             sendReceive = new SendReceive(socket);
             sendReceive.start();
-
-            writeReady();
         }
     }
-
-
 }

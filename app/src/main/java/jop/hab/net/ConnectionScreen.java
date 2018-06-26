@@ -279,6 +279,7 @@ public class ConnectionScreen extends AppCompatActivity implements ObserverInter
 
     void handleUpdate(GameActions action) {
         if (action.action == GameActions.actions.INIT_GAME) {
+            GameStatics.NIOManager = NIOManager;
             Intent i = new Intent(getBaseContext(), GameViewProt.class);
             startActivity(i);
         }

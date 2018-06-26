@@ -52,6 +52,7 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
     CheckBox quickPlayCheck;
 
     Thread socketThread;
+    boolean started = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,9 +69,12 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
             createGroup();
 
             socketThread = new Thread() {
-                public void run()  {
-                    while (playerCount < 4 || !isInterrupted()){
-                        openSocket();
+                public void run() {
+                    Log.d("HOST", "Waitung for Players");
+                    while(playerCount < 4 && !started) {
+                        if (openSocket()) {
+                            Log.d("HOST", "Player Connected");
+                        }
                     }
                 }
             };
@@ -194,12 +198,16 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
             deviceAddress = groupOwnerAddress.getHostAddress();
 
             if (info.groupFormed && info.isGroupOwner) {
-                NIOManager.setHostAdress(deviceAddress);
-                NIOManager.open();
+                Log.d("HOST","Form Group");
+                if (NIOManager.serverClass == null) {
+                    NIOManager.setHostAdress(deviceAddress);
+                    NIOManager.open();
+                }
 
                 startGame.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        started = true;
                         socketThread.interrupt();
                         NIOManager.setNumclients(playerCount);
                         Intent i = new Intent(getBaseContext(), GameViewProt.class);
@@ -214,7 +222,7 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
 
     boolean openSocket() {
         if (NIOManager == null) {
-           return false;
+            return false;
         }
 
         if (NIOManager.serverClass == null) {
@@ -222,7 +230,6 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
         }
         try {
             if (NIOManager.serverClass.addClient()) {
-                Log.d("openSocket", "A Player connected");
                 playerCount++;
                 return true;
             }

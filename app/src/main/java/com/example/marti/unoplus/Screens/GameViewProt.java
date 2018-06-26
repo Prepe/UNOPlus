@@ -60,7 +60,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     private Button unoButton;
     private Vibrator vibrator;
     private String hostAdress;
-    private String mode;
+    private boolean host;
     private int numClients;
     private int playerCount;
     private boolean isGameController = false;
@@ -91,8 +91,11 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         playerTurn = (TextView) findViewById(R.id.playerTurn);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
-        NIOmanager = GameStatics.NIOManager;
-        NIOmanager.setObserverInterface(this);
+        if (NIOmanager == null) {
+            NIOmanager = GameStatics.NIOManager;
+            NIOmanager.setObserverInterface(this);
+            host = NIOmanager.MODE_IS_SERVER;
+        }
 
         GameStatics.currentActivity = this;
         GameStatics.Initialize(true);
@@ -166,6 +169,11 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     public void onStart() {
         super.onStart();
 
+        if (NIOmanager == null){
+            NIOmanager = GameStatics.NIOManager;
+            NIOmanager.setObserverInterface(this);
+        }
+
         //Let the screen be always on.
         //No sleep mode during gameplay.
         ImageView screenOn = this.findViewById(R.id.unostack);
@@ -179,7 +187,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         this.throwAwayView = new ThrowAwayView(this.getApplicationContext(), this);
         this.tradeCardView = new TradeCardView(this.getApplicationContext(), this);
 
-        if (mode.equals("server")) {
+        if (host) {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
