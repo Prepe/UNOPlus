@@ -33,7 +33,7 @@ public class NetworkIOManager {
 
     public ServerClass serverClass;
     ClientClass clientClass;
-    SendReceive sendReceive;
+    ArrayList<SendReceive> sendReceive;
 
 
     String hostAdress;
@@ -103,7 +103,9 @@ public class NetworkIOManager {
         String GameActionString = gson.toJson(gameAction);
 
         Log.d("GSON Senden", GameActionString);
-        sendReceive.write(GameActionString.getBytes());
+        for (SendReceive s : sendReceive) {
+            s.write(GameActionString.getBytes());
+        }
     }
 
     public LinkedList<GameActions> receiveGameaction(String gameActionString) {
@@ -112,7 +114,7 @@ public class NetworkIOManager {
         Gson gson = gsonBuilder.create();
 
         try {
-            actions.add(gson.fromJson(gameActionString,GameActions.class));
+            actions.add(gson.fromJson(gameActionString, GameActions.class));
             Log.d("GAMEACTION", gameAction.action.toString());
         } catch (Exception e) {
             Log.e("JSon error", "Retry");
@@ -128,7 +130,7 @@ public class NetworkIOManager {
         Gson gson = gsonBuilder.create();
 
         try {
-            actions.add(gson.fromJson(gameActionString,GameActions.class));
+            actions.add(gson.fromJson(gameActionString, GameActions.class));
         } catch (Exception e) {
             Log.e("JSon error", "Splitting");
             receiveGameactionSplitting(gameActionString);
@@ -173,32 +175,6 @@ public class NetworkIOManager {
         actions = new LinkedList<>();
     }
 
-    public void writeReady() {
-        String ready = "ready";
-        //sendReceive.write(ready.getBytes());
-    }
-
-    public boolean waitforClientsreadyingup() {
-        while (countready != numclients) {
-            try {
-                Thread.sleep(20);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return true;
-    }
-
-    public boolean isNotReady() {
-        if (serverClass == null) {
-            return true;
-        } else if (sendReceive == null) {
-            return true;
-        }
-        return !(sendReceive.ready && serverClass.ready);
-    }
-
     public void close() {
         if (serverClass != null) {
             closeServer();
@@ -216,7 +192,7 @@ public class NetworkIOManager {
 
     void closeServer() {
         try {
-            if (serverClass.socket != null){
+            if (serverClass.socket != null) {
                 serverClass.socket.close();
             }
         } catch (IOException e) {
@@ -242,24 +218,26 @@ public class NetworkIOManager {
     }
 
     void closeSendReceive() {
-        try {
-            sendReceive.socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        for (OutputStream o : sendReceive.outputStream) {
+        for (SendReceive s : sendReceive) {
             try {
-                o.close();
+                s.socket.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        for (InputStream i : sendReceive.inputStream) {
+
             try {
-                i.close();
+                s.outputStream.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            try {
+                s.inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            s = null;
         }
         sendReceive = null;
     }
@@ -314,9 +292,7 @@ public class NetworkIOManager {
                 Log.d("@error", "sc catched");
             }
 
-            sendReceive = new SendReceive();
-            sendReceive.start();
-            sendReceive.ready = true;
+            sendReceive = new ArrayList<>();
         }
 
         public boolean addClient() {
@@ -327,9 +303,11 @@ public class NetworkIOManager {
             }
 
             if (socket != null) {
-                Log.d("HOST","Client Socket");
-                Log.d("HOST",socket.toString());
-                sendReceive.addClient(socket);
+                Log.d("HOST", "Client Socket");
+                Log.d("HOST", socket.toString());
+                SendReceive temp = new SendReceive(socket);
+                sendReceive.add(temp);
+                temp.start();
                 return true;
             }
             Log.d("HOST", "No one connectet");
@@ -339,37 +317,24 @@ public class NetworkIOManager {
 
     private class SendReceive extends Thread {
         private Socket socket;
-        private ArrayList<InputStream> inputStream = new ArrayList<>();
-        private ArrayList<OutputStream> outputStream = new ArrayList<>();
+        private InputStream inputStream;
+        private OutputStream outputStream;
         boolean ready = false;
 
         public SendReceive(Socket socket) {
             this.socket = socket;
 
             try {
-                Log.d("CLIENT", "addHostSocket");
-                Log.d("CLIENT", socket.toString());
-                this.inputStream.add(socket.getInputStream());
-                this.outputStream.add(socket.getOutputStream());
+                Log.d("SR", "addNewSR");
+                Log.d("SR", socket.toString());
+                this.inputStream = socket.getInputStream();
+                this.outputStream = socket.getOutputStream();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
         public SendReceive() {
-        }
-
-        public void addClient(Socket socket) {
-            this.socket = socket;
-
-            try {
-                Log.d("HOST", "addClientSocket");
-                Log.d("HOST", socket.toString());
-                this.inputStream.add(socket.getInputStream());
-                this.outputStream.add(socket.getOutputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
 
         @Override
@@ -381,27 +346,24 @@ public class NetworkIOManager {
 
             while (socket != null) {
                 if (inputStream != null) {
-                    for (InputStream input : inputStream) {
-                        try {
-                            bytes = input.read(buffer);
-                            if (bytes > 0) {
-                                handler.obtainMessage(MESSAGE_READ, bytes, -1, buffer).sendToTarget();
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                    try {
+                        bytes = inputStream.read(buffer);
+                        if (bytes > 0) {
+                            handler.obtainMessage(MESSAGE_READ, bytes, -1, buffer).sendToTarget();
                         }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
+
                 }
             }
         }
 
         public void write(byte[] bytes) {
-            for (OutputStream output : outputStream) {
-                try {
-                    output.write(bytes);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            try {
+                outputStream.write(bytes);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
             try {
@@ -411,8 +373,7 @@ public class NetworkIOManager {
             }
         }
     }
-
-
+    
     public class ClientClass extends Thread {
         Socket socket;
         String hostAdd;
@@ -431,8 +392,9 @@ public class NetworkIOManager {
                 e.printStackTrace();
             }
 
-            sendReceive = new SendReceive(socket);
-            sendReceive.start();
+            SendReceive temp = new SendReceive((socket));
+            sendReceive.add(temp);
+            temp.start();
         }
     }
 }
