@@ -35,6 +35,14 @@ Sorted Handcards
 * **Trade card:** Every Player can trade a single card with other players.
 * **Conter possibility:** Players can conter +2 or +4 card with the reverse card or with the locking card.
 
+### How to connect
+- Open the UNOPlus App after titlescreen you will be directed to the main menu
+- Main Menu click on "Spiel beitreten" and you will be directed to the "lobby"
+- After automatically set on the WiFi you can click on "DISCOVER" to discover other players,
+- if you find other players you can click on them to send them an invite for a quick game
+- if all players are connected the HOST has to click "START" and also clients has to click on "START" in that direction
+- if all succeed, all players will be directed to the game screen
+
 
 ### Authors
 
