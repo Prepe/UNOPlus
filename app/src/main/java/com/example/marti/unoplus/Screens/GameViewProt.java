@@ -111,40 +111,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         unoButton = findViewById(R.id.unounobutton);
         unoButton.setOnClickListener(handler);
 
-
-        //int playerSize = playerList.playerCount();
-        for (int i = 1; i <= NIOmanager.numclients; i++) {
-            playersInListView.add("Player " + i);
-        }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_items, playersInListView);
-
-        ListView lv = findViewById(R.id.list);
-        lv.setAdapter(adapter);
-
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                final TextView mTextView = (TextView) view;
-                switch (position) {
-                    case 0:
-                        writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 0));
-                        break;
-                    case 1:
-                        writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 1));
-                        break;
-                    case 2:
-                        writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 2));
-                        break;
-                    case 3:
-                        writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 3));
-                        break;
-                    default:
-                        // Nothing do!
-                }
-
-            }
-        });
-
         //Timer for players run
         final TextView myCounter = findViewById(R.id.countdown);
         timer = new CountDownTimer(20000, 1000) {
@@ -187,6 +153,8 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+            setPlayerListInView(NIOmanager.numclients);
 
             isGameController = true;
             boolean[] options = {GameStatics.duel, GameStatics.hotDrop, GameStatics.cardSpin, GameStatics.dropCard, GameStatics.tradeCard, GameStatics.cunterPlay, GameStatics.quickPlay};
@@ -340,6 +308,11 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         Log.d("GVP_UPDATE", "specialUpdate: " + action.action.name());
         if (action.action.equals(GameActions.actions.INIT_PLAYER)) {
             initPlayer(action);
+            return true;
+        }
+        if (action.action.equals(GameActions.actions.INIT_GAME)) {
+            setPlayerListInView(action.nextPlayerID);
+            handleUpdate(action);
             return true;
         }
         if (action.action.equals(GameActions.actions.GAME_FINISH)) {
@@ -599,6 +572,41 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 .create();
         d.setCanceledOnTouchOutside(false);
         d.show();
+    }
+
+    void setPlayerListInView(int numPlayres) {
+        for (int i = 1; i <= numPlayres; i++) {
+            playersInListView.add("Player " + i);
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_items, playersInListView);
+
+        ListView lv = findViewById(R.id.list);
+        lv.setAdapter(adapter);
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                final TextView mTextView = (TextView) view;
+                switch (position) {
+                    case 0:
+                        writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 0));
+                        break;
+                    case 1:
+                        writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 1));
+                        break;
+                    case 2:
+                        writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 2));
+                        break;
+                    case 3:
+                        writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 3));
+                        break;
+                    default:
+                        // Nothing do!
+                }
+
+            }
+        });
     }
 
     //<---------- Toasts ---------->

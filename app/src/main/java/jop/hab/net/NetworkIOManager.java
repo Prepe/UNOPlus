@@ -118,7 +118,7 @@ public class NetworkIOManager {
         } catch (Exception e) {
             Log.e("JSon error", "Retry");
             gA = null;
-            receiveGameactionRetry(gameActionString);
+            receiveGameactionRetry(gameActionString, true);
         }
 
         if (gA != null) {
@@ -128,7 +128,7 @@ public class NetworkIOManager {
         return actions;
     }
 
-    void receiveGameactionRetry(String gameActionString) {
+    void receiveGameactionRetry(String gameActionString, boolean splitting) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setLenient();
         Gson gson = gsonBuilder.create();
@@ -139,7 +139,9 @@ public class NetworkIOManager {
         } catch (Exception e) {
             Log.e("JSon error", "Splitting");
             gA = null;
-            receiveGameactionSplitting(gameActionString);
+            if (splitting) {
+                receiveGameactionSplitting(gameActionString);
+            }
         }
 
         if (gA != null) {
@@ -178,7 +180,7 @@ public class NetworkIOManager {
                 Log.d("GAMEACTION", gameAction.action.toString());
             } catch (Exception e) {
                 Log.e("JSon error", "ERROR");
-                receiveGameactionRetry(gameactions.get(i));
+                receiveGameactionRetry(gameactions.get(i), false);
                 gA = null;
             }
 
