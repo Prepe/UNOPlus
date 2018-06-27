@@ -36,7 +36,9 @@ import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.players.PlayerList;
 import com.example.marti.unoplus.sound.SoundManager;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+
 import java.util.LinkedList;
 
 import jop.hab.net.NetworkIOManager;
@@ -44,30 +46,40 @@ import jop.hab.net.ObserverInterface;
 
 public class GameViewProt extends AppCompatActivity implements ObserverInterface {
     NetworkIOManager NIOmanager;
+    String hostAdress, mode, playerName;
+    int numClients;
+    boolean isGameController = false;
     GameController gameController;
     GameActions recievedGA;
     ArrayList<HandCardView> handCards;
     PlayedCardView playedCardView;
     ThrowAwayView throwAwayView;
     TradeCardView tradeCardView;
+    TextView numCards;
+    TextView numCards2;
+    public CountDownTimer timer;
+    Button unoButton;
+    Vibrator vibrator;
+    ArrayList<String> playersInListView = new ArrayList<>();
+    boolean buttonPressed = false;
     SoundManager soundManager;
     LinkedList<Player> tempPlayers;
-    ArrayList<String> playersInListView = new ArrayList<>();
     public Player player;
-    private TextView numCards;
-    private TextView numCards2;
+    private TextView numCardsP1;
+    private TextView numCardsP2;
+    private TextView numCardsP3;
+    private TextView numCardsP4;
     private TextView playerTurn;
-    private Button unoButton;
-    private Vibrator vibrator;
-    private String hostAdress;
-    private String mode;
-    private int numClients;
+    private boolean host;
     private int playerCount;
-    private boolean isGameController = false;
-    public CountDownTimer timer;
-    private boolean buttonPressed = false;
     private boolean endGame = false;
 
+    boolean hotDrop;
+    boolean spinCard;
+    boolean duel;
+    boolean tradeCard;
+    boolean dropCard;
+    boolean quickPlay;
 
     public GameViewProt() {
         super();
@@ -86,21 +98,16 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
         setContentView(R.layout.game_screen);
 
-        numCards = (TextView) findViewById(R.id.numCards1);
-        numCards2 = (TextView) findViewById(R.id.numCards2);
+        numCardsP1 = (TextView) findViewById(R.id.numCards1);
+        numCardsP2 = (TextView) findViewById(R.id.numCards2);
+        numCardsP3 = (TextView) findViewById(R.id.numCards3);
+        numCardsP4 = (TextView) findViewById(R.id.numCards4);
         playerTurn = (TextView) findViewById(R.id.playerTurn);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
-        //Hier werden die IP und der Modus über den Intent aus der ConnectionScreen abgefragt
-        hostAdress = getIntent().getStringExtra("adress");
-        mode = getIntent().getStringExtra("mode");
-        numClients = getIntent().getIntExtra("numofclients", 1);
-
-        NIOmanager = new NetworkIOManager(this);
-        NIOmanager.setMode(mode);
-        NIOmanager.setHostAdress(hostAdress);
-        NIOmanager.setNumclients(numClients);
-        NIOmanager.open();
+        NIOmanager = GameStatics.NIOManager;
+        NIOmanager.setObserverInterface(this);
+        host = NIOmanager.MODE_IS_SERVER;
 
         GameStatics.currentActivity = this;
         GameStatics.Initialize(true);
@@ -115,41 +122,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         unoButton = findViewById(R.id.unounobutton);
         unoButton.setOnClickListener(handler);
 
-
-        //int playerSize = playerList.playerCount();
-        int plsize = 0;
-        plsize = playerCountTest(plsize);
-        for (int i = 1; i <= 2; i++) {
-            playersInListView.add("Player " + i);
-        }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_items, playersInListView);
-
-        ListView lv = findViewById(R.id.list);
-        lv.setAdapter(adapter);
-
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                final TextView mTextView = (TextView) view;
-                switch (position) {
-                    case 0:
-                        writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 0));
-                        break;
-                    case 1:
-                        writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 1));
-                        break;
-                    case 2:
-                        blamePlayers();
-                        break;
-                    case 3:
-                        blamePlayers();
-                        break;
-                    default:
-                        // Nothing do!
-                }
-
-            }
-        });
 
         //Timer for players run
         final TextView myCounter = findViewById(R.id.countdown);
@@ -176,81 +148,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     }
 
     @Override
-    public void onBackPressed() {
-        //super.onBackPressed();
-        endGame();
-    }
-
-    @Override
-    public void dataChanged() {
-        LinkedList<GameActions> actionsToProcess = NIOmanager.getGameAction();
-        if (actionsToProcess == null) {
-            Log.e("GVP", "Reseved Actions where NULL");
-            return;
-        }
-
-        if (actionsToProcess.size() == 0) {
-            Log.e("GVP", "Reseved Actions where 0");
-            return;
-        }
-
-        for (int i = 0; i < actionsToProcess.size(); i++) {
-            recievedGA = actionsToProcess.get(i);
-            //TextView tv = (TextView) findViewById(R.id.netmessage);
-            //tv.setText(recievedGA.action.toString());
-            Log.d("GCP_Action", recievedGA.action.toString());
-            //TODO change placeholder player ID
-            if (specialUpdate(recievedGA)) {
-                Log.d("GCP_Action", recievedGA.action.toString());
-            } else {
-                handleUpdate(recievedGA);
-            }
-            recievedGA = null;
-            NIOmanager.updatesProcessed();
-        }
-    }
-
-    boolean specialUpdate(GameActions action) {
-        Log.d("GVP_UPDATE", "specialUpdate: " + action.action.name());
-        if (action.action.equals(GameActions.actions.INIT_PLAYER)) {
-            initPlayer(action);
-            return true;
-        }
-        if (action.action.equals(GameActions.actions.GAME_FINISH)) {
-            toastGameFinished(action.playerID);
-            return true;
-        }
-
-        return false;
-    }
-
-    @Override
-    public void NIOReady() {
-
-    }
-
-    //Method to Update all Players after GC and GL have finished
-    public void updateAllConnected(GameActions gA) {
-
-        Log.d("Time", "updateAllPLayrs will schon was vom NIO");
-
-        NIOmanager.writeGameaction(gA);
-        handleUpdate(gA);
-    }
-
-    //distripiutung game actions
-    void handleUpdate(GameActions action) {
-
-        if (!action.gcSend && isGameController) {
-            gameController.callGameController(action);
-        } else if (action.gcSend) {
-            Log.d("player", "callplayer");
-            player.callPlayer(action);
-        }
-    }
-
-
-    @Override
     public void onStart() {
         super.onStart();
 
@@ -267,16 +164,19 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         this.throwAwayView = new ThrowAwayView(this.getApplicationContext(), this);
         this.tradeCardView = new TradeCardView(this.getApplicationContext(), this);
 
-        if (mode.equals("server")) {
-
+        if (host) {
             try {
-                Thread.sleep(2000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
+            setPlayerListInView(NIOmanager.numclients);
+
             isGameController = true;
-            gameController = new GameController(this);
+            boolean[] options = {GameStatics.duel, GameStatics.hotDrop, GameStatics.cardSpin, GameStatics.dropCard, GameStatics.tradeCard, GameStatics.cunterPlay, GameStatics.quickPlay};
+            gameController = new GameController(this, options);
+
 
             tempPlayers = new LinkedList<>();
             player = new Player(0);
@@ -284,7 +184,8 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
             tempPlayers.add(player);
 
-            playerCount = numClients;
+            playerCount = NIOmanager.numclients;
+
 
             Log.d("HOST", "NumPlayers: " + playerCount);
             NIOmanager.writeGameaction(new GameActions(GameActions.actions.INIT_PLAYER, 0, 0, false));
@@ -303,7 +204,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 }
             }
 
-            player = new Player((int) (tempID * 1000));
+            player = new Player((int) (tempID * 100000));
             player.setGV(this);
             Log.d("CLIENT", "tempID: " + player.getID());
         }
@@ -318,7 +219,8 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 if (action.playerID.equals(player.getID())) {
                     if (action.nextPlayerID > 0) {
                         Log.d("CLIENT", "Setting new ID");
-                        tv.setText("Player " + (action.nextPlayerID + 1));
+                        tv.setText("Player " + action.nextPlayerID + 1);
+
                         player.setID(action.nextPlayerID);
                         return;
                     }
@@ -351,7 +253,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         NIOmanager.writeGameaction(tempA);
         Log.d("PLAYER_SETUP", "Added new Player: " + temp.getID());
 
-        if (nextID == playerCount) {
+        if (nextID == playerCount-1) {
             PlayerList pl = new PlayerList();
             pl.setPlayers(tempPlayers);
 
@@ -366,7 +268,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         temp1.gcSend = true;
         NIOmanager.writeGameaction(temp1);
         handleUpdate(temp1);
-
         gameController.setUpGame();
     }
 
@@ -389,8 +290,72 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         }
     };
 
-    public boolean getButtonPressed() {
-        return this.buttonPressed;
+    //Observer Communication
+    @Override
+    public void dataChanged() {
+        LinkedList<GameActions> actionsToProcess = NIOmanager.getGameAction();
+        if (actionsToProcess == null) {
+            Log.e("GVP", "Reseved Actions where NULL");
+            return;
+        }
+
+        if (actionsToProcess.size() == 0) {
+            Log.e("GVP", "Reseved Actions where 0");
+            return;
+        }
+
+        for (int i = 0; i < actionsToProcess.size(); i++) {
+            recievedGA = actionsToProcess.get(i);
+            //TextView tv = (TextView) findViewById(R.id.netmessage);
+            //tv.setText(recievedGA.action.toString());
+            Log.d("GCP_Action", recievedGA.action.toString());
+            if (specialUpdate(recievedGA)) {
+                Log.d("GCP_Action", recievedGA.action.toString());
+            } else {
+                handleUpdate(recievedGA);
+            }
+            recievedGA = null;
+        }
+        NIOmanager.updatesProcessed();
+    }
+
+    boolean specialUpdate(GameActions action) {
+        Log.d("GVP_UPDATE", "specialUpdate: " + action.action.name());
+        if (action.action.equals(GameActions.actions.INIT_PLAYER)) {
+            initPlayer(action);
+            return true;
+        }
+        if (action.action.equals(GameActions.actions.INIT_GAME)) {
+            setPlayerListInView(action.nextPlayerID);
+            handleUpdate(action);
+            return true;
+        }
+        if (action.action.equals(GameActions.actions.GAME_FINISH)) {
+            toastGameFinished(action.playerID);
+            return true;
+        }
+
+        return false;
+    }
+
+
+    //Method to Update all Players after GC and GL have finished
+    public void updateAllConnected(GameActions gA) {
+
+        Log.d("Time", "updateAllPLayrs will schon was vom NIO");
+
+        NIOmanager.writeGameaction(gA);
+        handleUpdate(gA);
+    }
+
+    //distripiutung game actions
+    void handleUpdate(GameActions action) {
+        if (!action.gcSend && isGameController) {
+            gameController.callGameController(action);
+        } else if (action.gcSend) {
+            Log.d("player", "callplayer");
+            player.callPlayer(action);
+        }
     }
 
     //<--------- View Updates --------->
@@ -411,8 +376,14 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     public void updateCountersInView() {
         int[] hcc = player.getHandcardcounter();
 
-        numCards.setText("( " + hcc[0] + " )");
-        numCards2.setText("( " + hcc[1] + " )");
+        numCardsP1.setText(hcc[0] + "");
+        numCardsP2.setText(hcc[1] + "");
+        if (hcc.length >= 3) {
+            numCardsP3.setText(hcc[2] + "");
+        }
+        if (hcc.length >= 4) {
+            numCardsP4.setText(hcc[3] + "");
+        }
     }
 
     public void updateForHotDrop() {
@@ -580,7 +551,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                         } else if (position == 1) {
                             dlg.cancel();
                             writeNetMessage(new GameActions(GameActions.actions.DUEL_OPPONENT, player.getID(), Card.colors.BLUE));
-                            ;
                         } else if (position == 2) {
                             dlg.cancel();
                             writeNetMessage(new GameActions(GameActions.actions.DUEL_OPPONENT, player.getID(), Card.colors.YELLOW));
@@ -591,34 +561,13 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                     }
                 })
                 .create();
-        d.setCanceledOnTouchOutside(true);
-        d.show();
-    }
-
-    public void blamePlayers() {
-        Dialog d = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
-                .setTitle("Beschuldigen wegen ")
-                .setItems(new String[]{"Cheaten", "Kein UNO gesagt"}, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dlg, int position) {
-                        if (position == 0) {
-                            dlg.cancel();
-                            writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 0));
-                        } else if (position == 1) {
-                            dlg.cancel();
-                            writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 1));
-                        }
-                    }
-                })
-                .create();
-        d.setCanceledOnTouchOutside(true);
+        d.setCanceledOnTouchOutside(false);
         d.show();
     }
 
     void finishTradeOffer(int playerToTrade, Card c) {
         if (playerToTrade != player.getID()) {
             player.tradeCard(playerToTrade, c);
-            ;
         } else {
             toastTradeError();
         }
@@ -637,6 +586,41 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 .create();
         d.setCanceledOnTouchOutside(false);
         d.show();
+    }
+
+    void setPlayerListInView(int numPlayres) {
+        for (int i = 1; i <= numPlayres; i++) {
+            playersInListView.add("Player " + i);
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_items, playersInListView);
+
+        ListView lv = findViewById(R.id.list);
+        lv.setAdapter(adapter);
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                final TextView mTextView = (TextView) view;
+                switch (position) {
+                    case 0:
+                        writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 0));
+                        break;
+                    case 1:
+                        writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 1));
+                        break;
+                    case 2:
+                        writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 2));
+                        break;
+                    case 3:
+                        writeNetMessage(new GameActions(GameActions.actions.BLAME_SB, player.getID(), 3));
+                        break;
+                    default:
+                        // Nothing do!
+                }
+
+            }
+        });
     }
 
     //<---------- Toasts ---------->
@@ -681,6 +665,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             intent.putExtra("pID", pID + 1);
             startActivity(intent);
         }
+        finish();
     }
 
     public void tradeOffer(final int traderID, final Card tradedCard) {
@@ -734,5 +719,15 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
     public void toastPlayersTime() {
         Toast.makeText(getApplicationContext(), "Deine Zeit: " + player.getMillSecs() + " Millisekunden", Toast.LENGTH_SHORT).show();
+    }
+
+    public void callUNO(int id, boolean check) {
+        if (check) {
+            if (id != player.getID()) {
+                Toast.makeText(getApplicationContext(), "Player " + (player.getID() + 1) + " called UNO", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(getApplicationContext(), "Player " + (player.getID() + 1) + " called UNO and has drawn a Card", Toast.LENGTH_SHORT).show();
+        }
     }
 }

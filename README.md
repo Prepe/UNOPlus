@@ -48,17 +48,16 @@ Sorted Handcards
 ![Screenshot](app/src/main/res/drawable/spielanleitung.png)
 ![Screenshot](app/src/main/res/drawable/lobby.png)
 
-
 ### Authors
 
-Martin Proprentner
-
-Sebastian Trattnig
-
 Ekaterina Königstorfer 
-
-Luca Rodiga
 
 Jennifer Gradischnig
 
 Josef Habich
+
+Luca Rodiga
+
+Martin Proprentner
+
+Sebastian Trattnig

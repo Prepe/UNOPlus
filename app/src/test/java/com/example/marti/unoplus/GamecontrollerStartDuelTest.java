@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.marti.unoplus.Screens.GameViewProt;
 import com.example.marti.unoplus.cards.Card;
+import com.example.marti.unoplus.cards.Deck;
 import com.example.marti.unoplus.gameLogicImpl.GameController;
 import com.example.marti.unoplus.gameLogicImpl.GameLogic;
 import com.example.marti.unoplus.players.Player;
@@ -23,26 +24,29 @@ import java.util.LinkedList;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 
-
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Log.class})
-public class TradeCardTest {
+public class GamecontrollerStartDuelTest {
 
     @Mock
     GameViewProt gameViewProt;
     GameController gameController;
     GameLogic gameLogic;
+    Deck deck;
+
 
     @Before
     public void setup() {
-        boolean[] temp = {true,true,true,true,true,true,true};
-        gameController = new GameController(gameViewProt,temp);
+        gameController = new GameController(gameViewProt);
         gameViewProt = mock(GameViewProt.class);
         gameLogic = new GameLogic();
+        deck = new Deck(true,true,true);
     }
 
+
     @Test
-    public void tradeCardTest() {
+    public void startDuelTest() {
+
         PowerMockito.mockStatic(Log.class);
 
 
@@ -55,22 +59,19 @@ public class TradeCardTest {
         playerList.setPlayers(list);
         gameController.setPlayerList(playerList);
         gameController.setUpGame();
-        LinkedList<Card> cards = new LinkedList<>();
 
-        Card card1 = new Card(Card.colors.GREEN, Card.values.TWO);
-        Card card2 = new Card(Card.colors.BLUE, Card.values.NINE);
+        //Test if
 
-        cards.add(card1);
+        GameActions testgameAction1 = new GameActions(GameActions.actions.DUEL_START, 0, 1, Card.colors.GREEN);
+        GameActions expected1 = new GameActions(GameActions.actions.DUEL_OPPONENT, 1, 0);
 
-        GameActions gameAction = new GameActions(GameActions.actions.TRADE_CARD, 1,0 , card1, true);
-        GameActions expected = new GameActions(GameActions.actions.TRADE_CARD, 1,0 , card1, true);
+        doNothing().when(gameViewProt).updateAllConnected(testgameAction1);
 
-        doNothing().when(gameViewProt).updateAllConnected(gameAction);
 
-        gameController.callGameController(gameAction);
+        gameController.callGameController(testgameAction1);
 
-        Assert.assertEquals(expected.action, gameController.gA.action);
-        Assert.assertEquals(expected.playerID, gameController.gA.playerID);
-
+        Assert.assertEquals(expected1.action, gameController.gA.action);
+        Assert.assertEquals(expected1.nextPlayerID, gameController.gA.nextPlayerID);
+        Assert.assertEquals(expected1.playerID, gameController.gA.playerID);
     }
 }

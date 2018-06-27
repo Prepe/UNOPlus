@@ -26,6 +26,8 @@ public class Player {
 
     //Variables needed for the Hot-Drop-Feature
     private int seconds = 0;
+    private boolean startRun = true;
+  
     private int millsecs = 0;
 
     public Player(Integer id) {
@@ -52,6 +54,8 @@ public class Player {
     public int[] getHandcardcounter() {
         return handcardcounter;
     }
+
+    public void setName(String name){playerName = name;}
 
     public Integer getID() {
         return ID;
@@ -276,13 +280,7 @@ public class Player {
             return;
         }
 
-        if (canSayUno) {
-            if (playerID == this.ID && hand.getCount() == 1) {
-
-            }
-        } else {
-            //TODO wrong
-        }
+        gameViewProt.callUNO(playerID,canSayUno);
     }
 
     //Timer for each player when Hot-Drop-Card is played

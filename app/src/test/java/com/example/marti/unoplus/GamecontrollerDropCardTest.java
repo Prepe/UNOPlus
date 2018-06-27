@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.marti.unoplus.Screens.GameViewProt;
 import com.example.marti.unoplus.cards.Card;
+import com.example.marti.unoplus.cards.Deck;
 import com.example.marti.unoplus.gameLogicImpl.GameController;
 import com.example.marti.unoplus.gameLogicImpl.GameLogic;
 import com.example.marti.unoplus.players.Player;
@@ -26,23 +27,23 @@ import static org.mockito.Mockito.mock;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Log.class})
-public class TradeCardTest {
+public class GamecontrollerDropCardTest {
 
     @Mock
     GameViewProt gameViewProt;
     GameController gameController;
     GameLogic gameLogic;
+    Deck deck;
 
     @Before
     public void setup() {
-        boolean[] temp = {true,true,true,true,true,true,true};
-        gameController = new GameController(gameViewProt,temp);
+        gameController = new GameController(gameViewProt);
         gameViewProt = mock(GameViewProt.class);
         gameLogic = new GameLogic();
     }
 
     @Test
-    public void tradeCardTest() {
+    public void dropCardTest() {
         PowerMockito.mockStatic(Log.class);
 
 
@@ -58,19 +59,18 @@ public class TradeCardTest {
         LinkedList<Card> cards = new LinkedList<>();
 
         Card card1 = new Card(Card.colors.GREEN, Card.values.TWO);
-        Card card2 = new Card(Card.colors.BLUE, Card.values.NINE);
 
         cards.add(card1);
 
-        GameActions gameAction = new GameActions(GameActions.actions.TRADE_CARD, 1,0 , card1, true);
-        GameActions expected = new GameActions(GameActions.actions.TRADE_CARD, 1,0 , card1, true);
+
+        GameActions gameAction = new GameActions(GameActions.actions.DROP_CARD, 0);
+        GameActions expected = new GameActions(GameActions.actions.DROP_CARD, 0);
 
         doNothing().when(gameViewProt).updateAllConnected(gameAction);
 
         gameController.callGameController(gameAction);
 
         Assert.assertEquals(expected.action, gameController.gA.action);
-        Assert.assertEquals(expected.playerID, gameController.gA.playerID);
 
     }
 }

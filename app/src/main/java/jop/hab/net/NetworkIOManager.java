@@ -5,6 +5,7 @@ import android.os.Message;
 import android.util.Log;
 
 import com.example.marti.unoplus.GameActions;
+import com.example.marti.unoplus.GameStatics;
 import com.example.marti.unoplus.gameLogicImpl.GameController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -15,6 +16,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -27,31 +29,30 @@ import java.util.LinkedList;
 
 
 public class NetworkIOManager {
-    GameController GC;
-//wird nie instanziert und wird auch nicht benötigt
-
     ObserverInterface observerInterface;
 
-    ServerClass serverClass;
+    public ServerClass serverClass;
     ClientClass clientClass;
-    SendReceive sendReceive;
-
+    ArrayList<SendReceive> sendReceive;
 
     String hostAdress;
 
-
-    boolean MODE_IS_SERVER = false;
+    public boolean MODE_IS_SERVER = false;
     static final int MESSAGE_READ = 1;
 
     String testText;
     GameActions gameAction;
     LinkedList<GameActions> actions = new LinkedList<>();
     int countready = 0;
-    int numclients;
+    public int numclients;
     boolean isReady = false;
 
     public NetworkIOManager(ObserverInterface observerInterface) {
         this.observerInterface = observerInterface;
+    }
+
+    public void setObserverInterface(ObserverInterface oInterface) {
+        this.observerInterface = oInterface;
     }
 
     public void setMode(String mode) {
@@ -80,13 +81,9 @@ public class NetworkIOManager {
 
     public void open() {
         if (MODE_IS_SERVER) {
-            if (serverClass == null) {
-                serverClass = new ServerClass();
-                serverClass.start();
-                serverClass.ready = true;
-            } else {
-                serverClass.fixState();
-            }
+            serverClass = new ServerClass();
+            serverClass.start();
+            serverClass.ready = true;
             Log.d("@mode", MODE_IS_SERVER + "");
         } else {
             clientClass = new ClientClass(hostAdress);
@@ -104,35 +101,51 @@ public class NetworkIOManager {
         String GameActionString = gson.toJson(gameAction);
 
         Log.d("GSON Senden", GameActionString);
-        sendReceive.write(GameActionString.getBytes());
+        for (SendReceive s : sendReceive) {
+            s.write(GameActionString.getBytes());
+        }
     }
 
     public LinkedList<GameActions> receiveGameaction(String gameActionString) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setLenient();
         Gson gson = gsonBuilder.create();
+        GameActions gA;
 
         try {
-            actions.add(gson.fromJson(gameActionString,GameActions.class));
+            gA = gson.fromJson(gameActionString, GameActions.class);
             Log.d("GAMEACTION", gameAction.action.toString());
         } catch (Exception e) {
             Log.e("JSon error", "Retry");
-            receiveGameactionRetry(gameActionString);
+            gA = null;
+            receiveGameactionRetry(gameActionString, true);
+        }
+
+        if (gA != null) {
+            actions.add(gA);
         }
 
         return actions;
     }
 
-    void receiveGameactionRetry(String gameActionString) {
+    void receiveGameactionRetry(String gameActionString, boolean splitting) {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setLenient();
         Gson gson = gsonBuilder.create();
+        GameActions gA;
 
         try {
-            actions.add(gson.fromJson(gameActionString,GameActions.class));
+            gA = gson.fromJson(gameActionString, GameActions.class);
         } catch (Exception e) {
             Log.e("JSon error", "Splitting");
-            receiveGameactionSplitting(gameActionString);
+            gA = null;
+            if (splitting) {
+                receiveGameactionSplitting(gameActionString);
+            }
+        }
+
+        if (gA != null) {
+            actions.add(gA);
         }
     }
 
@@ -159,13 +172,20 @@ public class NetworkIOManager {
         }
         gameactions.add(gameActionString.substring(helper));
 
+        GameActions gA;
         for (int i = 0; i < gameactions.size(); i++) {
             Log.d("Action", gameactions.get(i));
             try {
-                actions.add(gson.fromJson(gameactions.get(i), GameActions.class));
+                gA = gson.fromJson(gameactions.get(i), GameActions.class);
                 Log.d("GAMEACTION", gameAction.action.toString());
             } catch (Exception e) {
                 Log.e("JSon error", "ERROR");
+                receiveGameactionRetry(gameactions.get(i), false);
+                gA = null;
+            }
+
+            if (gA != null) {
+                actions.add(gA);
             }
         }
     }
@@ -174,32 +194,76 @@ public class NetworkIOManager {
         actions = new LinkedList<>();
     }
 
-    public void writeReady() {
-        String ready = "ready";
-        //sendReceive.write(ready.getBytes());
+    public void close() {
+        if (serverClass != null) {
+            closeServer();
+        }
+        if (clientClass != null) {
+            closeClient();
+        }
+        if (sendReceive != null) {
+            closeSendReceive();
+        }
+        if (handler != null) {
+            closeHandler();
+        }
     }
 
-    public boolean waitforClientsreadyingup() {
-        while (countready != numclients) {
+    void closeServer() {
+        try {
+            if (serverClass.socket != null) {
+                serverClass.socket.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            if (serverClass.serverSocket != null) {
+                serverClass.serverSocket.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        serverClass = null;
+    }
+
+    void closeClient() {
+        try {
+            clientClass.socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        clientClass = null;
+    }
+
+    void closeSendReceive() {
+        for (SendReceive s : sendReceive) {
             try {
-                Thread.sleep(20);
-            } catch (InterruptedException e) {
+                s.socket.close();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
 
-        return true;
+            try {
+                s.outputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                s.inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            s = null;
+        }
+        sendReceive = null;
     }
 
-    public boolean isNotReady() {
-        if (serverClass == null) {
-            return true;
-        } else if (sendReceive == null) {
-            return  true;
-        }
-        return !(sendReceive.ready && serverClass.ready);
+    void closeHandler() {
+        handler = null;
     }
-
 
     Handler handler = new Handler(new Handler.Callback() {
         @Override
@@ -212,8 +276,6 @@ public class NetworkIOManager {
                         Log.d("JSon Empfangen", tmpmsg);
                         actions = receiveGameaction(tmpmsg);
                         observerInterface.dataChanged();
-                    } else {
-                        countready++;
                     }
                     break;
             }
@@ -229,35 +291,46 @@ public class NetworkIOManager {
 
         @Override
         public void run() {
+            if (serverSocket != null) {
+                if (!serverSocket.isClosed()) {
+                    try {
+                        serverSocket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
             Log.d("@serverclass", "Serverclass running");
             try {
-//                    Log.d("socket",serverSocket.toString());
                 serverSocket = new ServerSocket(8888);
-                socket = serverSocket.accept();
+                serverSocket.setReuseAddress(true);
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.d("@error", "sc catched");
             }
 
-            sendReceive = new SendReceive(socket);
-            sendReceive.start();
-            sendReceive.ready = true;
+            sendReceive = new ArrayList<>();
         }
 
-        public void fixState() {
-            if (serverSocket == null) {
-                run();
-            } else if (socket == null){
-                try {
-                    socket = serverSocket.accept();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                sendReceive = new SendReceive(socket);
-                sendReceive.start();
-                sendReceive.ready = true;
+        public boolean addClient() {
+            try {
+                socket = serverSocket.accept();
+                socket.setReuseAddress(true);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+
+            if (socket != null) {
+                Log.d("HOST", "Client Socket");
+                Log.d("HOST", socket.toString());
+                SendReceive temp = new SendReceive(socket);
+                sendReceive.add(temp);
+                temp.start();
+                return true;
+            }
+            Log.d("HOST", "No one connectet");
+            return false;
         }
     }
 
@@ -265,35 +338,23 @@ public class NetworkIOManager {
         private Socket socket;
         private InputStream inputStream;
         private OutputStream outputStream;
-        boolean ready = false;
 
         public SendReceive(Socket socket) {
             this.socket = socket;
 
             try {
-                Log.d("@sendreceive", "sr created2");
-
+                Log.d("SR", "addNewSR");
+                Log.d("SR", socket.toString());
                 this.inputStream = socket.getInputStream();
                 this.outputStream = socket.getOutputStream();
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
-
         @Override
         public void run() {
-
-            Log.d("@sendreceive", "sr running2");
-
-            Log.d("Time", "SendRecieveist jetzt gestartet");
-
-
-            //Jz is alles bereit... des bedeutet GC kann auf NIO zugreifen.. deshalb INterface Callen
-            //observerInterface.NIOReady();
-
-
+            Log.d("SENDRECIEVE", "SendRecieveist jetzt gestartet");
             byte[] buffer = new byte[1024];
 
             int bytes;
@@ -308,58 +369,48 @@ public class NetworkIOManager {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+
                 }
             }
         }
 
         public void write(byte[] bytes) {
             try {
-                Log.d("@write", bytes.toString());
                 outputStream.write(bytes);
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             try {
-                sleep(10);
+                sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
     }
 
-
     public class ClientClass extends Thread {
-
         Socket socket;
         String hostAdd;
 
         public ClientClass(String hostAddress) {
-
-            Log.d("@clientclass", hostAddress);
             hostAdd = hostAddress;
             socket = new Socket();
+            sendReceive = new ArrayList<>();
         }
 
         @Override
         public void run() {
             super.run();
             try {
-
-                Log.d("socket", socket.toString());
                 socket.connect(new InetSocketAddress(hostAdd, 8888), 500);
-
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            sendReceive = new SendReceive(socket);
-            sendReceive.start();
-
-            writeReady();
+            SendReceive temp = new SendReceive((socket));
+            sendReceive.add(temp);
+            temp.start();
         }
     }
-
-
 }

@@ -37,7 +37,8 @@ public class EndDuelTest {
 
     @Before
     public void setup() {
-        gameController = new GameController(gameViewProt);
+        boolean[] temp = {true,true,true,true,true,true,true};
+        gameController = new GameController(gameViewProt,temp);
         gameViewProt = mock(GameViewProt.class);
         gameLogic = new GameLogic();
         deck = new Deck(true,true,true);

@@ -25,8 +25,14 @@ public class PlayerListTest {
 
 
     @Before
+<<<<<<< HEAD
+    public void setup() {
+        boolean[] temp = {true,true,true,true,true,true,true};
+        gameController = new GameController(gameViewProt,temp);
+=======
     public void setUp() throws Exception {
         gameController = new GameController(gameViewProt);
+>>>>>>> testFeatuers
         gameViewProt = mock(GameViewProt.class);
         playerList = new PlayerList();
         list.add(player1);

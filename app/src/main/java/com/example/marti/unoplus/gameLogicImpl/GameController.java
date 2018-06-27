@@ -37,25 +37,40 @@ public class GameController {
     public DuelData duelData; // holds information about a duel
 
     //<OPTIONS>
-    boolean dropCardAllowed = true;     //enables players to drop cards
+    boolean dropCardAllowed;            //enables players to drop cards
     int dropCardPunishment = 2;         //how many cards a player draws when punished
-    boolean tradeCardAllowed = true;    //enables players to trade cards
+    boolean tradeCardAllowed;           //enables players to trade cards
     int tradeCardPunishment = 2;        //how many cards a player draws when punished
-    boolean quickPlayAllowed = true;    //enables players to play cards anytime turn
-    boolean counterAllowed = true;      //enables players to counter +2/4
-    boolean hotDropEnabled = true;      //enables the HotDop Card
+    boolean quickPlayAllowed;           //enables players to play cards anytime turn
+    boolean counterAllowed;             //enables players to counter +2/4
+    boolean hotDropEnabled;             //enables the HotDop Card
     int hotDropPunishment = 2;          //HotDrop looser draw amount
-    boolean duelEnabled = true;         //enables the Duel Card
+    boolean duelEnabled;                //enables the Duel Card
     int duelPunishment = 2;             //Duel looser draw amount
-    boolean cardSpinEnabled = true;     //enables CardSpin Card
-    int accusingPunishment = 1;          //amount of cards a player gets for wrong Call
+    boolean cardSpinEnabled;            //enables CardSpin Card
+    int accusingPunishment = 1;         //amount of cards a player gets for wrong Call
 
     //Test Variables?
     LinkedList<LinkedList<Card>> gottenHandsCards = new LinkedList<>();
 
     //<---------- Method for setting up the Game ---------->
-    public GameController(GameViewProt gvp) {
+    public GameController(GameViewProt gvp, boolean[] options) {
+        duelEnabled = options[0];
+        hotDropEnabled = options[1];
+        cardSpinEnabled = options[2];
+        dropCardAllowed = options[3];
+        tradeCardAllowed = options[4];
+        counterAllowed = options[5];
+        quickPlayAllowed = options[6];
+
         this.gvp = gvp;
+        this.quickPlayAllowed = gvp.getBooleanQuickPlay();
+        this.tradeCardAllowed = gvp.getBooleanTradeCard();
+        this.dropCardAllowed = gvp.getBooleanDropCard();
+        this.hotDropEnabled = gvp.getBooleanHotDrop();
+        this.duelEnabled = gvp.getBooleanDuel();
+        this.cardSpinEnabled = gvp.getBooleanSpinCard();
+
         deck = new Deck(hotDropEnabled,duelEnabled,cardSpinEnabled);
     }
 
@@ -201,8 +216,6 @@ public class GameController {
 
         gA = new GameActions(GameActions.actions.DRAW_CARD, loserID, cards);
         update();
-
-        logic.nextPlayer(logic.getActivePlayer());
     }
 
     //Method for playing cards
@@ -251,19 +264,21 @@ public class GameController {
 
     //Method to call Uno
     void callUno(int player) {
-        if (!mustCallUNO[player]) {
-            mustCallUNO[player] = true;
+        if (mustCallUNO[player]) {
+            mustCallUNO[player] = false;
             Log.d("CALLUNO", player + " hat UNO gecalled");
             gA = new GameActions(GameActions.actions.CALL_UNO, player, true);
             update();
         } else {
             gA = new GameActions(GameActions.actions.CALL_UNO, player, false);
             update();
-            drawCard(player);
+            int amount = logic.getCardDrawCount();
+            forcedCardDraw(player);
+            logic.changeCardDrawCount(amount);
         }
 
     }
-  
+
     //Method to trade Card with other players
     void tradeCard(int traderID, int tradeTargetID, Card tradedCard, boolean accepted) {
         if (tradeCardAllowed) {
@@ -321,7 +336,7 @@ public class GameController {
         this.duelData = null;
         logic.changeCardDrawCount(duelPunishment);
         forcedCardDraw(loserID);
-
+        logic.nextPlayer(logic.getActivePlayer());
     }
 
     void cardSpin(GameActions action) {
