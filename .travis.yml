@@ -46,7 +46,7 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
     - $HOME/.android/build-cache
-    
+
 # benachrichtigungen per email auszuschalten
 #notifications:
 #  email: false
