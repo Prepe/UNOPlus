@@ -43,13 +43,10 @@ Sorted Handcards
 - if all players are connected the HOST has to click "START" and also clients has to click on "START" in that direction
 - if all succeed, all players will be directed to the game screen
 
-<p align="center">
-  <img src="app/src/main/res/drawable/titlescreen.png" width="350"/>
-  <img src="app/src/main/res/drawable/mainmenuscreen.png" width="350"/>
-  <img src="app/src/main/res/drawable/spielanleitung (4).png" width="350"/>
-  <img src="app/src/main/res/drawable/lobby.png" width="350"/>
-  
-</p>
+![Screenshot](app/src/main/res/drawable/titlescreen.png)
+![Screenshot](app/src/main/res/drawable/mainmenuscreen.png)
+![Screenshot](app/src/main/res/drawable/spielanleitung.png)
+![Screenshot](app/src/main/res/drawable/lobby.png)
 
 
 ### Authors
