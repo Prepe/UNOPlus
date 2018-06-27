@@ -37,24 +37,32 @@ public class GameController {
     public DuelData duelData; // holds information about a duel
 
     //<OPTIONS>
-    boolean dropCardAllowed = true;     //enables players to drop cards
+    boolean dropCardAllowed;            //enables players to drop cards
     int dropCardPunishment = 2;         //how many cards a player draws when punished
-    boolean tradeCardAllowed = true;    //enables players to trade cards
+    boolean tradeCardAllowed;           //enables players to trade cards
     int tradeCardPunishment = 2;        //how many cards a player draws when punished
-    boolean quickPlayAllowed = true;    //enables players to play cards anytime turn
-    boolean counterAllowed = true;      //enables players to counter +2/4
-    boolean hotDropEnabled = true;      //enables the HotDop Card
+    boolean quickPlayAllowed;           //enables players to play cards anytime turn
+    boolean counterAllowed;             //enables players to counter +2/4
+    boolean hotDropEnabled;             //enables the HotDop Card
     int hotDropPunishment = 2;          //HotDrop looser draw amount
-    boolean duelEnabled = true;         //enables the Duel Card
+    boolean duelEnabled;                //enables the Duel Card
     int duelPunishment = 2;             //Duel looser draw amount
-    boolean cardSpinEnabled = true;     //enables CardSpin Card
-    int accusingPunishment = 1;          //amount of cards a player gets for wrong Call
+    boolean cardSpinEnabled;            //enables CardSpin Card
+    int accusingPunishment = 1;         //amount of cards a player gets for wrong Call
 
     //Test Variables?
     LinkedList<LinkedList<Card>> gottenHandsCards = new LinkedList<>();
 
     //<---------- Method for setting up the Game ---------->
-    public GameController(GameViewProt gvp) {
+    public GameController(GameViewProt gvp, boolean[] options) {
+        duelEnabled = options[0];
+        hotDropEnabled = options[1];
+        cardSpinEnabled = options[2];
+        dropCardAllowed = options[3];
+        tradeCardAllowed = options[4];
+        counterAllowed = options[5];
+        quickPlayAllowed = options[6];
+
         this.gvp = gvp;
         this.quickPlayAllowed = gvp.getBooleanQuickPlay();
         this.tradeCardAllowed = gvp.getBooleanTradeCard();

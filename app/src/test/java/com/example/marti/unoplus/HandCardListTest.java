@@ -100,16 +100,6 @@ public class HandCardListTest {
     }
 
     @Test
-    public void addALotOfCardsTest() {
-        int count = sortedCards.length * 1000;
-        for (int i = 0; i < 1000; i++) {
-            addSortetCardsToHand();
-        }
-
-        Assert.assertEquals(count, handcards.getCount());
-    }
-
-    @Test
     public void sortedCardTest() {
         for (int i = 0; i < 10; i++) {
             addSortetCardsToHand();
@@ -133,7 +123,7 @@ public class HandCardListTest {
         int counter = 0;
         int expectedCount = 0;
 
-        while (counter < 1000000) {
+        while (counter < 10000) {
             double rand = Math.random();
 
             if (rand < 0.5) {

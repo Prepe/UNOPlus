@@ -1,80 +1,194 @@
 <?xml version="1.0" encoding="utf-8"?>
-<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/gamebg">
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="0dp"
-        android:layout_y="0dp"
-        android:scaleType="fitXY"
-        app:srcCompat="@drawable/gamebg"
-        tools:layout_editor_absoluteX="206dp"
-        tools:layout_editor_absoluteY="159dp"
-        android:contentDescription="@string/dummy_content" />
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/Optionen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="53dp"
-        android:layout_y="77dp"
-        android:text="@string/optionen"
-        android:textColor="@android:color/white"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:visibility="visible"
-        tools:layout_editor_absoluteX="42dp"
-        tools:layout_editor_absoluteY="17dp" />
+        <TextView
+            android:id="@+id/Einstellungen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="Spiel Einstellungen"
+            android:textColor="@android:color/white"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <CheckBox
-        android:id="@+id/kartentauschen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="52dp"
-        android:layout_y="182dp"
-        android:text="@string/karten_tauschen"
-        android:textColor="@android:color/white"
-        android:textSize="24sp"
-        tools:layout_editor_absoluteX="68dp"
-        tools:layout_editor_absoluteY="203dp" />
+        <CheckBox
+            android:id="@+id/chkConter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/Einstellungen"
+            android:layout_alignStart="@+id/Einstellungen"
+            android:layout_below="@+id/chkDuel"
+            android:layout_marginTop="8dp"
+            android:text="Conter +2/+4"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@+id/chkQuickPlay"
+            app:layout_constraintTop_toBottomOf="@+id/chkQuickPlay" />
 
-    <CheckBox
-        android:id="@+id/kartenwegwerfen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="52dp"
-        android:layout_y="214dp"
-        android:text="@string/karten_wegwerfen"
-        android:textColor="@android:color/white"
-        android:textSize="24sp"
-        tools:layout_editor_absoluteX="68dp"
-        tools:layout_editor_absoluteY="203dp" />
+        <CheckBox
+            android:id="@+id/chkHotDrop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/chkChardSpin"
+            android:layout_alignBottom="@+id/chkChardSpin"
+            android:layout_alignLeft="@+id/Einstellungen"
+            android:layout_alignStart="@+id/Einstellungen"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="Hotdrop"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/Karten" />
 
-    <CheckBox
-        android:id="@+id/tischteufel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="52dp"
-        android:layout_y="151dp"
-        android:text="@string/tischteufel"
-        android:textColor="@android:color/white"
-        android:textSize="24sp"
-        tools:layout_editor_absoluteX="68dp"
-        tools:layout_editor_absoluteY="203dp" />
+        <Button
+            android:id="@+id/verbindenbutton"
+            android:layout_width="220dp"
+            android:layout_height="71dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/spielstartenbutton"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chkConter" />
 
-    <Button
-        android:id="@+id/verbindenbutton"
-        android:layout_width="277dp"
-        android:layout_height="80dp"
-        android:layout_x="309dp"
-        android:layout_y="256dp"
-        android:background="@drawable/spielstartenbutton"
-        tools:layout_editor_absoluteX="307dp"
-        tools:layout_editor_absoluteY="264dp" />
+        <CheckBox
+            android:id="@+id/chkChardSpin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Einstellungen"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_toLeftOf="@+id/verbindenbutton"
+            android:layout_toStartOf="@+id/verbindenbutton"
+            android:text="Cardspin Karte"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chkHotDrop" />
 
-</AbsoluteLayout>
+        <CheckBox
+            android:id="@+id/chkTradeCard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="8dp"
+            android:layout_toEndOf="@+id/chkConter"
+            android:layout_toRightOf="@+id/chkConter"
+            android:text="Trade Card Cheat"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@+id/chkDropCard"
+            app:layout_constraintTop_toBottomOf="@+id/chkDropCard" />
+
+        <CheckBox
+            android:id="@+id/chkQuickPlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/chkDropCard"
+            android:layout_alignStart="@+id/chkDropCard"
+            android:layout_alignTop="@+id/chkDuel"
+            android:layout_marginTop="8dp"
+            android:text="Quick Play"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@+id/Regeln"
+            app:layout_constraintTop_toBottomOf="@+id/Regeln" />
+
+        <CheckBox
+            android:id="@+id/chkDuel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/verbindenbutton"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_toEndOf="@+id/chkChardSpin"
+            android:layout_toRightOf="@+id/chkChardSpin"
+            android:text="Duel Karte"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chkChardSpin" />
+
+        <TextView
+            android:id="@+id/Karten"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/chkHotDrop"
+            android:layout_alignRight="@+id/chkHotDrop"
+            android:layout_below="@+id/Einstellungen"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:text="Karten"
+            android:textColor="@android:color/white"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/Einstellungen" />
+
+        <TextView
+            android:id="@+id/Schummeln"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/chkHotDrop"
+            android:layout_alignRight="@+id/chkHotDrop"
+            android:layout_below="@+id/Einstellungen"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="24dp"
+            android:text="Schummeln"
+            android:textColor="@android:color/white"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/Karten"
+            app:layout_constraintTop_toBottomOf="@+id/Einstellungen" />
+
+        <TextView
+            android:id="@+id/Regeln"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/chkHotDrop"
+            android:layout_alignRight="@+id/chkHotDrop"
+            android:layout_below="@+id/Einstellungen"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:text="Regeln"
+            android:textColor="@android:color/white"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/Schummeln"
+            app:layout_constraintTop_toBottomOf="@+id/Einstellungen" />
+
+        <CheckBox
+            android:id="@+id/chkDropCard"
+            android:layout_width="148dp"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/chkDuel"
+            android:layout_alignEnd="@+id/discover2"
+            android:layout_alignRight="@+id/discover2"
+            android:layout_marginTop="8dp"
+            android:text="Drop Card Cheat"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@+id/Schummeln"
+            app:layout_constraintTop_toBottomOf="@+id/Schummeln" />
+    </android.support.constraint.ConstraintLayout>
+
+</RelativeLayout>

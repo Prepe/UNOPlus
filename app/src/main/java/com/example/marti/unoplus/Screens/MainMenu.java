@@ -1,19 +1,23 @@
+
 package com.example.marti.unoplus.Screens;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+        import android.content.Context;
+        import android.content.Intent;
+        import android.net.wifi.WifiManager;
+        import android.os.Bundle;
+        import android.os.StrictMode;
+        import android.support.v7.app.AppCompatActivity;
+        import android.view.View;
+        import android.view.Window;
+        import android.view.WindowManager;
 
-import com.example.marti.unoplus.GameStatics;
-import com.example.marti.unoplus.R;
-import com.example.marti.unoplus.sound.Sounds;
-import com.example.marti.unoplus.sound.SoundManager;
+        import com.example.marti.unoplus.GameStatics;
+        import com.example.marti.unoplus.R;
+        import com.example.marti.unoplus.sound.Sounds;
+        import com.example.marti.unoplus.sound.SoundManager;
 
 
-import jop.hab.net.ConnectionScreen;
+        import jop.hab.net.ConnectionScreen;
 
 public class MainMenu extends AppCompatActivity {
     public MainMenu() {
@@ -40,13 +44,18 @@ public class MainMenu extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        GameStatics.wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        GameStatics.resetWiFi(false);
         GameStatics.currentActivity = this;
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.main_menu);
 
-        //findViewById(R.id.spielerstellen).setOnClickListener(handler);
+        findViewById(R.id.spielerstellen).setOnClickListener(handler);
         findViewById(R.id.spielbeitreten).setOnClickListener(handler);
         findViewById(R.id.anleitung).setOnClickListener(handler);
         findViewById(R.id.exitbutton).setOnClickListener(handler);
@@ -56,33 +65,27 @@ public class MainMenu extends AppCompatActivity {
         soundManager.playSound(Sounds.THEMESTART);
     }
 
-
-
-
     View.OnClickListener handler = new View.OnClickListener(){
         public void onClick(View v) {
-
             switch (v.getId()) {
-                /*
                 case R.id.spielerstellen:
                     soundManager.playSound(Sounds.THEMESTOP);
+                    GameStatics.reset =  GameStatics.resetWiFi(false);
                     startActivity(new Intent(MainMenu.this, LobbyScreen.class));
                     break;
-*/
                 case R.id.spielbeitreten:
                     soundManager.playSound(Sounds.THEMESTOP);
-                    startActivity(new Intent(MainMenu.this, NameScreen.class));
+                    GameStatics.resetWiFi(false);
+                    startActivity(new Intent(MainMenu.this, ConnectionScreen.class));
                     break;
-
                 case R.id.anleitung:
                     startActivity(new Intent(MainMenu.this, Settings.class));
                     break;
-
                 case R.id.exitbutton:
                     soundManager.playSound(Sounds.THEMESTOP);
+                    GameStatics.resetWiFi(true);
                     System.exit(0);
                     break;
-
             }
         }
     };

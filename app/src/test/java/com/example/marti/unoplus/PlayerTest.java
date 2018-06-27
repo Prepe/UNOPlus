@@ -31,8 +31,14 @@ public class PlayerTest {
     private Card card3 = new Card(Card.colors.RED, Card.values.ONE);
 
     @Before
+<<<<<<< HEAD
+    public void setup() {
+        boolean[] temp = {true,true,true,true,true,true,true};
+        gameController = new GameController(gameViewProt,temp);
+=======
     public void setUp() throws Exception {
         gameController = new GameController(gameViewProt);
+>>>>>>> testFeatuers
         gameViewProt = mock(GameViewProt.class);
         gameLogic = new GameLogic();
         player1 = new Player(0);

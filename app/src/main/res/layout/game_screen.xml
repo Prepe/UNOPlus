@@ -111,7 +111,6 @@
         android:layout_marginTop="16dp"
         android:layout_toEndOf="@+id/list"
         android:layout_toRightOf="@+id/list"
-        android:text="(7)"
         android:textAppearance="@style/TextAppearance.AppCompat.Inverse" />
 
     <TextView
@@ -121,7 +120,6 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="71dp"
         android:layout_toEndOf="@+id/list"
-        android:text="(7)"
         android:textAppearance="@style/TextAppearance.AppCompat.Inverse" />
 
     <TextView
