@@ -375,6 +375,7 @@ public class NetworkIOManager {
         public ClientClass(String hostAddress) {
             hostAdd = hostAddress;
             socket = new Socket();
+            sendReceive = new ArrayList<>();
         }
 
         @Override
