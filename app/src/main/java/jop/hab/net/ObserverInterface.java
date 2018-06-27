@@ -10,11 +10,5 @@ import java.util.LinkedList;
 
 public interface ObserverInterface {
 
-
     public void dataChanged();
-
-
-    public void NIOReady();
-
-
 }

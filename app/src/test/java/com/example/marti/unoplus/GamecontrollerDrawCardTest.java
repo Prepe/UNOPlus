@@ -31,7 +31,7 @@ import static org.mockito.Mockito.mock;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Log.class})
-public class DrawCardTest {
+public class GamecontrollerDrawCardTest {
 
     @Mock
     GameViewProt gameViewProt;
@@ -42,8 +42,7 @@ public class DrawCardTest {
 
     @Before
     public void setup() {
-        boolean[] temp = {true,true,true,true,true,true,true};
-        gameController = new GameController(gameViewProt,temp);
+        gameController = new GameController(gameViewProt);
         gameViewProt = mock(GameViewProt.class);
         gameLogic = new GameLogic();
         deck = new Deck(true, true, true);

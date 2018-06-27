@@ -45,7 +45,7 @@ public class DropCardTest {
 
     @Test
     public void dropCardTest() {
-/*        PowerMockito.mockStatic(Log.class);
+        PowerMockito.mockStatic(Log.class);
 
 
         Player player1 = new Player(0);
@@ -72,7 +72,7 @@ public class DropCardTest {
         gameController.callGameController(gameAction);
 
         Assert.assertEquals(expected.action, gameController.gA.action);
-*/
+
     }
 
 

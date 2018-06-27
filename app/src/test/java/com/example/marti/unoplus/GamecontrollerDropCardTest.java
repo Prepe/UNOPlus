@@ -10,8 +10,7 @@ import com.example.marti.unoplus.gameLogicImpl.GameLogic;
 import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.players.PlayerList;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,13 +24,10 @@ import java.util.LinkedList;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 
-/**
- * Created by Luca on 16.06.2018.
- */
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Log.class})
-public class DrawCardTest {
+public class GamecontrollerDropCardTest {
 
     @Mock
     GameViewProt gameViewProt;
@@ -39,19 +35,15 @@ public class DrawCardTest {
     GameLogic gameLogic;
     Deck deck;
 
-
     @Before
     public void setup() {
-        boolean[] temp = {true,true,true,true,true,true,true};
-        gameController = new GameController(gameViewProt,temp);
+        gameController = new GameController(gameViewProt);
         gameViewProt = mock(GameViewProt.class);
         gameLogic = new GameLogic();
-        deck = new Deck(true, true, true);
     }
 
-
     @Test
-    public void drawCardTest() {
+    public void dropCardTest() {
         PowerMockito.mockStatic(Log.class);
 
 
@@ -65,38 +57,20 @@ public class DrawCardTest {
         gameController.setPlayerList(playerList);
         gameController.setUpGame();
         LinkedList<Card> cards = new LinkedList<>();
-        //Test if
 
-        GameActions testgameAction1 = new GameActions(GameActions.actions.DRAW_CARD, 1);
+        Card card1 = new Card(Card.colors.GREEN, Card.values.TWO);
+
+        cards.add(card1);
 
 
-        GameActions expected2 = new GameActions(GameActions.actions.DRAW_CARD, 1, cards);
+        GameActions gameAction = new GameActions(GameActions.actions.DROP_CARD, 0);
+        GameActions expected = new GameActions(GameActions.actions.DROP_CARD, 0);
 
-        doNothing().when(gameViewProt).updateAllConnected(testgameAction1);
+        doNothing().when(gameViewProt).updateAllConnected(gameAction);
 
-        gameController.callGameController(testgameAction1);
-
-        if (gameController.gA.action.equals(GameActions.actions.NEXT_PLAYER)) {
-            Assert.assertEquals(GameActions.actions.NEXT_PLAYER, gameController.gA.action);
-        } else {
-            Assert.assertEquals(expected2.action, gameController.gA.action);
-        }
-
-        Assert.assertEquals(expected2.nextPlayerID, gameController.gA.nextPlayerID);
-
-        //test else
-
-        gameController.setUpGame();
-
-        GameActions testgameAction2 = new GameActions(GameActions.actions.DRAW_CARD, 1);
-
-        GameActions expected = new GameActions(GameActions.actions.NEXT_PLAYER, 0);
-
-        gameController.callGameController(testgameAction2);
+        gameController.callGameController(gameAction);
 
         Assert.assertEquals(expected.action, gameController.gA.action);
 
-        Assert.assertEquals(expected.playerID, gameController.gA.playerID);
     }
-
 }

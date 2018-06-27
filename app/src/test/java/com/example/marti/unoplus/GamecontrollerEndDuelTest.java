@@ -10,8 +10,7 @@ import com.example.marti.unoplus.gameLogicImpl.GameLogic;
 import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.players.PlayerList;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,13 +24,9 @@ import java.util.LinkedList;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 
-/**
- * Created by Luca on 16.06.2018.
- */
-
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Log.class})
-public class DrawCardTest {
+public class GamecontrollerEndDuelTest {
 
     @Mock
     GameViewProt gameViewProt;
@@ -42,16 +37,15 @@ public class DrawCardTest {
 
     @Before
     public void setup() {
-        boolean[] temp = {true,true,true,true,true,true,true};
-        gameController = new GameController(gameViewProt,temp);
+        gameController = new GameController(gameViewProt);
         gameViewProt = mock(GameViewProt.class);
         gameLogic = new GameLogic();
-        deck = new Deck(true, true, true);
+        deck = new Deck(true,true,true);
     }
 
-
     @Test
-    public void drawCardTest() {
+    public void endDuelTest() {
+
         PowerMockito.mockStatic(Log.class);
 
 
@@ -64,39 +58,24 @@ public class DrawCardTest {
         playerList.setPlayers(list);
         gameController.setPlayerList(playerList);
         gameController.setUpGame();
-        LinkedList<Card> cards = new LinkedList<>();
+
+        GameActions testgameAction0 = new GameActions(GameActions.actions.DUEL_START, 0, 1, Card.colors.GREEN);
+        doNothing().when(gameViewProt).updateAllConnected(testgameAction0);
+
+
+        gameController.callGameController(testgameAction0);
         //Test if
 
-        GameActions testgameAction1 = new GameActions(GameActions.actions.DRAW_CARD, 1);
-
-
-        GameActions expected2 = new GameActions(GameActions.actions.DRAW_CARD, 1, cards);
+        GameActions testgameAction1 = new GameActions(GameActions.actions.DUEL_OPPONENT, 0, 1, Card.colors.GREEN);
+        GameActions expected1 = new GameActions(GameActions.actions.UPDATE, 0);
 
         doNothing().when(gameViewProt).updateAllConnected(testgameAction1);
 
+        gameController.duelData.setLoserIDfortests(0);
+
         gameController.callGameController(testgameAction1);
 
-        if (gameController.gA.action.equals(GameActions.actions.NEXT_PLAYER)) {
-            Assert.assertEquals(GameActions.actions.NEXT_PLAYER, gameController.gA.action);
-        } else {
-            Assert.assertEquals(expected2.action, gameController.gA.action);
-        }
+        Assert.assertEquals(expected1.action, gameController.gA.action);
 
-        Assert.assertEquals(expected2.nextPlayerID, gameController.gA.nextPlayerID);
-
-        //test else
-
-        gameController.setUpGame();
-
-        GameActions testgameAction2 = new GameActions(GameActions.actions.DRAW_CARD, 1);
-
-        GameActions expected = new GameActions(GameActions.actions.NEXT_PLAYER, 0);
-
-        gameController.callGameController(testgameAction2);
-
-        Assert.assertEquals(expected.action, gameController.gA.action);
-
-        Assert.assertEquals(expected.playerID, gameController.gA.playerID);
     }
-
 }

@@ -1,22 +1,23 @@
+
 package com.example.marti.unoplus.Screens;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.wifi.WifiManager;
-import android.os.Bundle;
-import android.os.StrictMode;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+        import android.content.Context;
+        import android.content.Intent;
+        import android.net.wifi.WifiManager;
+        import android.os.Bundle;
+        import android.os.StrictMode;
+        import android.support.v7.app.AppCompatActivity;
+        import android.view.View;
+        import android.view.Window;
+        import android.view.WindowManager;
 
-import com.example.marti.unoplus.GameStatics;
-import com.example.marti.unoplus.R;
-import com.example.marti.unoplus.sound.Sounds;
-import com.example.marti.unoplus.sound.SoundManager;
+        import com.example.marti.unoplus.GameStatics;
+        import com.example.marti.unoplus.R;
+        import com.example.marti.unoplus.sound.Sounds;
+        import com.example.marti.unoplus.sound.SoundManager;
 
 
-import jop.hab.net.ConnectionScreen;
+        import jop.hab.net.ConnectionScreen;
 
 public class MainMenu extends AppCompatActivity {
     public MainMenu() {
@@ -56,7 +57,7 @@ public class MainMenu extends AppCompatActivity {
 
         findViewById(R.id.spielerstellen).setOnClickListener(handler);
         findViewById(R.id.spielbeitreten).setOnClickListener(handler);
-        findViewById(R.id.einstellungen).setOnClickListener(handler);
+        findViewById(R.id.anleitung).setOnClickListener(handler);
         findViewById(R.id.exitbutton).setOnClickListener(handler);
 
 
@@ -77,7 +78,7 @@ public class MainMenu extends AppCompatActivity {
                     GameStatics.resetWiFi(false);
                     startActivity(new Intent(MainMenu.this, ConnectionScreen.class));
                     break;
-                case R.id.einstellungen:
+                case R.id.anleitung:
                     startActivity(new Intent(MainMenu.this, Settings.class));
                     break;
                 case R.id.exitbutton:

@@ -288,4 +288,3 @@ public class ConnectionScreen extends AppCompatActivity implements ObserverInter
         }
     }
 }
-
