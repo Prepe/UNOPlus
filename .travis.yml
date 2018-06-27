@@ -7,6 +7,7 @@ env:
     - ANDROID_ABI=arm64-v8a             # das Image für den Emulator (armv7/armv8/x86/x86_64)
     - ANDROID_BUILD_TOOLS=26.0.2        # die Version der build-tools (am besten aktuellste version)
     - ADB_INSTALL_TIMEOUT=5             # Timeout für die Installation der App im Emulator
+    - CODECOV_TOKEN=:430eb80d-1def-4c54-b812-b4b8612d0a4c
 android:
   components:
     #- tools                            # SDK-update
@@ -47,6 +48,9 @@ cache:
     - $HOME/.gradle/wrapper/
     - $HOME/.android/build-cache
 
+language: java
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
 # benachrichtigungen per email auszuschalten
 #notifications:
 #  email: false
