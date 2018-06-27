@@ -110,13 +110,19 @@ public class NetworkIOManager {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setLenient();
         Gson gson = gsonBuilder.create();
+        GameActions gA;
 
         try {
-            actions.add(gson.fromJson(gameActionString, GameActions.class));
+            gA = gson.fromJson(gameActionString, GameActions.class);
             Log.d("GAMEACTION", gameAction.action.toString());
         } catch (Exception e) {
             Log.e("JSon error", "Retry");
+            gA = null;
             receiveGameactionRetry(gameActionString);
+        }
+
+        if (gA != null) {
+            actions.add(gA);
         }
 
         return actions;
@@ -126,12 +132,18 @@ public class NetworkIOManager {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setLenient();
         Gson gson = gsonBuilder.create();
+        GameActions gA;
 
         try {
-            actions.add(gson.fromJson(gameActionString, GameActions.class));
+            gA = gson.fromJson(gameActionString, GameActions.class);
         } catch (Exception e) {
             Log.e("JSon error", "Splitting");
+            gA = null;
             receiveGameactionSplitting(gameActionString);
+        }
+
+        if (gA != null) {
+            actions.add(gA);
         }
     }
 
@@ -158,13 +170,20 @@ public class NetworkIOManager {
         }
         gameactions.add(gameActionString.substring(helper));
 
+        GameActions gA;
         for (int i = 0; i < gameactions.size(); i++) {
             Log.d("Action", gameactions.get(i));
             try {
-                actions.add(gson.fromJson(gameactions.get(i), GameActions.class));
+                gA = gson.fromJson(gameactions.get(i), GameActions.class);
                 Log.d("GAMEACTION", gameAction.action.toString());
             } catch (Exception e) {
                 Log.e("JSon error", "ERROR");
+                receiveGameactionRetry(gameactions.get(i));
+                gA = null;
+            }
+
+            if (gA != null) {
+                actions.add(gA);
             }
         }
     }

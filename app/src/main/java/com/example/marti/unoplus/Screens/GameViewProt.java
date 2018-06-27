@@ -264,7 +264,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         NIOmanager.writeGameaction(tempA);
         Log.d("PLAYER_SETUP", "Added new Player: " + temp.getID());
 
-        if (nextID == playerCount) {
+        if (nextID == playerCount-1) {
             PlayerList pl = new PlayerList();
             pl.setPlayers(tempPlayers);
 
