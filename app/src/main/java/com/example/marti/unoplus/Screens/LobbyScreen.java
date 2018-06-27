@@ -41,6 +41,7 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
 
     NetworkIOManager NIOManager;
     int playerCount = 0;
+    int readyPlayers = 1;
 
     //Buttons and Options Checkboxes
     Button startGame;
@@ -217,12 +218,14 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
                     public void onClick(View v) {
                         started = true;
                         socketThread.interrupt();
-                        NIOManager.setNumclients(playerCount);
+                        NIOManager.setNumclients(readyPlayers);
                         Intent i = new Intent(getBaseContext(), GameViewProt.class);
                         GameStatics.NIOManager = NIOManager;
                         GameStatics.reset = true;
+                        setOptions();
                         NIOManager.writeGameaction(new GameActions(GameActions.actions.INIT_GAME, 0, true));
                         startActivity(i);
+                        finish();
                     }
                 });
             }
@@ -288,8 +291,20 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
 
     void handleUpdate(GameActions action) {
         if (action.action == GameActions.actions.INIT_PLAYER) {
-            playerCount++;
+            readyPlayers++;
             Toast.makeText(getApplicationContext(), playerCount + " Players ready", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    void setOptions() {
+        GameStatics.duel = duelCheck.isChecked();
+        GameStatics.hotDrop = hotDropCheck.isChecked();
+        GameStatics.cardSpin = cardSpinCheck.isChecked();
+
+        GameStatics.dropCard = dropCardCheck.isChecked();
+        GameStatics.tradeCard = tradeCardCheck.isChecked();
+
+        GameStatics.quickPlay = quickPlayCheck.isChecked();
+        GameStatics.cunterPlay = conterPlayCheck.isChecked();
     }
 }

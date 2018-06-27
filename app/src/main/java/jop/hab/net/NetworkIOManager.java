@@ -35,9 +35,7 @@ public class NetworkIOManager {
     ClientClass clientClass;
     ArrayList<SendReceive> sendReceive;
 
-
     String hostAdress;
-
 
     public boolean MODE_IS_SERVER = false;
     static final int MESSAGE_READ = 1;
@@ -257,8 +255,6 @@ public class NetworkIOManager {
                         Log.d("JSon Empfangen", tmpmsg);
                         actions = receiveGameaction(tmpmsg);
                         observerInterface.dataChanged();
-                    } else {
-                        countready++;
                     }
                     break;
             }
@@ -287,6 +283,7 @@ public class NetworkIOManager {
             Log.d("@serverclass", "Serverclass running");
             try {
                 serverSocket = new ServerSocket(8888);
+                serverSocket.setReuseAddress(true);
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.d("@error", "sc catched");
@@ -298,6 +295,7 @@ public class NetworkIOManager {
         public boolean addClient() {
             try {
                 socket = serverSocket.accept();
+                socket.setReuseAddress(true);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -319,7 +317,6 @@ public class NetworkIOManager {
         private Socket socket;
         private InputStream inputStream;
         private OutputStream outputStream;
-        boolean ready = false;
 
         public SendReceive(Socket socket) {
             this.socket = socket;
@@ -332,9 +329,6 @@ public class NetworkIOManager {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-
-        public SendReceive() {
         }
 
         @Override
@@ -373,7 +367,7 @@ public class NetworkIOManager {
             }
         }
     }
-    
+
     public class ClientClass extends Thread {
         Socket socket;
         String hostAdd;

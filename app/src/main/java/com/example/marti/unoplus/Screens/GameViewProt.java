@@ -643,6 +643,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             intent.putExtra("pID", pID + 1);
             startActivity(intent);
         }
+        finish();
     }
 
     public void tradeOffer(final int traderID, final Card tradedCard) {
