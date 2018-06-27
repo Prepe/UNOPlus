@@ -144,7 +144,6 @@ public class Deck {
     public void replaceTakeDeck() {
         /*
         //Move top card in played deck to new deck
-
         //Make played deck the main deck and shuffle take deck
 
         //Make the new deck the played deck

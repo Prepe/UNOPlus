@@ -5,51 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/onOff2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="55dp"
-        android:layout_x="156dp"
-        android:layout_y="15dp"
-        android:text="Wifi On"
-        android:visibility="visible" />
-
-    <TextView
-        android:id="@+id/connectionStatus2"
-        android:layout_width="239dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="39dp"
-        android:layout_x="348dp"
-        android:layout_y="29dp"
-        android:text="@string/connection_status"
-        android:textAlignment="center"
-        android:textColor="@android:color/holo_blue_dark"
-        android:textSize="18sp"
-        android:textStyle="italic"
-        android:visibility="visible" />
-
-    <Button
-        android:id="@+id/discover2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="250dp"
-        android:layout_y="16dp"
-        android:text="@string/discover"
-        android:visibility="visible" />
-
-    <ListView
-        android:id="@+id/peerListView"
-        android:layout_width="485dp"
-        android:layout_height="92dp"
-        android:layout_marginTop="25dp"
-        android:layout_x="47dp"
-        android:layout_y="61dp"
-        android:background="@android:color/holo_orange_light" >
-
-    </ListView>
-
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="wrap_content"
@@ -63,24 +18,11 @@
         android:contentDescription="@string/dummy_content" />
 
     <TextView
-        android:id="@+id/Spieler"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="48dp"
-        android:layout_y="19dp"
-        android:text="@string/spieler"
-        android:textColor="@android:color/white"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        tools:layout_editor_absoluteX="42dp"
-        tools:layout_editor_absoluteY="17dp" />
-
-    <TextView
         android:id="@+id/Optionen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="51dp"
-        android:layout_y="176dp"
+        android:layout_x="53dp"
+        android:layout_y="77dp"
         android:text="@string/optionen"
         android:textColor="@android:color/white"
         android:textSize="30sp"
@@ -93,8 +35,8 @@
         android:id="@+id/kartentauschen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="50dp"
-        android:layout_y="248dp"
+        android:layout_x="52dp"
+        android:layout_y="182dp"
         android:text="@string/karten_tauschen"
         android:textColor="@android:color/white"
         android:textSize="24sp"
@@ -105,8 +47,8 @@
         android:id="@+id/kartenwegwerfen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="50dp"
-        android:layout_y="280dp"
+        android:layout_x="52dp"
+        android:layout_y="214dp"
         android:text="@string/karten_wegwerfen"
         android:textColor="@android:color/white"
         android:textSize="24sp"
@@ -117,8 +59,8 @@
         android:id="@+id/tischteufel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="50dp"
-        android:layout_y="217dp"
+        android:layout_x="52dp"
+        android:layout_y="151dp"
         android:text="@string/tischteufel"
         android:textColor="@android:color/white"
         android:textSize="24sp"

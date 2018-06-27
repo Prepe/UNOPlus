@@ -36,7 +36,9 @@ import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.players.PlayerList;
 import com.example.marti.unoplus.sound.SoundManager;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+
 import java.util.LinkedList;
 
 import jop.hab.net.NetworkIOManager;
@@ -44,29 +46,35 @@ import jop.hab.net.ObserverInterface;
 
 public class GameViewProt extends AppCompatActivity implements ObserverInterface {
     NetworkIOManager NIOmanager;
+    String hostAdress, mode, playerName;
+    int numClients;
+    boolean isGameController = false;
     GameController gameController;
     GameActions recievedGA;
     ArrayList<HandCardView> handCards;
     PlayedCardView playedCardView;
     ThrowAwayView throwAwayView;
     TradeCardView tradeCardView;
+    TextView numCards;
+    TextView numCards2;
+    public CountDownTimer timer;
+    Button unoButton;
+    Vibrator vibrator;
+    ArrayList<String> playersInListView = new ArrayList<>();
+    boolean buttonPressed = false;
     SoundManager soundManager;
     LinkedList<Player> tempPlayers;
-    ArrayList<String> playersInListView = new ArrayList<>();
     public Player player;
-    private TextView numCards;
-    private TextView numCards2;
     private TextView playerTurn;
-    private Button unoButton;
-    private Vibrator vibrator;
-    private String hostAdress;
-    private String mode;
-    private int numClients;
     private int playerCount;
-    private boolean isGameController = false;
-    public CountDownTimer timer;
-    private boolean buttonPressed = false;
     private boolean endGame = false;
+
+    boolean hotDrop;
+    boolean spinCard;
+    boolean duel;
+    boolean tradeCard;
+    boolean dropCard;
+    boolean quickPlay;
 
 
     public GameViewProt() {
@@ -275,15 +283,20 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 e.printStackTrace();
             }
 
+            hotDrop = getIntent().getBooleanExtra("HotDrop", false);
+            spinCard = getIntent().getBooleanExtra("SpinCard", false);
+            duel = getIntent().getBooleanExtra("Duel", false);
+            tradeCard = getIntent().getBooleanExtra("TradeCard", false);
+            dropCard = getIntent().getBooleanExtra("DropCard", false);
+            quickPlay = getIntent().getBooleanExtra("QuickPlay", false);
+
             isGameController = true;
             gameController = new GameController(this);
-
             tempPlayers = new LinkedList<>();
             player = new Player(0);
             player.setGV(this);
 
             tempPlayers.add(player);
-
             playerCount = numClients;
 
             Log.d("HOST", "NumPlayers: " + playerCount);
@@ -303,7 +316,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 }
             }
 
-            player = new Player((int) (tempID * 1000));
+            player = new Player((int) (tempID * 100000));
             player.setGV(this);
             Log.d("CLIENT", "tempID: " + player.getID());
         }
@@ -351,7 +364,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         NIOmanager.writeGameaction(tempA);
         Log.d("PLAYER_SETUP", "Added new Player: " + temp.getID());
 
-        if (nextID == playerCount) {
+        if (nextID == playerCount-1) {
             PlayerList pl = new PlayerList();
             pl.setPlayers(tempPlayers);
 
@@ -366,7 +379,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         temp1.gcSend = true;
         NIOmanager.writeGameaction(temp1);
         handleUpdate(temp1);
-
         gameController.setUpGame();
     }
 
@@ -389,9 +401,14 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         }
     };
 
-    public boolean getButtonPressed() {
-        return this.buttonPressed;
-    }
+
+    //getter for options
+    public boolean getBooleanHotDrop(){return this.hotDrop;}
+    public boolean getBooleanSpinCard(){return this.spinCard;}
+    public boolean getBooleanDuel(){return this.duel;}
+    public boolean getBooleanDropCard(){return this.dropCard;}
+    public boolean getBooleanTradeCard(){return this.tradeCard;}
+    public boolean getBooleanQuickPlay(){return this.quickPlay;}
 
     //<--------- View Updates --------->
     //Player sends an action

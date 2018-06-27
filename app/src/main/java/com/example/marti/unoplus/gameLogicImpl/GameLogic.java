@@ -237,5 +237,5 @@ public class GameLogic {
     public Card.values getLastCardValue() {
         return lastCardValue;
     }
-
 }
+

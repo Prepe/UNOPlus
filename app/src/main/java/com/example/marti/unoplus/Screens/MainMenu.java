@@ -71,7 +71,7 @@ public class MainMenu extends AppCompatActivity {
 */
                 case R.id.spielbeitreten:
                     soundManager.playSound(Sounds.THEMESTOP);
-                    startActivity(new Intent(MainMenu.this, ConnectionScreen.class));
+                    startActivity(new Intent(MainMenu.this, NameScreen.class));
                     break;
 
                 case R.id.anleitung:

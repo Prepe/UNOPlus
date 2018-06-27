@@ -56,6 +56,13 @@ public class GameController {
     //<---------- Method for setting up the Game ---------->
     public GameController(GameViewProt gvp) {
         this.gvp = gvp;
+        this.quickPlayAllowed = gvp.getBooleanQuickPlay();
+        this.tradeCardAllowed = gvp.getBooleanTradeCard();
+        this.dropCardAllowed = gvp.getBooleanDropCard();
+        this.hotDropEnabled = gvp.getBooleanHotDrop();
+        this.duelEnabled = gvp.getBooleanDuel();
+        this.cardSpinEnabled = gvp.getBooleanSpinCard();
+
         deck = new Deck(hotDropEnabled,duelEnabled,cardSpinEnabled);
     }
 
@@ -263,7 +270,7 @@ public class GameController {
         }
 
     }
-  
+
     //Method to trade Card with other players
     void tradeCard(int traderID, int tradeTargetID, Card tradedCard, boolean accepted) {
         if (tradeCardAllowed) {
