@@ -36,9 +36,7 @@ import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.players.PlayerList;
 import com.example.marti.unoplus.sound.SoundManager;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-
 import java.util.LinkedList;
 
 import jop.hab.net.NetworkIOManager;
@@ -219,7 +217,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 if (action.playerID.equals(player.getID())) {
                     if (action.nextPlayerID > 0) {
                         Log.d("CLIENT", "Setting new ID");
-                        tv.setText("Player " + action.nextPlayerID + 1);
+                        tv.setText("Player " + (action.nextPlayerID + 1));
 
                         player.setID(action.nextPlayerID);
                         return;

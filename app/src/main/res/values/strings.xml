@@ -17,13 +17,16 @@
     <string name="connection_status">Connection Status</string>
     <string name="discover">discover</string>
     <string name="title_activity_game_view_prot">GameViewProt</string>
+
     <color name="UserWhite">#FFFFFF</color>
+
     <string name="eingabe_spielername">Gib hier deinen Spielernamen ein:</string>
     <string name="name">Name</string>
     <string name="zurück">Zurück</string>
     <string name="weiter">Weiter</string>
     <string name="waiting">Bitte warte bis alle Optionen ausgewählt wurden.</string>
     <string name="start">Start</string>
+
     <string name="hotDropCard">Wer als Letztes auf dem Bildschirm drückt hat verloren — Verlierer ziehen Karten</string>
     <string name="cardSpinCard">CardSpin — Alle Spieler geben ihre Handkarten weiter</string>
     <string name="tradeCardFeature">Trade Card Feature — Tausche eine Karte mit einem Spieler während du nicht dran bist. VORSICHT: CHEAT</string>
@@ -32,4 +35,5 @@
     <string name="blamePlayer">ACHTUNG PLAYER DIE CHEATEN ODER KEIN UNO SAGEN KÖNNEN (SOLTEN) BESTRAFT WERDEN!!</string>
     <string name="counterPossibility">TIPP: +2/+4 können auch mit anderen Karten gekontert werden</string>
     <string name="gameDesc">Zu Beginn einer Runde erhällt jedem Spieler 7 Karten. Eine Karte kann nur gelegt werden, wenn die vorherige Karte dieselbe Nummer/Farbe hat. Für die schwarzen Aktionskarten gelten besondere Regeln. Wer keine passende Karte hat, muss eine vom Stapel nehmen und darf diese (wenn möglich) sofort ausspielen. Wer die vorletzte Karte ablegt, sollte „Uno!“ rufen. Gewinner der Runde ist, wer zuerst seine letzte Karte ablegt hat (Gilt nicht bei CHEAT). </string>
+
 </resources>

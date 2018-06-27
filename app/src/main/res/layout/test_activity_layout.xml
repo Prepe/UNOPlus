@@ -55,7 +55,7 @@
         android:layout_below="@+id/connectionStatus"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:text="Start" />
+        android:text="Ready" />
 
 
     <ListView
@@ -85,10 +85,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="TextView"
         android:textAlignment="center"
         android:textColor="@android:color/holo_blue_dark"
         android:textSize="18sp"
-        android:textStyle="italic"/>
+        android:textStyle="italic" />
 
 </RelativeLayout>
