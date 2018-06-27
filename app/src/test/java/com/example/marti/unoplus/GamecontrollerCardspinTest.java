@@ -3,7 +3,6 @@ package com.example.marti.unoplus;
 import android.util.Log;
 
 import com.example.marti.unoplus.Screens.GameViewProt;
-import com.example.marti.unoplus.cards.Card;
 import com.example.marti.unoplus.gameLogicImpl.GameController;
 import com.example.marti.unoplus.gameLogicImpl.GameLogic;
 import com.example.marti.unoplus.players.Player;
@@ -23,7 +22,6 @@ import java.util.LinkedList;
 
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by Luca on 16.06.2018.
@@ -40,7 +38,8 @@ public class GamecontrollerCardspinTest {
 
     @Before
     public void setup() {
-        gameController = new GameController(gameViewProt);
+        boolean[] temp = {true,true,true,true,true,true,true};
+        gameController = new GameController(gameViewProt, temp);
         gameViewProt = mock(GameViewProt.class);
         gameLogic = new GameLogic();
 
