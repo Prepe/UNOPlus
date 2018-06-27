@@ -280,13 +280,7 @@ public class Player {
             return;
         }
 
-        if (canSayUno) {
-            if (playerID == this.ID && hand.getCount() == 1) {
-
-            }
-        } else {
-            //TODO wrong
-        }
+        gameViewProt.callUNO(playerID,canSayUno);
     }
 
     //Timer for each player when Hot-Drop-Card is played

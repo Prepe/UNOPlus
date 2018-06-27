@@ -597,7 +597,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                         } else if (position == 1) {
                             dlg.cancel();
                             writeNetMessage(new GameActions(GameActions.actions.DUEL_OPPONENT, player.getID(), Card.colors.BLUE));
-                            ;
                         } else if (position == 2) {
                             dlg.cancel();
                             writeNetMessage(new GameActions(GameActions.actions.DUEL_OPPONENT, player.getID(), Card.colors.YELLOW));
@@ -608,7 +607,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                     }
                 })
                 .create();
-        d.setCanceledOnTouchOutside(true);
+        d.setCanceledOnTouchOutside(false);
         d.show();
     }
 
@@ -635,7 +634,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
     void finishTradeOffer(int playerToTrade, Card c) {
         if (playerToTrade != player.getID()) {
             player.tradeCard(playerToTrade, c);
-            ;
         } else {
             toastTradeError();
         }
@@ -751,5 +749,15 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
     public void toastPlayersTime() {
         Toast.makeText(getApplicationContext(), "Deine Zeit: " + player.getMillSecs() + " Millisekunden", Toast.LENGTH_SHORT).show();
+    }
+
+    public void callUNO(int id, boolean check) {
+        if (check) {
+            if (id != player.getID()) {
+                Toast.makeText(getApplicationContext(), "Player " + (player.getID() + 1) + " called UNO", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(getApplicationContext(), "Player " + (player.getID() + 1) + " called UNO and has drawn a Card", Toast.LENGTH_SHORT).show();
+        }
     }
 }
