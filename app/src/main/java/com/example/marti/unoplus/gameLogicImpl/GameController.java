@@ -317,6 +317,7 @@ public class GameController {
 
         logic.changeCardDrawCount(hotDropPunishment);
         forcedCardDraw(slowestPlayer);
+        logic.nextPlayer(logic.activePlayer);
     }
 
     private void startDuel(GameActions action) {
