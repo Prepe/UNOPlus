@@ -43,16 +43,21 @@ Sorted Handcards
 - if all players are connected the HOST has to click "START" and also clients has to click on "START" in that direction
 - if all succeed, all players will be directed to the game screen
 
+![Screenshot](app/src/main/res/drawable/titlescreen.png)
+![Screenshot](app/src/main/res/drawable/mainmenuscreen.png)
+![Screenshot](app/src/main/res/drawable/spielanleitung.png)
+![Screenshot](app/src/main/res/drawable/lobby.png)
+
 ### Authors
 
-Martin Proprentner
-
-Sebastian Trattnig
-
 Ekaterina Königstorfer 
-
-Luca Rodiga
 
 Jennifer Gradischnig
 
 Josef Habich
+
+Luca Rodiga
+
+Martin Proprentner
+
+Sebastian Trattnig
