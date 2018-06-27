@@ -390,10 +390,10 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
 
         numCardsP1.setText(hcc[0] + "");
         numCardsP2.setText(hcc[1] + "");
-        if (hcc.length >= 2) {
+        if (hcc.length >= 3) {
             numCardsP3.setText(hcc[2] + "");
         }
-        if (hcc.length >= 3) {
+        if (hcc.length >= 4) {
             numCardsP4.setText(hcc[3] + "");
         }
     }
