@@ -36,7 +36,9 @@ import com.example.marti.unoplus.players.Player;
 import com.example.marti.unoplus.players.PlayerList;
 import com.example.marti.unoplus.sound.SoundManager;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+
 import java.util.LinkedList;
 
 import jop.hab.net.NetworkIOManager;
@@ -44,31 +46,40 @@ import jop.hab.net.ObserverInterface;
 
 public class GameViewProt extends AppCompatActivity implements ObserverInterface {
     NetworkIOManager NIOmanager;
+    String hostAdress, mode, playerName;
+    int numClients;
+    boolean isGameController = false;
     GameController gameController;
     GameActions recievedGA;
     ArrayList<HandCardView> handCards;
     PlayedCardView playedCardView;
     ThrowAwayView throwAwayView;
     TradeCardView tradeCardView;
+    TextView numCards;
+    TextView numCards2;
+    public CountDownTimer timer;
+    Button unoButton;
+    Vibrator vibrator;
+    ArrayList<String> playersInListView = new ArrayList<>();
+    boolean buttonPressed = false;
     SoundManager soundManager;
     LinkedList<Player> tempPlayers;
-    ArrayList<String> playersInListView = new ArrayList<>();
     public Player player;
     private TextView numCardsP1;
     private TextView numCardsP2;
     private TextView numCardsP3;
     private TextView numCardsP4;
     private TextView playerTurn;
-    private Button unoButton;
-    private Vibrator vibrator;
-    private String hostAdress;
     private boolean host;
-    private int numClients;
     private int playerCount;
-    private boolean isGameController = false;
-    public CountDownTimer timer;
-    private boolean buttonPressed = false;
     private boolean endGame = false;
+
+    boolean hotDrop;
+    boolean spinCard;
+    boolean duel;
+    boolean tradeCard;
+    boolean dropCard;
+    boolean quickPlay;
 
     public GameViewProt() {
         super();
@@ -166,6 +177,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             boolean[] options = {GameStatics.duel, GameStatics.hotDrop, GameStatics.cardSpin, GameStatics.dropCard, GameStatics.tradeCard, GameStatics.cunterPlay, GameStatics.quickPlay};
             gameController = new GameController(this, options);
 
+
             tempPlayers = new LinkedList<>();
             player = new Player(0);
             player.setGV(this);
@@ -173,6 +185,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
             tempPlayers.add(player);
 
             playerCount = NIOmanager.numclients;
+
 
             Log.d("HOST", "NumPlayers: " + playerCount);
             NIOmanager.writeGameaction(new GameActions(GameActions.actions.INIT_PLAYER, 0, 0, false));
@@ -191,7 +204,7 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
                 }
             }
 
-            player = new Player((int) (tempID * 1000));
+            player = new Player((int) (tempID * 100000));
             player.setGV(this);
             Log.d("CLIENT", "tempID: " + player.getID());
         }
@@ -255,7 +268,6 @@ public class GameViewProt extends AppCompatActivity implements ObserverInterface
         temp1.gcSend = true;
         NIOmanager.writeGameaction(temp1);
         handleUpdate(temp1);
-
         gameController.setUpGame();
     }
 

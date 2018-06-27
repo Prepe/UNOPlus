@@ -55,6 +55,8 @@ public class Player {
         return handcardcounter;
     }
 
+    public void setName(String name){playerName = name;}
+
     public Integer getID() {
         return ID;
     }

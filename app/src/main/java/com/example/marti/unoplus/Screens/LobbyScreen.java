@@ -19,7 +19,9 @@ import android.widget.Toast;
 
 import com.example.marti.unoplus.GameActions;
 import com.example.marti.unoplus.GameStatics;
+
 import com.example.marti.unoplus.R;
+import static com.example.marti.unoplus.Screens.NameScreen.PLAYER_NAME;
 
 import java.net.InetAddress;
 import java.util.LinkedList;
@@ -27,7 +29,6 @@ import java.util.LinkedList;
 import jop.hab.net.NetworkIOManager;
 import jop.hab.net.ObserverInterface;
 import jop.hab.net.WifiDirectBroadcastReceiver;
-
 
 public class LobbyScreen extends AppCompatActivity implements ObserverInterface {
     //P2P network
@@ -140,6 +141,7 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
     void startDiscover() {
         mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
             @Override
+
             public void onSuccess() {
                 // Code for when the discovery initiation is successful goes here.
                 // No services have actually been discovered yet, so this method
@@ -160,6 +162,7 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
                     startDiscover();
                 } else {
                     Toast.makeText(getApplicationContext(), "ERROR! No Network", Toast.LENGTH_SHORT).show();
+
                 }
             }
         });
@@ -262,11 +265,6 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
     public void onPause() {
         super.onPause();
         unregisterReceiver(mReceiver);
-    }
-
-    @Override
-    public void NIOReady() {
-
     }
 
     @Override
