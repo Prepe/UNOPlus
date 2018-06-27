@@ -64,12 +64,6 @@ public class GameController {
         quickPlayAllowed = options[6];
 
         this.gvp = gvp;
-        this.quickPlayAllowed = gvp.getBooleanQuickPlay();
-        this.tradeCardAllowed = gvp.getBooleanTradeCard();
-        this.dropCardAllowed = gvp.getBooleanDropCard();
-        this.hotDropEnabled = gvp.getBooleanHotDrop();
-        this.duelEnabled = gvp.getBooleanDuel();
-        this.cardSpinEnabled = gvp.getBooleanSpinCard();
 
         deck = new Deck(hotDropEnabled,duelEnabled,cardSpinEnabled);
     }
