@@ -21,6 +21,7 @@ import com.example.marti.unoplus.GameActions;
 import com.example.marti.unoplus.GameStatics;
 
 import com.example.marti.unoplus.R;
+
 import static com.example.marti.unoplus.Screens.NameScreen.PLAYER_NAME;
 
 import java.net.InetAddress;
@@ -74,7 +75,7 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
             socketThread = new Thread() {
                 public void run() {
                     Log.d("HOST", "Waitung for Players");
-                    while(!started) {
+                    while (!started) {
                         if (openSocket()) {
                             Log.d("HOST", "Player Connected");
                         }
@@ -147,7 +148,6 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
                 // No services have actually been discovered yet, so this method
                 // can often be left blank. Code for peer discovery goes in the
                 // onReceive method, detailed below.
-                Toast.makeText(getApplicationContext(), "Creating Lobby", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -187,7 +187,6 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
                 } else {
                     Toast.makeText(getApplicationContext(), "Could not Create P2P Group", Toast.LENGTH_SHORT).show();
                     GameStatics.resetWiFi(true);
-                    Toast.makeText(getApplicationContext(), "WiFi and System Reset", Toast.LENGTH_SHORT).show();
                     Toast.makeText(getApplicationContext(), "Try Again or Check Network", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getApplicationContext(), MainMenu.class);
                     startActivity(intent);
@@ -198,7 +197,6 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
     }
 
     void startNetwork() {
-        Toast.makeText(getApplicationContext(), "Starting NIOM", Toast.LENGTH_SHORT).show();
         NIOManager = new NetworkIOManager(this);
         NIOManager.setMode("server");
     }
@@ -210,7 +208,7 @@ public class LobbyScreen extends AppCompatActivity implements ObserverInterface 
             deviceAddress = groupOwnerAddress.getHostAddress();
 
             if (info.groupFormed && info.isGroupOwner) {
-                Log.d("HOST","Form Group");
+                Log.d("HOST", "Form Group");
                 if (NIOManager.serverClass == null) {
                     NIOManager.setHostAdress(deviceAddress);
                     NIOManager.open();

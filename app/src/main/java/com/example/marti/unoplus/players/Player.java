@@ -90,7 +90,7 @@ public class Player {
     public void playCard(Card c) {
         GameActions action;
         action = new GameActions(GameActions.actions.PLAY_CARD, ID, c);
-        if (hand.getCount() == 1) {
+        if (hand.getCount() == 2) {
             action.check = true;
         } else {
             action.check = false;
