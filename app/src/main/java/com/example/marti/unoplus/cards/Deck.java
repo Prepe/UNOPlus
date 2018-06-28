@@ -93,7 +93,7 @@ public class Deck {
     private void createDuel() {
         for (int i = 0; i < 4; i++) {
             for (int x = 0; x < 2; x++) {
-                int action = 16;
+                int action = 17;
                 deck.add(new Card(4, action));
             }
         }
@@ -102,7 +102,7 @@ public class Deck {
     private void createCardSpin() {
         for (int i = 0; i < 4; i++) {
             for (int x = 0; x < 2; x++) {
-                int action = 17;
+                int action = 16;
                 deck.add(new Card(4, action));
             }
         }
